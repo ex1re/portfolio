@@ -28,7 +28,7 @@ export default function Home() {
           transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
         >
           <Link
-            to="/work"
+            to="/garden"
             className="mt-10 inline-block border-b border-neutral-100 pb-1 text-sm tracking-wide text-neutral-100 transition-opacity hover:opacity-70"
           >
             View the work →

@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const links = [
   { to: '/', label: 'foyer' },
-  { to: '/work', label: 'garden' },
-  { to: '/about', label: 'office' },
+  { to: '/garden', label: 'garden' },
+  { to: '/office', label: 'office' },
 ]
 
 export default function Nav() {

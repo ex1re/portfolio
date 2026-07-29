@@ -7,7 +7,7 @@ export default function Work() {
   return (
     <PageTransition>
       <section className="min-h-screen px-6 pt-32 pb-20">
-        <h1 className="mb-10 text-sm tracking-wide text-neutral-500">SELECTED WORK</h1>
+        <h1 className="mb-10 text-sm tracking-wide text-neutral-500">selections</h1>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => (
             <motion.div
@@ -16,7 +16,7 @@ export default function Work() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.08, ease: 'easeOut' }}
             >
-              <Link to={`/work/${project.slug}`} className="group block">
+              <Link to={`/garden/${project.slug}`} className="group block">
                 <div
                   className={`aspect-[4/5] w-full rounded-sm bg-gradient-to-br ${project.color} transition-transform duration-300 group-hover:scale-[1.02]`}
                 />

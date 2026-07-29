@@ -12,9 +12,9 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
-        <Route path="/work" element={<Work />} />
-        <Route path="/work/:slug" element={<Project />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/garden" element={<Work />} />
+        <Route path="/garden/:slug" element={<Project />} />
+        <Route path="/office" element={<About />} />
       </Routes>
     </AnimatePresence>
   )
