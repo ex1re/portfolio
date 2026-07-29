@@ -4,6 +4,7 @@ import Nav from './components/Nav'
 import Home from './pages/Home'
 import Work from './pages/Work'
 import Project from './pages/Project'
+import CollectionDetail from './pages/CollectionDetail'
 import About from './pages/About'
 import Cellar from './pages/Cellar'
 
@@ -14,6 +15,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/garden" element={<Work />} />
+        <Route path="/garden/collections/:slug" element={<CollectionDetail />} />
         <Route path="/garden/:slug" element={<Project />} />
         <Route path="/office" element={<About />} />
         <Route path="/cellar" element={<Cellar />} />
