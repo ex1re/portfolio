@@ -5,6 +5,14 @@
   box-sizing: border-box;
 }
 
+/* The garden pile deliberately bleeds past its container and can be dragged
+   further; clip that horizontally instead of letting it pan the page sideways.
+   Both html and body are needed — html is the scroll container. */
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
 }
