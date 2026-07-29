@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type { Photo } from '../data/collections'
+import type { DisplayPhoto } from '../data/photos'
 
 interface LightboxProps {
-  photos: Photo[]
+  photos: DisplayPhoto[]
   index: number
   onClose: () => void
   onNavigate: (index: number) => void
@@ -61,9 +61,25 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
             exit={{ opacity: 0, scale: 0.97 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            style={{ aspectRatio: String(photo.aspect) }}
-            className={`max-h-[80vh] w-full max-w-3xl rounded-sm bg-gradient-to-br ${photo.color}`}
-          />
+            className="flex w-full max-w-3xl items-center justify-center"
+          >
+            {photo.src ? (
+              // Contained rather than cropped: the full frame should be visible here.
+              <img
+                src={photo.src}
+                width={photo.width}
+                height={photo.height}
+                alt={photo.alt}
+                draggable={false}
+                className="max-h-[80vh] w-auto max-w-full rounded-sm object-contain"
+              />
+            ) : (
+              <div
+                style={{ aspectRatio: String(photo.aspect) }}
+                className={`max-h-[80vh] w-full rounded-sm bg-gradient-to-br ${photo.color}`}
+              />
+            )}
+          </motion.div>
 
           <button
             type="button"

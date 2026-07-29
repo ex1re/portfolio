@@ -3,12 +3,15 @@ import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import Lightbox from '../components/Lightbox'
+import PhotoImage from '../components/PhotoImage'
 import { collections } from '../data/collections'
+import { collectionPhotos } from '../data/photos'
 
 export default function CollectionDetail() {
   const { slug } = useParams()
   const collection = collections.find((c) => c.slug === slug)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const photos = collection ? collectionPhotos(collection) : []
 
   if (!collection) {
     return (
@@ -33,7 +36,7 @@ export default function CollectionDetail() {
         <p className="mt-2 max-w-xl text-neutral-400">{collection.description}</p>
 
         <div className="mt-10 columns-2 gap-4 sm:columns-3">
-          {collection.photos.map((photo, i) => (
+          {photos.map((photo, i) => (
             <motion.button
               key={photo.id}
               type="button"
@@ -41,16 +44,18 @@ export default function CollectionDetail() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.05, ease: 'easeOut' }}
-              style={{ aspectRatio: String(photo.aspect) }}
-              className={`mb-4 block w-full break-inside-avoid rounded-sm bg-gradient-to-br ${photo.color} transition-transform duration-300 hover:scale-[1.02]`}
-            />
+              aria-label={`Open ${photo.alt}`}
+              className="mb-4 block w-full break-inside-avoid transition-transform duration-300 hover:scale-[1.02]"
+            >
+              <PhotoImage photo={photo} loading={i < 6 ? 'eager' : 'lazy'} className="rounded-sm" />
+            </motion.button>
           ))}
         </div>
       </section>
 
       {openIndex !== null && (
         <Lightbox
-          photos={collection.photos}
+          photos={photos}
           index={openIndex}
           onClose={() => setOpenIndex(null)}
           onNavigate={setOpenIndex}

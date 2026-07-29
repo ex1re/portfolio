@@ -3,8 +3,15 @@ export interface Project {
   title: string
   category: string
   year: number
+  /** Gradient placeholder, also shown behind the photo while it loads. */
   color: string
+  /** Fallback frame shape (width / height) used until `image` is added. */
   aspect: number
+  /**
+   * Filename inside public/photos/selections, e.g. `coastline.jpg`. Once set,
+   * the frame takes the file's real dimensions instead of `aspect`.
+   */
+  image?: string
 }
 
 export const projects: Project[] = [

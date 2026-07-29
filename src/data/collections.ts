@@ -1,4 +1,5 @@
-export interface Photo {
+/** Stand-in for a photo, used until real files are added to the collection. */
+export interface Placeholder {
   id: string
   color: string
   aspect: number
@@ -9,7 +10,12 @@ export interface Collection {
   title: string
   description: string
   color: string
-  photos: Photo[]
+  /**
+   * Shown only while public/photos/collections/<slug>/ is empty. Once files are
+   * added they replace these entirely, and their gradients become load-time
+   * backdrops for the real photos.
+   */
+  placeholders: Placeholder[]
 }
 
 export const collections: Collection[] = [
@@ -18,7 +24,7 @@ export const collections: Collection[] = [
     title: 'Coastal Mornings',
     description: 'Light along the shoreline before the world wakes up.',
     color: 'from-slate-700 to-slate-900',
-    photos: [
+    placeholders: [
       { id: 'cm-1', color: 'from-slate-600 to-slate-900', aspect: 0.75 },
       { id: 'cm-2', color: 'from-slate-700 to-neutral-900', aspect: 1.4 },
       { id: 'cm-3', color: 'from-blue-800 to-slate-900', aspect: 1 },
@@ -33,7 +39,7 @@ export const collections: Collection[] = [
     title: 'Strangers',
     description: 'Portraits of people met once, in passing.',
     color: 'from-rose-800 to-neutral-900',
-    photos: [
+    placeholders: [
       { id: 'st-1', color: 'from-rose-700 to-neutral-900', aspect: 0.75 },
       { id: 'st-2', color: 'from-rose-800 to-neutral-900', aspect: 0.8 },
       { id: 'st-3', color: 'from-pink-800 to-neutral-900', aspect: 0.7 },
@@ -46,7 +52,7 @@ export const collections: Collection[] = [
     title: 'After Hours',
     description: 'The city once the shops close and the neon stays on.',
     color: 'from-amber-800 to-neutral-900',
-    photos: [
+    placeholders: [
       { id: 'ah-1', color: 'from-amber-700 to-neutral-900', aspect: 1.3 },
       { id: 'ah-2', color: 'from-amber-800 to-neutral-900', aspect: 0.75 },
       { id: 'ah-3', color: 'from-orange-800 to-neutral-900', aspect: 1 },

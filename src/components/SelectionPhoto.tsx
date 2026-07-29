@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useDragControls } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import PhotoImage from './PhotoImage'
+import { selectionPhoto } from '../data/photos'
 import type { Project } from '../data/projects'
 
 export interface PhotoPlacement {
@@ -46,6 +48,7 @@ export default function SelectionPhoto({
   const dragControls = useDragControls()
   const [armed, setArmed] = useState(false)
   const [dragging, setDragging] = useState(false)
+  const photo = selectionPhoto(project)
 
   const holdTimer = useRef<number | null>(null)
   const holdOrigin = useRef<{ x: number; y: number } | null>(null)
@@ -171,7 +174,7 @@ export default function SelectionPhoto({
       transition={{
         // Surfacing and sinking are eased rather than snapped, so moving the
         // cursor across the pile doesn't read as photos popping.
-        default: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+        default: { duration: 1.5, ease: [0.22, 1, 0.36, 1] },
         // Stacking order has to change at once: interpolating it would walk the
         // photo up through its neighbours instead of lifting it clear.
         zIndex: { duration: 0 },
@@ -196,15 +199,12 @@ export default function SelectionPhoto({
         }}
         className="group block cursor-grab bg-neutral-400 p-1.5 shadow-xl shadow-black/60 select-none active:cursor-grabbing"
       >
-        <div
-          style={{ aspectRatio: String(project.aspect) }}
-          className={`relative w-full overflow-hidden bg-gradient-to-br ${project.color}`}
-        >
+        <PhotoImage photo={photo} loading={index < 4 ? 'eager' : 'lazy'}>
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-3 pt-8 pb-2 opacity-0 transition-opacity group-hover:opacity-100">
             <h2 className="text-sm text-neutral-100">{project.title}</h2>
             <span className="text-xs text-neutral-300">{project.year}</span>
           </div>
-        </div>
+        </PhotoImage>
       </Link>
     </motion.div>
   )

@@ -1,6 +1,8 @@
 import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
+import PhotoImage from '../components/PhotoImage'
 import { projects } from '../data/projects'
+import { selectionPhoto } from '../data/photos'
 
 export default function Project() {
   const { slug } = useParams()
@@ -29,7 +31,9 @@ export default function Project() {
         <p className="mt-2 text-neutral-500">
           {project.category} — {project.year}
         </p>
-        <div className={`mt-10 aspect-video w-full rounded-sm bg-gradient-to-br ${project.color}`} />
+        <div className="mt-10 max-w-3xl">
+          <PhotoImage photo={selectionPhoto(project)} loading="eager" className="rounded-sm" />
+        </div>
         <p className="mt-8 max-w-xl text-neutral-400">
           Replace this with a real gallery of images and project notes for {project.title}.
         </p>

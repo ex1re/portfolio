@@ -5,6 +5,7 @@ import PageTransition from '../components/PageTransition'
 import SelectionPhoto from '../components/SelectionPhoto'
 import { projects } from '../data/projects'
 import { collections } from '../data/collections'
+import { collectionPhotos } from '../data/photos'
 
 // How far a photo may be dragged from its resting spot, in px. Deliberately
 // bounded per-photo (rather than to the container) so the pile keeps its
@@ -58,24 +59,41 @@ export default function Work() {
       <section className="px-6 pt-4 pb-24">
         <h2 className="mb-10 text-sm tracking-wide text-neutral-500">collections</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {collections.map((collection, i) => (
-            <motion.div
-              key={collection.slug}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.08, ease: 'easeOut' }}
-            >
-              <Link to={`/garden/collections/${collection.slug}`} className="group block">
-                <div
-                  className={`aspect-[4/3] w-full rounded-sm bg-gradient-to-br ${collection.color} transition-transform duration-300 group-hover:scale-[1.02]`}
-                />
-                <div className="mt-3">
-                  <h3 className="text-base text-neutral-100">{collection.title}</h3>
-                  <p className="text-sm text-neutral-500">{collection.photos.length} photos</p>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+          {collections.map((collection, i) => {
+            const photos = collectionPhotos(collection)
+            const cover = photos[0]
+            return (
+              <motion.div
+                key={collection.slug}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.08, ease: 'easeOut' }}
+              >
+                <Link to={`/garden/collections/${collection.slug}`} className="group block">
+                  {/* Covers stay a uniform 4:3 so the grid reads evenly, which is
+                      why this one frame crops its photo instead of following it. */}
+                  <div
+                    className={`relative aspect-[4/3] w-full overflow-hidden rounded-sm bg-gradient-to-br ${collection.color} transition-transform duration-300 group-hover:scale-[1.02]`}
+                  >
+                    {cover?.src && (
+                      <img
+                        src={cover.src}
+                        alt={`${collection.title} cover`}
+                        loading="lazy"
+                        decoding="async"
+                        draggable={false}
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    )}
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="text-base text-neutral-100">{collection.title}</h3>
+                    <p className="text-sm text-neutral-500">{photos.length} photos</p>
+                  </div>
+                </Link>
+              </motion.div>
+            )
+          })}
         </div>
       </section>
     </PageTransition>
