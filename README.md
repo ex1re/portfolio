@@ -2,7 +2,7 @@
 
 A photography / creative portfolio site built with React, Vite, and Tailwind CSS.
 
-**Live site:** _add URL after deploying_
+**Live site:** [portfolio-liard-one-48.vercel.app](https://portfolio-liard-one-48.vercel.app/)
 
 ## Tech stack
 
