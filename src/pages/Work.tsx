@@ -43,7 +43,7 @@ export default function Work() {
                   zIndex: i + 1,
                 }}
               >
-                <Link to={`/garden/${project.slug}`} className="group block bg-neutral-50 p-1.5 shadow-xl shadow-black/60">
+                <Link to={`/garden/${project.slug}`} className="group block bg-neutral-400 p-1.5 shadow-xl shadow-black/60">
                   <div
                     style={{ aspectRatio: String(project.aspect) }}
                     className={`relative w-full overflow-hidden bg-gradient-to-br ${project.color}`}
