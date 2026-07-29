@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
@@ -20,6 +21,8 @@ const layout = [
 ]
 
 export default function Work() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+
   return (
     <PageTransition>
       <section className="px-6 pt-32 pb-24">
@@ -27,20 +30,27 @@ export default function Work() {
         <div className="relative mx-auto aspect-[3/4] w-full max-w-5xl sm:aspect-[4/3] lg:aspect-[16/9]">
           {projects.map((project, i) => {
             const pos = layout[i % layout.length]
+            const isActive = activeIndex === i
             return (
               <motion.div
                 key={project.slug}
+                onPointerEnter={() => setActiveIndex(i)}
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1, rotate: pos.rotate }}
-                transition={{ duration: 0.5, delay: i * 0.06, ease: 'easeOut' }}
-                whileHover={{ scale: 1.1, rotate: 0, zIndex: 50, transition: { duration: 0.2 } }}
-                whileTap={{ scale: 1.1, rotate: 0, zIndex: 50, transition: { duration: 0.2 } }}
+                animate={{
+                  opacity: 1,
+                  scale: isActive ? 1.1 : 1,
+                  rotate: isActive ? 0 : pos.rotate,
+                  zIndex: isActive ? 50 : i + 1,
+                }}
+                transition={{
+                  default: { duration: 0.2, ease: 'easeOut' },
+                  opacity: { duration: 0.5, delay: i * 0.06, ease: 'easeOut' },
+                }}
                 style={{
                   position: 'absolute',
                   left: `${pos.left}%`,
                   top: `${pos.top}%`,
                   width: `${pos.width}%`,
-                  zIndex: i + 1,
                 }}
               >
                 <Link to={`/garden/${project.slug}`} className="group block bg-neutral-400 p-1.5 shadow-xl shadow-black/60">
