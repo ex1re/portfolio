@@ -6,6 +6,7 @@ const links = [
   { to: '/', label: 'foyer' },
   { to: '/garden', label: 'garden' },
   { to: '/office', label: 'office' },
+  { to: '/cellar', label: 'cellar' },
 ]
 
 export default function Nav() {

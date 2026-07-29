@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Work from './pages/Work'
 import Project from './pages/Project'
 import About from './pages/About'
+import Cellar from './pages/Cellar'
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -15,6 +16,7 @@ function AnimatedRoutes() {
         <Route path="/garden" element={<Work />} />
         <Route path="/garden/:slug" element={<Project />} />
         <Route path="/office" element={<About />} />
+        <Route path="/cellar" element={<Cellar />} />
       </Routes>
     </AnimatePresence>
   )
