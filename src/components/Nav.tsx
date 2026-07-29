@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const links = [
-  { to: '/', label: 'Home' },
-  { to: '/work', label: 'Work' },
-  { to: '/about', label: 'About' },
+  { to: '/', label: 'foyer' },
+  { to: '/work', label: 'garden' },
+  { to: '/about', label: 'office' },
 ]
 
 export default function Nav() {
@@ -25,7 +25,7 @@ export default function Nav() {
               to={link.to}
               end={link.to === '/'}
               className={({ isActive }) =>
-                `text-sm transition-colors ${
+                `font-nav text-sm transition-colors ${
                   isActive ? 'text-neutral-100' : 'text-neutral-500 hover:text-neutral-200'
                 }`
               }
@@ -63,7 +63,7 @@ export default function Nav() {
                   end={link.to === '/'}
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
-                    `text-lg ${isActive ? 'text-neutral-100' : 'text-neutral-500'}`
+                    `font-nav text-lg ${isActive ? 'text-neutral-100' : 'text-neutral-500'}`
                   }
                 >
                   {link.label}

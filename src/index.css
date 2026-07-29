@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Space+Grotesk:wght@400;500&display=swap');
 @import "tailwindcss";
 
 * {
@@ -11,4 +11,8 @@ body {
 
 .font-logo {
   font-family: 'Pinyon Script', cursive;
+}
+
+.font-nav {
+  font-family: 'Space Grotesk', sans-serif;
 }
