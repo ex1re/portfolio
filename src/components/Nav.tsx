@@ -14,8 +14,8 @@ export default function Nav() {
   return (
     <header className="fixed top-0 z-50 w-full bg-neutral-950/80 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <NavLink to="/" className="text-sm font-semibold tracking-wide text-neutral-100">
-          YOUR NAME
+        <NavLink to="/" className="font-logo text-3xl leading-none text-neutral-100">
+          exire
         </NavLink>
 
         <nav className="hidden gap-8 md:flex">
