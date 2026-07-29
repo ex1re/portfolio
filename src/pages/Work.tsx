@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
-import useFinePointer from '../hooks/useFinePointer'
+import SelectionPhoto from '../components/SelectionPhoto'
 import { projects } from '../data/projects'
 import { collections } from '../data/collections'
 
@@ -11,11 +11,9 @@ import { collections } from '../data/collections'
 // edge-bleeding look while no photo can reach the header or the collections
 // section below.
 const DRAG_X = 90
-const DRAG_Y = 60
+const DRAG_Y = 75
 
-// Distance in px past which a pointer gesture counts as a drag rather than a
-// click, so dragging a photo doesn't also navigate to its page.
-const DRAG_SLOP = 4
+const dragConstraints = { left: -DRAG_X, right: DRAG_X, top: -DRAG_Y, bottom: DRAG_Y }
 
 // Percent-based positions, deliberately irregular (not a grid): mixed sizes,
 // wide rotation range, and edges that bleed past the frame so the pile reads
@@ -34,85 +32,23 @@ const layout = [
 
 export default function Work() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const didDrag = useRef(false)
-  // Drag is mouse/trackpad only: a draggable photo gets `touch-action: none`,
-  // which on a phone would swallow the swipe used to scroll the page.
-  const canDrag = useFinePointer()
 
   return (
     <PageTransition>
       <section className="px-6 pt-44 pb-56 sm:pb-72 lg:pb-96">
         <h1 className="mb-10 text-sm tracking-wide text-neutral-500">selections</h1>
         <div className="relative mx-auto aspect-[3/4] w-full max-w-5xl sm:aspect-[4/3] lg:aspect-[16/9]">
-          {projects.map((project, i) => {
-            const pos = layout[i % layout.length]
-            const isActive = activeIndex === i
-            return (
-              <motion.div
-                key={project.slug}
-                onPointerEnter={() => setActiveIndex(i)}
-                drag={canDrag}
-                dragConstraints={{ left: -DRAG_X, right: DRAG_X, top: -DRAG_Y, bottom: DRAG_Y }}
-                // Low elasticity is what creates the "magnetic" feel: past the
-                // boundary the photo only follows a fraction of the pointer's
-                // movement, then eases back inside.
-                dragElastic={0.12}
-                dragMomentum={false}
-                dragTransition={{ bounceStiffness: 260, bounceDamping: 42 }}
-                onDragStart={() => {
-                  didDrag.current = false
-                  setActiveIndex(i)
-                }}
-                onDrag={(_, info) => {
-                  if (Math.abs(info.offset.x) > DRAG_SLOP || Math.abs(info.offset.y) > DRAG_SLOP) {
-                    didDrag.current = true
-                  }
-                }}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{
-                  opacity: 1,
-                  scale: isActive ? 1.1 : 1,
-                  rotate: isActive ? 0 : pos.rotate,
-                  zIndex: isActive ? 50 : i + 1,
-                }}
-                whileDrag={{ scale: 1.14, zIndex: 60 }}
-                transition={{
-                  default: { duration: 0.2, ease: 'easeOut' },
-                  opacity: { duration: 0.5, delay: i * 0.06, ease: 'easeOut' },
-                }}
-                style={{
-                  position: 'absolute',
-                  left: `${pos.left}%`,
-                  top: `${pos.top}%`,
-                  width: `${pos.width}%`,
-                }}
-              >
-                <Link
-                  to={`/garden/${project.slug}`}
-                  draggable={false}
-                  onClick={(e) => {
-                    if (didDrag.current) {
-                      e.preventDefault()
-                      didDrag.current = false
-                    }
-                  }}
-                  className={`group block bg-neutral-400 p-1.5 shadow-xl shadow-black/60 select-none ${
-                    canDrag ? 'cursor-grab active:cursor-grabbing' : ''
-                  }`}
-                >
-                  <div
-                    style={{ aspectRatio: String(project.aspect) }}
-                    className={`relative w-full overflow-hidden bg-gradient-to-br ${project.color}`}
-                  >
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-3 pt-8 pb-2 opacity-0 transition-opacity group-hover:opacity-100">
-                      <h2 className="text-sm text-neutral-100">{project.title}</h2>
-                      <span className="text-xs text-neutral-300">{project.year}</span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            )
-          })}
+          {projects.map((project, i) => (
+            <SelectionPhoto
+              key={project.slug}
+              project={project}
+              placement={layout[i % layout.length]}
+              index={i}
+              isActive={activeIndex === i}
+              onActivate={() => setActiveIndex(i)}
+              constraints={dragConstraints}
+            />
+          ))}
         </div>
       </section>
 
