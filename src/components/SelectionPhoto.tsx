@@ -21,7 +21,7 @@ interface SelectionPhotoProps {
 
 // Touch must hold before a photo is picked up, so an ordinary swipe across the
 // pile still scrolls the page.
-const HOLD_MS = 300
+const HOLD_MS = 200
 // Movement during the hold that means "this is a scroll, not a grab".
 const HOLD_SLOP = 10
 // Movement past which a gesture counts as a drag rather than a tap.
@@ -165,9 +165,16 @@ export default function SelectionPhoto({
         rotate: isActive ? 0 : placement.rotate,
         zIndex: isActive ? 50 : index + 1,
       }}
-      whileDrag={{ scale: 1.14, zIndex: 60 }}
+      // Picking a photo up should still feel immediate, so this stays quicker
+      // than the hover transition below.
+      whileDrag={{ scale: 1.14, zIndex: 60, transition: { duration: 0.15, ease: 'easeOut' } }}
       transition={{
-        default: { duration: 0.2, ease: 'easeOut' },
+        // Surfacing and sinking are eased rather than snapped, so moving the
+        // cursor across the pile doesn't read as photos popping.
+        default: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+        // Stacking order has to change at once: interpolating it would walk the
+        // photo up through its neighbours instead of lifting it clear.
+        zIndex: { duration: 0 },
         opacity: { duration: 0.5, delay: index * 0.06, ease: 'easeOut' },
       }}
       style={{
