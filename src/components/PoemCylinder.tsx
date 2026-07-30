@@ -89,7 +89,11 @@ function usePoemTexture(text: string, circumference: number, height: number) {
       const tex = new THREE.CanvasTexture(canvas)
       tex.colorSpace = THREE.SRGBColorSpace
       tex.anisotropy = 8
-      tex.wrapS = THREE.RepeatWrapping
+      // Clamped rather than repeating: the UVs already span 0–1, and this
+      // canvas isn't a power of two in height, which repeat wrapping rejects
+      // outright on a WebGL1 context.
+      tex.wrapS = THREE.ClampToEdgeWrapping
+      tex.wrapT = THREE.ClampToEdgeWrapping
       setTexture(tex)
     }
 
@@ -126,6 +130,7 @@ function Drum({ text, spin }: { text: string; spin: boolean }) {
     geo.translate(-centre.x, -centre.y, -centre.z)
     return geo
   }, [gltf])
+
 
   const dims = useMemo(() => {
     if (!geometry) return { circumference: 0, height: 0 }
@@ -211,7 +216,24 @@ export default function PoemCylinder({ text, className = '' }: PoemCylinderProps
   const compact = useMediaQuery('(max-width: 767px)')
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
   const [touched, setTouched] = useState(false)
+  const [lost, setLost] = useState(false)
+  // Bumped when a context comes back, to rebuild the texture that died with it.
+  const [generation, setGeneration] = useState(0)
   const onGrab = useCallback(() => setTouched(true), [])
+
+  const onCreated = useCallback(({ gl }: { gl: THREE.WebGLRenderer }) => {
+    const canvas = gl.domElement
+    canvas.addEventListener('webglcontextlost', (event) => {
+      // A lost context is only ever restored if the default is prevented;
+      // without this the drum simply goes blank and stays that way.
+      event.preventDefault()
+      setLost(true)
+    })
+    canvas.addEventListener('webglcontextrestored', () => {
+      setLost(false)
+      setGeneration((n) => n + 1)
+    })
+  }, [])
 
   const size = compact ? { width: 224, height: 300 } : { width: 320, height: 400 }
 
@@ -219,18 +241,25 @@ export default function PoemCylinder({ text, className = '' }: PoemCylinderProps
     <div className={className}>
       <div
         aria-hidden
-        className="mx-auto cursor-grab active:cursor-grabbing"
+        className="relative mx-auto cursor-grab active:cursor-grabbing"
         style={size}
       >
         <Canvas
           dpr={[1, 2]}
           gl={{ alpha: true, antialias: true }}
           camera={{ position: [0, 0, 6.2], fov: 34 }}
+          onCreated={onCreated}
           fallback={<PoemFallback text={text} />}
         >
-          <Drum text={text} spin={!touched && !reduceMotion} />
+          <Drum key={generation} text={text} spin={!touched && !reduceMotion} />
           <Orbit onGrab={onGrab} />
         </Canvas>
+        {/* Rather than leave an empty frame while the GPU sorts itself out. */}
+        {lost && (
+          <div className="absolute inset-0 overflow-hidden">
+            <PoemFallback text={text} />
+          </div>
+        )}
       </div>
       {/* The drum is decorative; the poem itself is read out as prose. */}
       <p className="sr-only">{text}</p>
