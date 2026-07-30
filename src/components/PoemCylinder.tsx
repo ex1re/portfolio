@@ -41,56 +41,49 @@ function usePoemTexture(text: string, circumference: number, height: number) {
       const ctx = canvas.getContext('2d')
       if (!ctx) return
 
-      // Rows break only between the poem's own lines, never mid-phrase. Each row
-      // is a full turn, so wherever it ends is where the wrap closes on itself —
-      // breaking on a word would leave the rest of that phrase a row further
-      // down, split across the seam.
-      const verses = text.split(SEPARATOR)
+      // Rows are filled right to the edge of the turn — a partly filled row
+      // leaves a hole where the wrap closes on itself. Where a line break of the
+      // poem falls near the end of a row anyway, the row is cut back to it, so
+      // the break lands on a separator rather than mid-phrase. Backing up any
+      // further than that would empty out the row it was meant to tidy.
+      const PREFER_BREAK_FROM = 0.86
+      const tokens = text.split(' ')
 
-      const wrap = (size: number, width: number) => {
+      const wrap = (size: number) => {
         ctx.font = `${size}px "Instrument Serif", serif`
         const rows: string[] = []
-        let row = ''
-        for (const verse of verses) {
-          const candidate = row ? row + SEPARATOR + verse : verse
-          if (ctx.measureText(candidate).width > width && row) {
-            rows.push(row)
-            row = verse
-          } else {
-            row = candidate
+        let start = 0
+
+        while (start < tokens.length) {
+          let end = start
+          while (end < tokens.length) {
+            if (ctx.measureText(tokens.slice(start, end + 1).join(' ')).width > canvas.width) break
+            end++
           }
+          if (end === start) end = start + 1
+
+          const full = ctx.measureText(tokens.slice(start, end).join(' ')).width
+          let cut = end
+          for (let k = end - 1; k > start; k--) {
+            if (tokens[k - 1] !== SEPARATOR.trim()) continue
+            const backed = ctx.measureText(tokens.slice(start, k).join(' ')).width
+            if (backed >= full * PREFER_BREAK_FROM) cut = k
+            break
+          }
+
+          rows.push(tokens.slice(start, cut).join(' '))
+          start = cut
         }
-        if (row) rows.push(row)
         return rows
       }
 
-      const widest = (rows: string[]) =>
-        rows.reduce((max, row) => Math.max(max, ctx.measureText(row).width), 0)
-
-      // Largest type that fits the drum's height, and whose longest verse still
-      // fits one turn — a single verse can't be broken, so it sets the ceiling.
+      // Largest type whose rows still stack inside the drum's height.
       let fontSize = 96
-      let lines = wrap(fontSize, canvas.width)
-      while (
-        fontSize > 12 &&
-        (lines.length * fontSize * 1.42 > canvas.height || widest(lines) > canvas.width)
-      ) {
+      let lines = wrap(fontSize)
+      while (fontSize > 12 && lines.length * fontSize * 1.42 > canvas.height) {
         fontSize -= 2
-        lines = wrap(fontSize, canvas.width)
+        lines = wrap(fontSize)
       }
-
-      // Then even the rows out: re-pack at the narrowest width that still needs
-      // the same number of rows, so the slack is shared rather than piling up in
-      // the last one.
-      const lineCount = lines.length
-      let lo = 0
-      let hi = canvas.width
-      for (let i = 0; i < 20; i++) {
-        const mid = (lo + hi) / 2
-        if (wrap(fontSize, mid).length <= lineCount) hi = mid
-        else lo = mid
-      }
-      lines = wrap(fontSize, hi)
 
       const lineHeight = canvas.height / lines.length
       ctx.font = `${fontSize}px "Instrument Serif", serif`
@@ -98,30 +91,28 @@ function usePoemTexture(text: string, circumference: number, height: number) {
       ctx.textAlign = 'left'
       ctx.textBaseline = 'middle'
 
-      // Each row is spread to fill its whole turn, but the slack goes only into
-      // the breaks between verses — never between words. Stretching the word
-      // spacing was the alternative, and since a verse can't be split, a
-      // half-empty row would need several times normal spacing to reach round.
-      // Widening the pauses instead keeps the text set at single spacing and
-      // reads as the line break it already is.
-      const dot = '·'
-      const dotWidth = ctx.measureText(dot).width
+      // Every row is justified across the full turn, less one space so the last
+      // word doesn't collide with the first where the wrap closes. Rows are cut
+      // close to full, so the spacing this adds stays near normal.
+      const spaceWidth = ctx.measureText(' ').width
+      const target = canvas.width - spaceWidth
 
       lines.forEach((line, i) => {
         const y = lineHeight * (i + 0.5)
-        const verse = line.split(SEPARATOR)
-        const widths = verse.map((v) => ctx.measureText(v).width)
-        const ink = widths.reduce((sum, w) => sum + w, 0)
-        // One break per verse: the last one is the wrap itself.
-        const perBreak = (canvas.width - ink) / verse.length
+        const words = line.split(' ').filter(Boolean)
 
+        if (words.length < 2) {
+          ctx.fillText(line, 0, y)
+          return
+        }
+
+        const ink = words.reduce((sum, w) => sum + ctx.measureText(w).width, 0)
+        const gap = (target - ink) / (words.length - 1)
         let x = 0
-        verse.forEach((v, k) => {
-          ctx.fillText(v, x, y)
-          x += widths[k]
-          ctx.fillText(dot, x + (perBreak - dotWidth) / 2, y)
-          x += perBreak
-        })
+        for (const word of words) {
+          ctx.fillText(word, x, y)
+          x += ctx.measureText(word).width + gap
+        }
       })
 
       // Erase back into the top and bottom edges so the first and last lines
