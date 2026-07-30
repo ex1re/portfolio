@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
 import SelectionPhoto from '../components/SelectionPhoto'
+import useMediaQuery from '../hooks/useMediaQuery'
 import { projects } from '../data/projects'
 import { collections } from '../data/collections'
 import { collectionPhotos } from '../data/photos'
@@ -11,10 +12,16 @@ import { collectionPhotos } from '../data/photos'
 // bounded per-photo (rather than to the container) so the pile keeps its
 // edge-bleeding look while no photo can reach the header or the collections
 // section below.
+//
+// The vertical range is smaller on phones: the surrounding gaps have to be at
+// least this big to stay clear of the heading, and on a small screen a 75px
+// reach would force more empty space than the layout can spare.
 const DRAG_X = 90
 const DRAG_Y = 75
+const DRAG_Y_COMPACT = 45
 
-const dragConstraints = { left: -DRAG_X, right: DRAG_X, top: -DRAG_Y, bottom: DRAG_Y }
+/** Below Tailwind's `sm`, i.e. phone widths. */
+const COMPACT_QUERY = '(max-width: 639px)'
 
 // Percent-based positions, deliberately irregular (not a grid): mixed sizes,
 // wide rotation range, and edges that bleed past the frame so the pile reads
@@ -36,11 +43,17 @@ const layout = [
 
 export default function Work() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const compact = useMediaQuery(COMPACT_QUERY)
+
+  const dragConstraints = useMemo(() => {
+    const y = compact ? DRAG_Y_COMPACT : DRAG_Y
+    return { left: -DRAG_X, right: DRAG_X, top: -y, bottom: y }
+  }, [compact])
 
   return (
     <PageTransition>
-      <section className="px-6 pt-44 pb-56 sm:pb-72 lg:pb-96">
-        <h1 className="mb-32 text-sm tracking-wide text-neutral-500">selections</h1>
+      <section className="px-6 pt-28 pb-36 sm:pt-44 sm:pb-72 lg:pb-96">
+        <h1 className="mb-20 text-sm tracking-wide text-neutral-500 sm:mb-32">selections</h1>
         <div className="relative mx-auto aspect-[3/4] w-full max-w-5xl sm:aspect-[4/3] lg:aspect-[16/9]">
           {projects.map((project, i) => (
             <SelectionPhoto
