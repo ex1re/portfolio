@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Space+Grotesk:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Pinyon+Script&family=Space+Grotesk:wght@400;500&display=swap');
 @import "tailwindcss";
 
 * {
@@ -23,4 +23,29 @@ body {
 
 .font-nav {
   font-family: 'Space Grotesk', sans-serif;
+}
+
+.font-serif {
+  font-family: 'Instrument Serif', serif;
+}
+
+/* Driven by CSS rather than JS so the cylinder keeps turning smoothly without
+   occupying the main thread, and stops outright for reduced-motion users. */
+@keyframes cylinder-spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.animate-cylinder {
+  animation: cylinder-spin 34s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-cylinder {
+    animation: none;
+  }
 }
