@@ -39,13 +39,13 @@ function usePoemTexture(text: string, circumference: number, height: number) {
       const ctx = canvas.getContext('2d')
       if (!ctx) return
 
-      const wrap = (size: number) => {
+      const wrap = (size: number, width: number) => {
         ctx.font = `${size}px "Instrument Serif", serif`
         const lines: string[] = []
         let line = ''
         for (const word of text.split(' ')) {
           const candidate = line ? `${line} ${word}` : word
-          if (ctx.measureText(candidate).width > canvas.width && line) {
+          if (ctx.measureText(candidate).width > width && line) {
             lines.push(line)
             line = word
           } else {
@@ -59,19 +59,59 @@ function usePoemTexture(text: string, circumference: number, height: number) {
       // Take the largest type that still fits the drum's height, so the poem
       // fills the surface rather than floating in the middle of it.
       let fontSize = 96
-      let lines = wrap(fontSize)
+      let lines = wrap(fontSize, canvas.width)
       while (fontSize > 16 && lines.length * fontSize * 1.42 > canvas.height) {
         fontSize -= 2
-        lines = wrap(fontSize)
+        lines = wrap(fontSize, canvas.width)
       }
+
+      // Then even the lines out: re-wrap at the narrowest width that still needs
+      // the same number of lines. Filling greedily leaves a short last line, and
+      // justifying that one stretches its spaces to several times their width.
+      const lineCount = lines.length
+      let lo = 0
+      let hi = canvas.width
+      for (let i = 0; i < 20; i++) {
+        const mid = (lo + hi) / 2
+        if (wrap(fontSize, mid).length <= lineCount) hi = mid
+        else lo = mid
+      }
+      lines = wrap(fontSize, hi)
 
       const lineHeight = canvas.height / lines.length
       ctx.font = `${fontSize}px "Instrument Serif", serif`
       ctx.fillStyle = INK
-      ctx.textAlign = 'center'
+      ctx.textAlign = 'left'
       ctx.textBaseline = 'middle'
-      lines.forEach((l, i) => {
-        ctx.fillText(l, canvas.width / 2, lineHeight * (i + 0.5))
+
+      // Each line is justified so it closes on itself around the drum, minus
+      // one space so the last word doesn't run into the first. Centring the
+      // lines instead pushes every line's leftover margin to the same angle,
+      // which reads as a seam of ragged gaps running down the cylinder.
+      const spaceWidth = ctx.measureText(' ').width
+      const target = canvas.width - spaceWidth
+
+      lines.forEach((line, i) => {
+        const y = lineHeight * (i + 0.5)
+        const words = line.split(' ').filter(Boolean)
+        const naturalWidth = ctx.measureText(line).width
+        const isLast = i === lines.length - 1
+        // A short final line is centred: stretching its few words across the
+        // whole circumference would strand them.
+        const stretch = words.length > 1 && (!isLast || naturalWidth > target * 0.7)
+
+        if (!stretch) {
+          ctx.fillText(line, (canvas.width - naturalWidth) / 2, y)
+          return
+        }
+
+        const inkWidth = words.reduce((sum, w) => sum + ctx.measureText(w).width, 0)
+        const gap = (target - inkWidth) / (words.length - 1)
+        let x = 0
+        for (const word of words) {
+          ctx.fillText(word, x, y)
+          x += ctx.measureText(word).width + gap
+        }
       })
 
       // Erase back into the top and bottom edges so the first and last lines
