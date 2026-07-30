@@ -1,28 +1,56 @@
 /**
- * Reads the real pixel dimensions of everything in public/photos and writes them
- * to src/data/generated/photo-manifest.ts.
+ * Prepares everything in public/photos for the site:
  *
- * Knowing each file's width and height up front lets the markup reserve exactly
- * the right space before an image loads, so frames fit their photo without the
- * pile shifting around as files arrive.
+ *  1. Reads each file's real pixel dimensions (EXIF orientation applied), so
+ *     frames can be shaped and their space reserved before anything loads.
+ *  2. Writes a compressed preview of each photo, used for the pile, the album
+ *     grids and the covers. Only the lightbox loads the full-size file.
+ *  3. Emits both, plus dimensions, to src/data/generated/photo-manifest.ts.
+ *
+ * You drop one full-resolution file per photo; the preview is derived.
  *
  * Layout:
  *   public/photos/selections/<name>.jpg          -> referenced by `image` in projects.ts
  *   public/photos/collections/<slug>/<name>.jpg  -> becomes that collection's photos
+ *   public/photos/previews/...                   -> generated, git-ignored
  *
  * Files are ordered by filename, so prefix them (01-, 02-, ...) to control order.
  * Run via `npm run photos`; also runs automatically before `dev` and `build`.
  */
-import { readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync, statSync } from 'node:fs'
+import {
+  readdirSync,
+  readFileSync,
+  existsSync,
+  mkdirSync,
+  writeFileSync,
+  statSync,
+  rmSync,
+} from 'node:fs'
 import { join, relative, extname, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { imageSize } from 'image-size'
 
+/** Long edge of a generated preview, in px. Covers the widest grid slot at 2x. */
+const PREVIEW_EDGE = 1200
+const PREVIEW_QUALITY = 78
+
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const photosDir = join(root, 'public', 'photos')
+const publicDir = join(root, 'public')
+const photosDir = join(publicDir, 'photos')
+const previewsDir = join(photosDir, 'previews')
 const outFile = join(root, 'src', 'data', 'generated', 'photo-manifest.ts')
 
 const EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif'])
+
+// Previews are a nicety, not a requirement: if sharp can't load (native binary,
+// unfamiliar platform) fall back to serving the full file everywhere rather than
+// failing the build.
+let sharp = null
+try {
+  sharp = (await import('sharp')).default
+} catch {
+  console.warn('photo manifest: sharp unavailable, serving full-size files as previews')
+}
 
 function listImages(dir) {
   if (!existsSync(dir)) return []
@@ -41,43 +69,118 @@ function listDirs(dir) {
     .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
 }
 
-/** Absolute path -> the URL the browser requests, plus intrinsic dimensions. */
-function describe(absPath) {
-  // image-size v2 reads from a buffer rather than a path.
-  const { width, height, type } = imageSize(readFileSync(absPath))
-  if (!width || !height) {
-    throw new Error(`Could not read dimensions from ${relative(root, absPath)} (type: ${type})`)
+/** Everything under public/ is served from the site root. */
+function urlFor(absPath) {
+  return '/' + relative(publicDir, absPath).split(/[\\/]/).join('/')
+}
+
+/**
+ * Dimensions as displayed. A camera JPEG can carry an EXIF orientation that
+ * swaps width and height, so a portrait shot reports landscape until it's
+ * applied -- which would shape the frame wrongly.
+ */
+async function dimensionsOf(absPath) {
+  if (sharp) {
+    const meta = await sharp(absPath).metadata()
+    const swap = typeof meta.orientation === 'number' && meta.orientation >= 5
+    return {
+      width: swap ? meta.height : meta.width,
+      height: swap ? meta.width : meta.height,
+    }
   }
-  // Everything under public/ is served from the site root.
-  const url = '/' + relative(join(root, 'public'), absPath).split(/[\\/]/).join('/')
-  return { src: url, width, height }
+  const { width, height } = imageSize(readFileSync(absPath))
+  return { width, height }
+}
+
+const wantedPreviews = new Set()
+
+/** Write (or reuse) the compressed preview for a photo; returns its URL. */
+async function previewFor(absPath) {
+  if (!sharp) return null
+
+  const rel = relative(photosDir, absPath).replace(/\.[^.]+$/, '.webp')
+  const outAbs = join(previewsDir, rel)
+  wantedPreviews.add(outAbs)
+
+  // Skip files already newer than their source, so repeat runs stay fast.
+  if (existsSync(outAbs) && statSync(outAbs).mtimeMs >= statSync(absPath).mtimeMs) {
+    return urlFor(outAbs)
+  }
+
+  mkdirSync(dirname(outAbs), { recursive: true })
+  await sharp(absPath)
+    // Bake in EXIF orientation so the preview isn't sideways.
+    .rotate()
+    .resize({
+      width: PREVIEW_EDGE,
+      height: PREVIEW_EDGE,
+      fit: 'inside',
+      withoutEnlargement: true,
+    })
+    .webp({ quality: PREVIEW_QUALITY })
+    .toFile(outAbs)
+
+  return urlFor(outAbs)
+}
+
+async function describe(absPath) {
+  const { width, height } = await dimensionsOf(absPath)
+  if (!width || !height) {
+    throw new Error(`Could not read dimensions from ${relative(root, absPath)}`)
+  }
+  const fullSrc = urlFor(absPath)
+  const preview = await previewFor(absPath)
+  return { src: preview ?? fullSrc, fullSrc, width, height }
 }
 
 const selections = {}
 for (const file of listImages(join(photosDir, 'selections'))) {
   const name = file.split(/[\\/]/).pop()
-  selections[name] = describe(file)
+  selections[name] = await describe(file)
 }
 
 const collections = {}
-const collectionsRoot = join(photosDir, 'collections')
-for (const slug of listDirs(collectionsRoot)) {
-  const files = listImages(join(collectionsRoot, slug))
+for (const slug of listDirs(join(photosDir, 'collections'))) {
+  const files = listImages(join(photosDir, 'collections', slug))
   if (files.length === 0) continue
-  collections[slug] = files.map((file) => ({
-    id: `${slug}/${file.split(/[\\/]/).pop()}`,
-    ...describe(file),
-  }))
+  collections[slug] = []
+  for (const file of files) {
+    collections[slug].push({
+      id: `${slug}/${file.split(/[\\/]/).pop()}`,
+      ...(await describe(file)),
+    })
+  }
 }
 
-const banner = `// AUTO-GENERATED by scripts/generate-photo-manifest.mjs -- do not edit by hand.
-// Regenerate with \`npm run photos\` (also runs before \`npm run dev\`/\`build\`).
-`
+/** Drop previews whose source photo is gone, so builds don't ship dead files. */
+function pruneStalePreviews(dir) {
+  if (!existsSync(dir)) return
+  for (const name of readdirSync(dir)) {
+    const abs = join(dir, name)
+    if (statSync(abs).isDirectory()) {
+      pruneStalePreviews(abs)
+      if (readdirSync(abs).length === 0) rmSync(abs, { recursive: true })
+    } else if (!wantedPreviews.has(abs)) {
+      rmSync(abs)
+    }
+  }
+}
+pruneStalePreviews(previewsDir)
 
-const body = `${banner}
-/** An image file on disk, with the intrinsic dimensions used to size its frame. */
+const body = `// AUTO-GENERATED by scripts/generate-photo-manifest.mjs -- do not edit by hand.
+// Regenerate with \`npm run photos\` (also runs before \`npm run dev\`/\`build\`).
+
+/**
+ * An image file on disk.
+ *
+ * \`src\` is the compressed preview used everywhere a photo appears in a grid or
+ * the pile; \`fullSrc\` is the original, loaded only by the lightbox. \`width\` and
+ * \`height\` are the full photo's displayed dimensions -- the preview shares the
+ * same ratio, which is all the frames need.
+ */
 export interface PhotoFile {
   src: string
+  fullSrc: string
   width: number
   height: number
 }
@@ -96,10 +199,9 @@ export const collectionFiles: Record<string, CollectionPhotoFile[]> = ${JSON.str
 mkdirSync(dirname(outFile), { recursive: true })
 writeFileSync(outFile, body)
 
-const selectionCount = Object.keys(selections).length
-const collectionCount = Object.keys(collections).length
 const collectionPhotoCount = Object.values(collections).reduce((n, list) => n + list.length, 0)
 console.log(
-  `photo manifest: ${selectionCount} selection(s), ` +
-    `${collectionPhotoCount} photo(s) across ${collectionCount} collection(s)`,
+  `photo manifest: ${Object.keys(selections).length} selection(s), ` +
+    `${collectionPhotoCount} photo(s) across ${Object.keys(collections).length} collection(s)` +
+    (sharp ? `, ${wantedPreviews.size} preview(s)` : ''),
 )

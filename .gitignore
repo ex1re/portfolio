@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Generated image previews (rebuilt by npm run photos)
+public/photos/previews/

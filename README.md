@@ -35,19 +35,26 @@ npm run photos    # re-read photo dimensions (runs automatically on dev/build)
 public/photos/
   selections/                 # the scattered pile on the garden page
   collections/<slug>/         # one folder per album
+  previews/                   # generated, git-ignored — don't edit
 src/
   components/                 # Nav, PhotoImage, Lightbox, and other shared UI
   pages/                      # Home, Work (garden), Project, CollectionDetail, About, Cellar
   data/                       # hand-written metadata
-    generated/                # auto-generated photo dimensions — don't edit
+    generated/                # auto-generated photo data — don't edit
 scripts/
-  generate-photo-manifest.mjs # reads image sizes into src/data/generated/
+  generate-photo-manifest.mjs # reads sizes, writes previews
 ```
 
 ## Adding photos
 
-Frames size themselves from each file's real dimensions, so a photo of any shape
-fits without cropping or letterboxing. Nothing needs measuring by hand.
+Drop in **one full-resolution file per photo** — you don't need to resize or
+measure anything. The build reads each file's real dimensions (applying EXIF
+orientation) so frames fit any shape without cropping or letterboxing, and writes
+a compressed preview alongside it.
+
+Pages load only previews. The full-size file is fetched by the lightbox alone, so
+browsing stays light and the full detail is still there when someone opens a
+photo.
 
 **A collection (album)** — drop images into `public/photos/collections/<slug>/`,
 matching a `slug` in [`src/data/collections.ts`](src/data/collections.ts). They're
@@ -72,6 +79,21 @@ Until a photo file exists, an entry falls back to its gradient placeholder and
 its `aspect` value, so the site always renders. Those gradients also show behind
 real photos while they load.
 
-Supported formats: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`, `.gif`. Export at a
-sensible size for the web (long edge ~2000px is plenty) — the files are served
-as-is, so a folder of 8 MB originals will make the site slow to load.
+Supported formats: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`, `.gif`.
+
+### File sizes
+
+Previews are generated for you, so the only file you control is the original —
+the one the lightbox serves. Long edge **2400px at quality ~82** (usually
+400–800 KB) is a good target: enough for a full-screen view on a retina display
+without being wasteful. Beyond ~3000px nobody sees the difference here, since the
+lightbox caps at 768px wide.
+
+Previews come out at 1200px on the long edge as WebP, typically 100–250 KB, which
+covers the widest grid slot at 2× density.
+
+Tuning lives at the top of
+[`scripts/generate-photo-manifest.mjs`](scripts/generate-photo-manifest.mjs)
+(`PREVIEW_EDGE`, `PREVIEW_QUALITY`). Previews are cached by modification time, so
+re-runs only rebuild what changed, and previews whose original was deleted are
+cleaned up automatically.

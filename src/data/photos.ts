@@ -17,7 +17,10 @@ export interface DisplayPhoto {
   /** Gradient shown behind the image while it loads, or alone if there's no file. */
   color: string
   alt: string
+  /** Compressed preview — what grids, covers and the pile display. */
   src?: string
+  /** The original, loaded only by the lightbox. */
+  fullSrc?: string
   width?: number
   height?: number
 }
@@ -31,6 +34,7 @@ export function selectionPhoto(project: Project): DisplayPhoto {
     color: project.color,
     alt: project.title,
     src: file?.src,
+    fullSrc: file?.fullSrc,
     width: file?.width,
     height: file?.height,
   }
@@ -52,6 +56,7 @@ export function collectionPhotos(collection: Collection): DisplayPhoto[] {
       color: tint(collection.placeholders, i),
       alt: `${collection.title} — photo ${i + 1}`,
       src: file.src,
+      fullSrc: file.fullSrc,
       width: file.width,
       height: file.height,
     }))
