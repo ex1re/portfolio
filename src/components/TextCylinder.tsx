@@ -1,5 +1,12 @@
-import { useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import useMediaQuery from '../hooks/useMediaQuery'
+
+/** Tilt off head-on, so the rings read as ellipses and the drum looks round. */
+const TILT = -12
+/** Matches the reverse material on the reference model. */
+const REVERSE_OPACITY = 0.16
+/** Dissolves the first and last rings rather than cutting them off square. */
+const FADE = 'linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%)'
 
 interface Glyph {
   ch: string
@@ -89,12 +96,11 @@ export default function TextCylinder({ text, className = '' }: TextCylinderProps
 
   const config = useMemo(
     () =>
-      // A tighter radius with larger type puts fewer words on each turn, which
-      // gives the cylinder its height — a wide one would fit the poem in three
-      // or four rings and read as a flat band.
+      // maxRings is a ceiling, not a target — the poem currently runs out first.
+      // It only clips a text long enough to make the drum unreasonably tall.
       compact
-        ? { radius: 72, fontSize: 20, lineHeight: 32, maxRings: 9 }
-        : { radius: 96, fontSize: 25, lineHeight: 40, maxRings: 9 },
+        ? { radius: 92, fontSize: 16, lineHeight: 26, maxRings: 18 }
+        : { radius: 148, fontSize: 23, lineHeight: 37, maxRings: 18 },
     [compact],
   )
 
@@ -119,47 +125,70 @@ export default function TextCylinder({ text, className = '' }: TextCylinderProps
 
   return (
     <div className={className}>
-      {/* The turning text is decorative; screen readers get the poem as prose. */}
+      {/* The turning text is decorative; screen readers get the poem as prose.
+          The mask sits outside the 3D scene: applying it to a preserve-3d
+          element would flatten the subtree and collapse the cylinder. */}
       <div
         aria-hidden
         className="relative mx-auto"
         style={{
           width: config.radius * 2,
           height,
-          perspective: 900,
+          maskImage: FADE,
+          WebkitMaskImage: FADE,
         }}
       >
-        <div
-          className="absolute inset-0"
-          style={{ transformStyle: 'preserve-3d', transform: 'rotateX(-8deg)' }}
-        >
+        <div className="absolute inset-0" style={{ perspective: 1000 }}>
           <div
-            className="animate-cylinder absolute inset-0"
-            style={{ transformStyle: 'preserve-3d' }}
+            className="absolute inset-0"
+            style={{ transformStyle: 'preserve-3d', transform: `rotateX(${TILT}deg)` }}
           >
-            {rings.map((ring, r) => (
-              <div
-                key={r}
-                className="absolute left-1/2 top-0"
-                style={{ transformStyle: 'preserve-3d', transform: `translateY(${r * config.lineHeight}px)` }}
-              >
-                {ring.map((glyph, i) => (
-                  <span
-                    key={`${r}-${i}`}
-                    className="font-serif absolute text-neutral-300"
-                    style={{
+            <div
+              className="animate-cylinder absolute inset-0"
+              style={{ transformStyle: 'preserve-3d' }}
+            >
+              {rings.map((ring, r) => (
+                <div
+                  key={r}
+                  className="absolute left-1/2 top-0"
+                  style={{ transformStyle: 'preserve-3d', transform: `translateY(${r * config.lineHeight}px)` }}
+                >
+                  {ring.map((glyph, i) => {
+                    const seat = `rotateY(${glyph.angle}deg) translateZ(${config.radius}px)`
+                    const style = {
                       fontSize: config.fontSize,
                       lineHeight: 1,
-                      transform: `rotateY(${glyph.angle}deg) translateZ(${config.radius}px)`,
-                      backfaceVisibility: 'hidden',
-                      whiteSpace: 'pre',
-                    }}
-                  >
-                    {glyph.ch}
-                  </span>
-                ))}
-              </div>
-            ))}
+                      backfaceVisibility: 'hidden' as const,
+                      whiteSpace: 'pre' as const,
+                    }
+                    return (
+                      <Fragment key={`${r}-${i}`}>
+                        <span
+                          className="font-serif absolute text-neutral-200"
+                          style={{ ...style, transform: seat }}
+                        >
+                          {glyph.ch}
+                        </span>
+                        {/* The same glyph turned to face inward, so it appears
+                            only while on the far side — seen through the drum,
+                            and mirrored, the way the model's reverse material
+                            shows the back of the text at low opacity. */}
+                        <span
+                          className="font-serif absolute text-neutral-200"
+                          style={{
+                            ...style,
+                            transform: `${seat} rotateY(180deg)`,
+                            opacity: REVERSE_OPACITY,
+                          }}
+                        >
+                          {glyph.ch}
+                        </span>
+                      </Fragment>
+                    )
+                  })}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
