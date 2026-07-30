@@ -36,6 +36,8 @@ public/photos/
   selections/                 # the scattered pile on the garden page
   collections/<slug>/         # one folder per album
   previews/                   # generated, git-ignored — don't edit
+public/models/
+  text-cylinder.glb           # geometry only, texture drawn at runtime
 src/
   components/                 # Nav, PhotoImage, Lightbox, and other shared UI
   pages/                      # Home, Work (garden), Project, CollectionDetail, About, Cellar
@@ -43,7 +45,28 @@ src/
     generated/                # auto-generated photo data — don't edit
 scripts/
   generate-photo-manifest.mjs # reads sizes, writes previews
+  strip-glb-texture.mjs       # one-off: removes a GLB's baked texture
 ```
+
+## The office cylinder
+
+The verse on the office page is the exported `text-cylinder` model, rendered with
+three.js. Its geometry is UV-mapped, so the poem is painted to a canvas in
+Instrument Serif and bound as the texture — the words are yours rather than the
+exporter's baked-in placeholder copy. Drag to turn it, scroll to zoom; it
+turntables on its own until you touch it, and holds still under
+`prefers-reduced-motion`.
+
+The original export is 1.1 MB, of which 99% is that placeholder texture. It was
+stripped once, leaving 11 KB of geometry:
+
+```bash
+node scripts/strip-glb-texture.mjs <original>.glb public/models/text-cylinder.glb
+```
+
+three.js is a large dependency next to everything else here, so the page loads it
+as its own chunk — nothing else on the site pays for it, and the garden fetches
+none of it. Where WebGL is unavailable the poem falls back to plain text.
 
 ## Adding photos
 

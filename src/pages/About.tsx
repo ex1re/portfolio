@@ -1,8 +1,13 @@
+import { Suspense, lazy } from 'react'
 import PageTransition from '../components/PageTransition'
-import TextCylinder from '../components/TextCylinder'
 
-// Wraps continuously around the cylinder, so the line breaks are marked rather
-// than implied. It runs until the rings are full and stops there.
+// three.js is heavy relative to the rest of the site, so it's split into its own
+// chunk that only downloads when someone opens this page. The garden, which
+// carries the photographs, never pays for it.
+const PoemCylinder = lazy(() => import('../components/PoemCylinder'))
+
+// Wraps continuously around the drum, so the line breaks are marked rather than
+// implied.
 const poem = [
   'At twilight, the lonely rock juts',
   'Like a defiant fist from the swishing sea.',
@@ -53,7 +58,11 @@ export default function About() {
         </div>
 
         <div className="md:flex md:w-3/5 md:justify-center lg:w-2/3">
-          <TextCylinder text={poem} />
+          {/* Reserves the drum's footprint while its chunk loads, so the column
+              doesn't jump once it arrives. */}
+          <Suspense fallback={<div aria-hidden className="mx-auto h-[300px] w-[224px] md:h-[400px] md:w-[320px]" />}>
+            <PoemCylinder text={poem} />
+          </Suspense>
         </div>
       </section>
     </PageTransition>
