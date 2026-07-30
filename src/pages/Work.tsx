@@ -16,29 +16,32 @@ import { collectionPhotos } from '../data/photos'
 // The vertical range is smaller on phones: the surrounding gaps have to be at
 // least this big to stay clear of the heading, and on a small screen a 75px
 // reach would force more empty space than the layout can spare.
-const DRAG_X = 90
+const DRAG_X = 40
+const DRAG_X_COMPACT = 30
 const DRAG_Y = 75
 const DRAG_Y_COMPACT = 45
 
 /** Below Tailwind's `sm`, i.e. phone widths. */
 const COMPACT_QUERY = '(max-width: 639px)'
 
-// Percent-based positions, deliberately irregular (not a grid): mixed sizes,
-// wide rotation range, and edges that bleed past the frame so the pile reads
-// as a genuine scattered stack rather than tidy rows.
+// Percent-based positions, deliberately irregular (not a grid): mixed sizes and
+// a wide rotation range, with neighbours overlapping so the pile reads as a
+// scattered stack rather than tidy rows.
 //
-// Photos bleed sideways on purpose, but `top` stays >= 0 so the pile never
-// reaches up over the "selections" heading, even hovered and dragged upward.
+// The span is inset from the container on every side. Rotation widens a photo's
+// footprint, hovering scales it up, and dragging moves it further still — the
+// margin absorbs all three so no photo is ever clipped by the edge of the
+// screen. `top` stays >= 0 for the same reason at the heading.
 const layout = [
-  { left: -6, top: 4, width: 38, rotate: -12 },
-  { left: 30, top: 1, width: 30, rotate: 8 },
-  { left: 62, top: 7, width: 40, rotate: -9 },
-  { left: -4, top: 40, width: 33, rotate: 10 },
-  { left: 33, top: 36, width: 28, rotate: -6 },
-  { left: 64, top: 44, width: 38, rotate: 11 },
-  { left: 0, top: 70, width: 36, rotate: -8 },
-  { left: 33, top: 75, width: 31, rotate: 7 },
-  { left: 63, top: 66, width: 39, rotate: -10 },
+  { left: 8, top: 4, width: 33, rotate: -12 },
+  { left: 34, top: 1, width: 29, rotate: 8 },
+  { left: 59, top: 7, width: 33, rotate: -9 },
+  { left: 9, top: 40, width: 31, rotate: 10 },
+  { left: 35, top: 36, width: 28, rotate: -6 },
+  { left: 60, top: 44, width: 32, rotate: 11 },
+  { left: 8, top: 70, width: 32, rotate: -8 },
+  { left: 34, top: 75, width: 29, rotate: 7 },
+  { left: 59, top: 66, width: 33, rotate: -10 },
 ]
 
 export default function Work() {
@@ -46,8 +49,9 @@ export default function Work() {
   const compact = useMediaQuery(COMPACT_QUERY)
 
   const dragConstraints = useMemo(() => {
+    const x = compact ? DRAG_X_COMPACT : DRAG_X
     const y = compact ? DRAG_Y_COMPACT : DRAG_Y
-    return { left: -DRAG_X, right: DRAG_X, top: -y, bottom: y }
+    return { left: -x, right: x, top: -y, bottom: y }
   }, [compact])
 
   return (
