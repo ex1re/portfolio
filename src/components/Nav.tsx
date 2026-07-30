@@ -14,7 +14,10 @@ export default function Nav() {
 
   return (
     <header className="fixed top-0 z-70 w-full bg-neutral-950/80 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      {/* Full width with the same px-6 as every page section, so the logo lines up
+          with page headings and the nav ends the same distance from the opposite
+          edge. A max-width here would inset both toward the middle. */}
+      <div className="flex items-center justify-between px-6 py-5">
         <NavLink to="/" className="font-logo text-3xl leading-none text-neutral-100">
           exire
         </NavLink>
