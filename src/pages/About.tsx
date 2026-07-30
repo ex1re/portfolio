@@ -60,7 +60,7 @@ export default function About() {
         <div className="md:flex md:w-3/5 md:justify-center lg:w-2/3">
           {/* Reserves the drum's footprint while its chunk loads, so the column
               doesn't jump once it arrives. */}
-          <Suspense fallback={<div aria-hidden className="mx-auto h-[300px] w-[224px] md:h-[400px] md:w-[320px]" />}>
+          <Suspense fallback={<div aria-hidden className="mx-auto h-[320px] w-[240px] md:h-[500px] md:w-[400px]" />}>
             <PoemCylinder text={poem} />
           </Suspense>
         </div>

@@ -10,6 +10,8 @@ const MODEL_URL = '/models/text-cylinder.glb'
 
 const TEXTURE_WIDTH = 2048
 const INK = '#e7e5e4'
+/** Marks the poem's line breaks, and the only place a row may end. */
+const SEPARATOR = ' · '
 /** Opacity of the far wall, matching the model's `text_ink_reverse` material. */
 const REVERSE_OPACITY = 0.16
 const SPIN_SPEED = 0.13 // radians/second
@@ -39,35 +41,47 @@ function usePoemTexture(text: string, circumference: number, height: number) {
       const ctx = canvas.getContext('2d')
       if (!ctx) return
 
+      // Rows break only between the poem's own lines, never mid-phrase. Each row
+      // is a full turn, so wherever it ends is where the wrap closes on itself —
+      // breaking on a word would leave the rest of that phrase a row further
+      // down, split across the seam.
+      const verses = text.split(SEPARATOR)
+
       const wrap = (size: number, width: number) => {
         ctx.font = `${size}px "Instrument Serif", serif`
-        const lines: string[] = []
-        let line = ''
-        for (const word of text.split(' ')) {
-          const candidate = line ? `${line} ${word}` : word
-          if (ctx.measureText(candidate).width > width && line) {
-            lines.push(line)
-            line = word
+        const rows: string[] = []
+        let row = ''
+        for (const verse of verses) {
+          const candidate = row ? row + SEPARATOR + verse : verse
+          if (ctx.measureText(candidate).width > width && row) {
+            rows.push(row)
+            row = verse
           } else {
-            line = candidate
+            row = candidate
           }
         }
-        if (line) lines.push(line)
-        return lines
+        if (row) rows.push(row)
+        return rows
       }
 
-      // Take the largest type that still fits the drum's height, so the poem
-      // fills the surface rather than floating in the middle of it.
+      const widest = (rows: string[]) =>
+        rows.reduce((max, row) => Math.max(max, ctx.measureText(row).width), 0)
+
+      // Largest type that fits the drum's height, and whose longest verse still
+      // fits one turn — a single verse can't be broken, so it sets the ceiling.
       let fontSize = 96
       let lines = wrap(fontSize, canvas.width)
-      while (fontSize > 16 && lines.length * fontSize * 1.42 > canvas.height) {
+      while (
+        fontSize > 12 &&
+        (lines.length * fontSize * 1.42 > canvas.height || widest(lines) > canvas.width)
+      ) {
         fontSize -= 2
         lines = wrap(fontSize, canvas.width)
       }
 
-      // Then even the lines out: re-wrap at the narrowest width that still needs
-      // the same number of lines. Filling greedily leaves a short last line, and
-      // justifying that one stretches its spaces to several times their width.
+      // Then even the rows out: re-pack at the narrowest width that still needs
+      // the same number of rows, so the slack is shared rather than piling up in
+      // the last one.
       const lineCount = lines.length
       let lo = 0
       let hi = canvas.width
@@ -84,34 +98,30 @@ function usePoemTexture(text: string, circumference: number, height: number) {
       ctx.textAlign = 'left'
       ctx.textBaseline = 'middle'
 
-      // Each line is justified so it closes on itself around the drum, minus
-      // one space so the last word doesn't run into the first. Centring the
-      // lines instead pushes every line's leftover margin to the same angle,
-      // which reads as a seam of ragged gaps running down the cylinder.
-      const spaceWidth = ctx.measureText(' ').width
-      const target = canvas.width - spaceWidth
+      // Each row is spread to fill its whole turn, but the slack goes only into
+      // the breaks between verses — never between words. Stretching the word
+      // spacing was the alternative, and since a verse can't be split, a
+      // half-empty row would need several times normal spacing to reach round.
+      // Widening the pauses instead keeps the text set at single spacing and
+      // reads as the line break it already is.
+      const dot = '·'
+      const dotWidth = ctx.measureText(dot).width
 
       lines.forEach((line, i) => {
         const y = lineHeight * (i + 0.5)
-        const words = line.split(' ').filter(Boolean)
-        const naturalWidth = ctx.measureText(line).width
-        const isLast = i === lines.length - 1
-        // A short final line is centred: stretching its few words across the
-        // whole circumference would strand them.
-        const stretch = words.length > 1 && (!isLast || naturalWidth > target * 0.7)
+        const verse = line.split(SEPARATOR)
+        const widths = verse.map((v) => ctx.measureText(v).width)
+        const ink = widths.reduce((sum, w) => sum + w, 0)
+        // One break per verse: the last one is the wrap itself.
+        const perBreak = (canvas.width - ink) / verse.length
 
-        if (!stretch) {
-          ctx.fillText(line, (canvas.width - naturalWidth) / 2, y)
-          return
-        }
-
-        const inkWidth = words.reduce((sum, w) => sum + ctx.measureText(w).width, 0)
-        const gap = (target - inkWidth) / (words.length - 1)
         let x = 0
-        for (const word of words) {
-          ctx.fillText(word, x, y)
-          x += ctx.measureText(word).width + gap
-        }
+        verse.forEach((v, k) => {
+          ctx.fillText(v, x, y)
+          x += widths[k]
+          ctx.fillText(dot, x + (perBreak - dotWidth) / 2, y)
+          x += perBreak
+        })
       })
 
       // Erase back into the top and bottom edges so the first and last lines
@@ -275,7 +285,7 @@ export default function PoemCylinder({ text, className = '' }: PoemCylinderProps
     })
   }, [])
 
-  const size = compact ? { width: 224, height: 300 } : { width: 320, height: 400 }
+  const size = compact ? { width: 240, height: 320 } : { width: 400, height: 500 }
 
   return (
     <div className={className}>
