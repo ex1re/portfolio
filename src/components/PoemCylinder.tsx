@@ -238,12 +238,13 @@ function Orbit({ onGrab }: { onGrab: () => void }) {
   useEffect(() => {
     const c = new OrbitControls(camera, domElement)
     c.enablePan = false
+    // The drum is a fixed part of the page, so its size stays put: turning it is
+    // the interaction, resizing it isn't. This also leaves the wheel to scroll
+    // the page, which is what it should do over a panel this size.
+    c.enableZoom = false
     c.enableDamping = true
     c.dampingFactor = 0.075
     c.rotateSpeed = 0.6
-    c.zoomSpeed = 0.6
-    c.minDistance = 3.4
-    c.maxDistance = 11
     // Keep the drum upright — a full flip reads as a mistake, not a feature.
     c.minPolarAngle = Math.PI * 0.22
     c.maxPolarAngle = Math.PI * 0.78
