@@ -77,32 +77,47 @@ function usePoemTexture(text: string, circumference: number, height: number) {
         return rows
       }
 
-      // Largest type whose rows still stack inside the drum's height.
+      // Largest type whose rows still stack inside the drum's height. One row of
+      // headroom is reserved for the descent described below.
       let fontSize = 96
       let lines = wrap(fontSize)
-      while (fontSize > 12 && lines.length * fontSize * 1.42 > canvas.height) {
+      while (fontSize > 12 && (lines.length + 1) * fontSize * 1.42 > canvas.height) {
         fontSize -= 2
         lines = wrap(fontSize)
       }
 
-      const lineHeight = canvas.height / lines.length
+      const lineHeight = canvas.height / (lines.length + 1)
       ctx.font = `${fontSize}px "Instrument Serif", serif`
       ctx.fillStyle = INK
       ctx.textAlign = 'left'
       ctx.textBaseline = 'middle'
 
-      // Every row is justified across the full turn, less one space so the last
-      // word doesn't collide with the first where the wrap closes. Rows are cut
-      // close to full, so the spacing this adds stays near normal.
+      // The text is set as a helix, not as stacked rings. Each line descends by
+      // exactly one line-height across the turn, so where it meets the wrap it
+      // has arrived at the height the next line starts from, and the poem runs
+      // on unbroken. Level lines would all break at the same angle instead,
+      // putting the end of one line beside the start of another wherever that
+      // angle faced the viewer — reading as two unrelated half-lines.
+      const slope = lineHeight / canvas.width
+      const tilt = Math.atan(slope)
       const spaceWidth = ctx.measureText(' ').width
+      // Less one space, so the last word doesn't touch the first of the next.
       const target = canvas.width - spaceWidth
 
+      const write = (word: string, x: number, baseY: number) => {
+        ctx.save()
+        ctx.translate(x, baseY + x * slope)
+        ctx.rotate(tilt)
+        ctx.fillText(word, 0, 0)
+        ctx.restore()
+      }
+
       lines.forEach((line, i) => {
-        const y = lineHeight * (i + 0.5)
+        const baseY = lineHeight * (i + 0.5)
         const words = line.split(' ').filter(Boolean)
 
         if (words.length < 2) {
-          ctx.fillText(line, 0, y)
+          write(line, 0, baseY)
           return
         }
 
@@ -110,7 +125,7 @@ function usePoemTexture(text: string, circumference: number, height: number) {
         const gap = (target - ink) / (words.length - 1)
         let x = 0
         for (const word of words) {
-          ctx.fillText(word, x, y)
+          write(word, x, baseY)
           x += ctx.measureText(word).width + gap
         }
       })
