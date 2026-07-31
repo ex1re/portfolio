@@ -29,6 +29,7 @@
     "@types/three": "^0.185.1",
     "@vitejs/plugin-react": "^6.0.3",
     "image-size": "^2.0.2",
+    "opentype.js": "^2.0.0",
     "oxlint": "^1.71.0",
     "sharp": "^0.35.3",
     "typescript": "~6.0.2",

@@ -46,7 +46,23 @@ src/
 scripts/
   generate-photo-manifest.mjs # reads sizes, writes previews
   strip-glb-texture.mjs       # one-off: removes a GLB's baked texture
+  build-favicon.mjs           # one-off: outlines the logo into the favicon
 ```
+
+## The favicon
+
+The logo mark, as `favicon.svg` plus PNG fallbacks. The source artwork sets
+"ex" as live text in Pinyon Script, which a favicon can't load — anywhere the
+face isn't installed it falls back to a default serif and the script is lost.
+So the lettering is converted to outlines once and committed:
+
+```bash
+node scripts/build-favicon.mjs /path/to/PinyonScript-Regular.ttf
+```
+
+The SVG carries its own `prefers-color-scheme` rule, so the near-black mark
+inverts to light on a dark tab strip rather than disappearing into it. The PNGs
+can't adapt, so they sit on a light disc that reads either way.
 
 ## The office cylinder
 
