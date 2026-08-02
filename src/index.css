@@ -1,6 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Pinyon+Script&family=Space+Grotesk:wght@400;500&display=swap');
 @import "tailwindcss";
 
+/* Helvetica sets the tone for headings and body copy. It isn't a webfont — it's
+   licensed, and installed on Macs and iOS. Arial is its metric-compatible stand-in
+   on Windows and Android, so line breaks land in the same places either way. */
+@theme {
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }

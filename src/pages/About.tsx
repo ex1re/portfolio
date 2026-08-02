@@ -35,6 +35,28 @@ const poem = [
   'And I am not alone.',
 ].join(' · ')
 
+/** Sized to sit with the email beside it, and inheriting its colour. */
+function InstagramIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="19"
+      height="19"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      focusable="false"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5.5" />
+      <circle cx="12" cy="12" r="4.4" />
+      <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
 export default function About() {
   return (
     <PageTransition>
@@ -44,17 +66,35 @@ export default function About() {
           doesn't get cramped before there's room for the full split. */}
       <section className="flex min-h-screen flex-col justify-center gap-16 px-6 pt-32 pb-20 md:flex-row md:items-center md:gap-0 md:pt-20">
         <div className="md:w-2/5 lg:w-1/3 lg:max-w-lg">
-          <h1 className="text-3xl font-semibold text-neutral-100">About</h1>
-          <p className="mt-6 max-w-xl text-neutral-400">
-            Write a short bio here — who you are, what you shoot, and how people can reach you.
-            Replace this placeholder with your own story.
+          {/* The mark read aloud. `lang` keeps a screen reader from spelling the
+              brackets and stress marks out as punctuation. */}
+          <h1 lang="la-fonipa" className="text-3xl font-semibold tracking-tight text-neutral-100">
+            [ekˈziːre]
+          </h1>
+          <p className="mt-6 max-w-xl leading-relaxed text-neutral-400">
+            Eric Xie is a California-based photographer. He works with immediacy and chance,
+            photographing whatever comes his way. His images highlight the impact of unguarded
+            moments in ordinary settings.
           </p>
-          <a
-            href="mailto:you@example.com"
-            className="mt-8 inline-block w-fit border-b border-neutral-100 pb-1 text-sm text-neutral-100"
-          >
-            you@example.com
-          </a>
+          <div className="mt-8 flex items-center gap-4">
+            <a
+              href="mailto:z4@berkeley.edu"
+              className="border-b border-neutral-100 pb-1 text-sm text-neutral-100 transition-opacity hover:opacity-70"
+            >
+              z4@berkeley.edu
+            </a>
+            <a
+              href="https://instagram.com/e.xire"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram: e.xire"
+              // Padding grows the tap target to a thumb-friendly size; the
+              // matching negative margin keeps the icon where it sits visually.
+              className="-m-3 p-3 text-neutral-100 transition-opacity hover:opacity-70"
+            >
+              <InstagramIcon />
+            </a>
+          </div>
         </div>
 
         <div className="md:flex md:w-3/5 md:justify-center lg:w-2/3">
