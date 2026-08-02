@@ -22,7 +22,16 @@ const publicDir = join(root, 'public')
 const SIZE = 1024
 const INK = '#111111'
 const PAPER = '#faf9f7'
-const RING = { cx: 512, cy: 512, r: 499, width: 14 }
+// Weights are set for a favicon, not for the logo at full size: the artwork's
+// 14-unit ring lands under a third of a pixel at 16px and greys out, and the
+// script's hairlines disappear with it. These were picked by rendering the
+// candidates at 16, 32 and 48px — heavier than this and the counters in the
+// "e" start to close up.
+// The radius shrinks as the ring thickens so the outer edge stays where the
+// artwork put it — a stroke is centred on its path, so keeping r at 499 would
+// push the ring past the viewBox and flatten it against the sides.
+const RING = { cx: 512, cy: 512, r: 480, width: 52 }
+const GLYPH_WEIGHT = 26
 const TEXT = { value: 'ex', x: 252, y: 616, fontSize: 627 }
 
 const fontPath = process.argv[2]
@@ -45,7 +54,13 @@ if (!d || d.length < 32) throw new Error('font produced no outline for the mark'
 const mark = `<circle cx="${RING.cx}" cy="${RING.cy}" r="${RING.r}" stroke-width="${RING.width}" class="ring"/>
   <path d="${d}" class="glyph"/>`
 
-const palette = (ink) => `.ring { fill: none; stroke: ${ink}; } .glyph { fill: ${ink}; }`
+// The lettering is thickened by stroking the outline in its own colour, which
+// widens every stroke of the script evenly. Round joins keep the flourishes
+// from developing spikes where the contours meet at sharp angles.
+const palette = (ink) =>
+  `.ring { fill: none; stroke: ${ink}; } ` +
+  `.glyph { fill: ${ink}; stroke: ${ink}; stroke-width: ${GLYPH_WEIGHT}; ` +
+  `stroke-linejoin: round; stroke-linecap: round; }`
 
 // The mark is near-black on nothing, so on a dark tab strip it would sit
 // invisible. Browsers apply an SVG icon's own media query, so it inverts itself.
