@@ -104,7 +104,7 @@ export default function Home() {
           >
             <Link
               to="/garden"
-              className="mt-20 inline-block border-b border-neutral-100 pb-1 text-lg tracking-wide text-neutral-100 transition-opacity hover:opacity-70"
+              className="mt-28 inline-block border-b border-neutral-100 pb-1 text-lg tracking-wide text-neutral-100 transition-opacity hover:opacity-70"
             >
               Enter the garden →
             </Link>
