@@ -1,7 +1,53 @@
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
+import useMediaQuery from '../hooks/useMediaQuery'
 import { heroFile } from '../data/generated/photo-manifest'
+
+const CAMERAS = ['FujiFilm', 'Canon', 'iPhone']
+const HOLD_MS = 2600
+
+/**
+ * The last word of the line, changing on a turn: each name rises out of sight
+ * as the next comes up from below it.
+ *
+ * The names sit in a slot with its edges clipped, so they appear from nothing
+ * rather than sliding over the sentence. Nothing follows them on the line, so
+ * the slot can take each name's own width without moving anything else.
+ */
+function RotatingCamera() {
+  const [index, setIndex] = useState(0)
+  const still = useMediaQuery('(prefers-reduced-motion: reduce)')
+
+  useEffect(() => {
+    const id = setInterval(() => setIndex((n) => (n + 1) % CAMERAS.length), HOLD_MS)
+    return () => clearInterval(id)
+  }, [])
+
+  return (
+    <>
+      {/* Read out as one settled line, rather than a word that keeps changing. */}
+      <span className="sr-only">FujiFilm, Canon and iPhone.</span>
+      <span aria-hidden className="relative inline-flex h-7 items-start overflow-hidden align-bottom">
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.span
+            key={CAMERAS[index]}
+            initial={{ y: still ? 0 : '110%', opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: still ? 0 : '-110%', opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="leading-7 whitespace-nowrap"
+          >
+            {/* The weight is on the name alone — the full stop belongs to the
+                sentence, not to the camera. */}
+            <span className="font-semibold">{CAMERAS[index]}</span>.
+          </motion.span>
+        </AnimatePresence>
+      </span>
+    </>
+  )
+}
 
 export default function Home() {
   return (
@@ -29,7 +75,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }}
             className="mt-6 max-w-xl text-lg text-neutral-400"
           >
-            A short line about what you shoot and how you see the world. Replace this with your own voice.
+            Shot on <RotatingCamera />
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
