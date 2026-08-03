@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Nav from './components/Nav'
+import BottomGlow from './components/BottomGlow'
 import Home from './pages/Home'
 import Work from './pages/Work'
 import Project from './pages/Project'
@@ -30,6 +31,7 @@ function App() {
       <div className="min-h-screen bg-neutral-950 text-neutral-100">
         <Nav />
         <AnimatedRoutes />
+        <BottomGlow />
       </div>
     </BrowserRouter>
   )
