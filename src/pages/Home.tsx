@@ -40,7 +40,9 @@ export default function Home() {
               to="/garden"
               className="mt-10 inline-block border-b border-neutral-100 pb-1 text-sm tracking-wide text-neutral-100 transition-opacity hover:opacity-70"
             >
-              View the work →
+              {/* The room's name is set in the nav's own face, so it reads as
+                  the same word you'd click up there. */}
+              Enter the <span className="font-nav">garden</span> →
             </Link>
           </motion.div>
         </div>
