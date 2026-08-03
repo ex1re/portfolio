@@ -65,7 +65,10 @@ export default function Home() {
           The desktop padding is cut back to what the picture needs: at 90vh tall
           it and its margins come to 100vh on any screen down to 640px high, so
           it runs nearly the full height without pushing the page into a scroll. */}
-      <section className="flex min-h-screen flex-col items-start justify-center gap-6 px-6 pt-28 pb-16 lg:flex-row lg:items-center lg:gap-8 lg:py-8">
+      {/* Stacked, the words and the picture sit straight on top of each other:
+          the picture's own top band is empty sky faded to nothing, which reads
+          as space of its own without any gap being set. */}
+      <section className="flex min-h-screen flex-col items-start justify-center gap-0 px-6 pt-28 pb-16 lg:flex-row lg:items-center lg:gap-8 lg:py-8">
         {/* Full width on its own line; a half-column only once they sit side by
             side. Without the base width the column would shrink to its contents
             and the lettering, which fills whatever it's given, would have
