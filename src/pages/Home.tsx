@@ -10,7 +10,10 @@ export default function Home() {
           on desktop, under them once there isn't room. Both are centred on the
           same line, so the picture reads as the other half of the page rather
           than as decoration hung beside it. */}
-      <section className="flex min-h-screen flex-col items-start justify-center gap-12 px-6 pt-28 pb-16 md:flex-row md:items-center md:gap-8 md:pt-24 md:pb-24">
+      {/* The desktop padding is cut back to what the picture needs: at 90vh tall
+          it and its margins come to 100vh on any screen down to 640px high, so
+          it runs nearly the full height without pushing the page into a scroll. */}
+      <section className="flex min-h-screen flex-col items-start justify-center gap-12 px-6 pt-28 pb-16 md:flex-row md:items-center md:gap-8 md:py-8">
         <div className={heroFile ? 'md:w-1/2 md:max-w-2xl' : 'w-full'}>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -62,7 +65,7 @@ export default function Home() {
               // waiting its turn behind the deferred images elsewhere.
               fetchPriority="high"
               decoding="async"
-              className="blend-edges h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:h-[74vh] md:max-h-[52rem] md:w-auto md:max-w-none"
+              className="blend-edges h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:h-[90vh] md:max-h-[64rem] md:w-auto md:max-w-none"
             />
           </div>
         )}
