@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
+import CityCrossfade from '../components/CityCrossfade'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { heroFile } from '../data/generated/photo-manifest'
 
@@ -65,14 +66,24 @@ export default function Home() {
           it runs nearly the full height without pushing the page into a scroll. */}
       <section className="flex min-h-screen flex-col items-start justify-center gap-12 px-6 pt-28 pb-16 md:flex-row md:items-center md:gap-8 md:py-8">
         <div className={heroFile ? 'md:w-1/2 md:max-w-2xl' : 'w-full'}>
-          <motion.h1
+          {/* The mark is two names crossing, which no single run of text can
+              stand in for, so the heading itself is the plain reading of it. */}
+          <h1 className="sr-only">San Francisco and Los Angeles</h1>
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="max-w-3xl text-5xl font-semibold tracking-tight text-neutral-100 sm:text-7xl"
           >
-            Photography &amp; visual work.
-          </motion.h1>
+            <CityCrossfade top="San Francisco" bottom="Los Angeles" />
+            {/* The coordinates of each, in the order they're read above. They
+                hold one line at every width — a wrapped pair reads as four
+                numbers rather than two places — so the tracking and size come
+                in a step where the column is narrowest. */}
+            <div className="mt-5 flex justify-between gap-4 text-[10px] uppercase tracking-[0.08em] text-neutral-500 sm:gap-8 sm:text-[11px] sm:tracking-[0.12em]">
+              <span className="whitespace-nowrap">37.7749° N, 122.4194° W</span>
+              <span className="whitespace-nowrap">34.0522° N, 118.2437° W</span>
+            </div>
+          </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
