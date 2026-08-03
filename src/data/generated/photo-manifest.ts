@@ -20,6 +20,9 @@ export interface CollectionPhotoFile extends PhotoFile {
   id: string
 }
 
+/** The home page's opening photograph, or null until one is dropped in. */
+export const heroFile: PhotoFile | null = null
+
 /** Keyed by filename, e.g. `coastline.jpg`, as referenced from projects.ts. */
 export const selectionFiles: Record<string, PhotoFile> = {}
 

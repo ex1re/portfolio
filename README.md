@@ -95,6 +95,14 @@ Pages load only previews. The full-size file is fetched by the lightbox alone, s
 browsing stays light and the full detail is still there when someone opens a
 photo.
 
+**The home page photograph** — drop one image into `public/photos/home/`. It
+appears beside the opening words on desktop and below them on a phone, and it's
+the only photo served at full resolution on a retina screen. Its edges are
+feathered and screen-blended into the page (`.blend-edges` in
+[`src/index.css`](src/index.css)), so a photograph with dark margins has no
+visible border at all. If the folder is empty the page falls back to the words
+alone, full width.
+
 **A collection (album)** — drop images into `public/photos/collections/<slug>/`,
 matching a `slug` in [`src/data/collections.ts`](src/data/collections.ts). They're
 ordered by filename, so prefix them (`01-`, `02-`) to arrange them. The first

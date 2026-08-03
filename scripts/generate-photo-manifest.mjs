@@ -10,6 +10,7 @@
  * You drop one full-resolution file per photo; the preview is derived.
  *
  * Layout:
+ *   public/photos/home/<name>.jpg                -> the home page's centrepiece
  *   public/photos/selections/<name>.jpg          -> referenced by `image` in projects.ts
  *   public/photos/collections/<slug>/<name>.jpg  -> becomes that collection's photos
  *   public/photos/previews/...                   -> generated, git-ignored
@@ -133,6 +134,11 @@ async function describe(absPath) {
   return { src: preview ?? fullSrc, fullSrc, width, height }
 }
 
+// The home page's centrepiece. Whatever sits in public/photos/home/ becomes it;
+// if there's more than one file the first by name wins.
+const [heroPath] = listImages(join(photosDir, 'home'))
+const hero = heroPath ? await describe(heroPath) : null
+
 const selections = {}
 for (const file of listImages(join(photosDir, 'selections'))) {
   const name = file.split(/[\\/]/).pop()
@@ -189,6 +195,9 @@ export interface CollectionPhotoFile extends PhotoFile {
   id: string
 }
 
+/** The home page's opening photograph, or null until one is dropped in. */
+export const heroFile: PhotoFile | null = ${JSON.stringify(hero, null, 2)}
+
 /** Keyed by filename, e.g. \`coastline.jpg\`, as referenced from projects.ts. */
 export const selectionFiles: Record<string, PhotoFile> = ${JSON.stringify(selections, null, 2)}
 
@@ -201,7 +210,8 @@ writeFileSync(outFile, body)
 
 const collectionPhotoCount = Object.values(collections).reduce((n, list) => n + list.length, 0)
 console.log(
-  `photo manifest: ${Object.keys(selections).length} selection(s), ` +
+  `photo manifest: ${hero ? '1 hero, ' : 'no hero, '}` +
+    `${Object.keys(selections).length} selection(s), ` +
     `${collectionPhotoCount} photo(s) across ${Object.keys(collections).length} collection(s)` +
     (sharp ? `, ${wantedPreviews.size} preview(s)` : ''),
 )

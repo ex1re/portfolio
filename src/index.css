@@ -36,6 +36,22 @@ body {
   font-family: 'Instrument Serif', serif;
 }
 
+/* For a photograph whose own edges are black, sitting on a black page. Two
+   things give the frame away: a JPEG's darkest pixels are never exactly the
+   page's colour, and its border is a hard line. Screen blending sends true
+   black to the page colour and leaves the lit parts alone, and the mask
+   feathers the outermost band to nothing, so the picture has no edge to find.
+   The percentages stay small — only the empty margin is touched. */
+.blend-edges {
+  mix-blend-mode: screen;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 9%, black 91%, transparent),
+    linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, black 9%, black 91%, transparent),
+    linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
+  mask-composite: intersect;
+}
+
 /* Driven by CSS rather than JS so the cylinder keeps turning smoothly without
    occupying the main thread, and stops outright for reduced-motion users. */
 @keyframes cylinder-spin {
