@@ -58,14 +58,19 @@ export default function Home() {
   return (
     <PageTransition>
       {/* The photograph shares the opening screen with the words: alongside them
-          on desktop, under them once there isn't room. Both are centred on the
-          same line, so the picture reads as the other half of the page rather
-          than as decoration hung beside it. */}
-      {/* The desktop padding is cut back to what the picture needs: at 90vh tall
+          on a wide screen, under them otherwise. The side-by-side only starts at
+          lg — the picture is nearly a full screen tall, and half of a tablet's
+          width leaves the two of them fighting over the same inch.
+
+          The desktop padding is cut back to what the picture needs: at 90vh tall
           it and its margins come to 100vh on any screen down to 640px high, so
           it runs nearly the full height without pushing the page into a scroll. */}
-      <section className="flex min-h-screen flex-col items-start justify-center gap-12 px-6 pt-28 pb-16 md:flex-row md:items-center md:gap-8 md:py-8">
-        <div className={heroFile ? 'md:w-1/2 md:max-w-2xl' : 'w-full'}>
+      <section className="flex min-h-screen flex-col items-start justify-center gap-6 px-6 pt-28 pb-16 lg:flex-row lg:items-center lg:gap-8 lg:py-8">
+        {/* Full width on its own line; a half-column only once they sit side by
+            side. Without the base width the column would shrink to its contents
+            and the lettering, which fills whatever it's given, would have
+            nothing definite to fill. */}
+        <div className={heroFile ? 'w-full lg:w-1/2 lg:max-w-2xl' : 'w-full'}>
           {/* The mark is two names crossing, which no single run of text can
               stand in for, so the heading itself is the plain reading of it. */}
           <h1 className="sr-only">San Francisco and Los Angeles</h1>
@@ -99,7 +104,7 @@ export default function Home() {
           >
             <Link
               to="/garden"
-              className="mt-10 inline-block border-b border-neutral-100 pb-1 text-sm tracking-wide text-neutral-100 transition-opacity hover:opacity-70"
+              className="mt-14 inline-block border-b border-neutral-100 pb-1 text-lg tracking-wide text-neutral-100 transition-opacity hover:opacity-70"
             >
               Enter the garden →
             </Link>
@@ -107,7 +112,7 @@ export default function Home() {
         </div>
 
         {heroFile && (
-          <div className="flex w-full justify-center md:w-1/2">
+          <div className="flex w-full justify-center lg:w-1/2">
             <motion.img
               // Rising a little as it fades is the same entrance the words make,
               // just slower — it should still be arriving as they settle.
@@ -126,7 +131,7 @@ export default function Home() {
               // waiting its turn behind the deferred images elsewhere.
               fetchPriority="high"
               decoding="async"
-              className="blend-edges h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:h-[90vh] md:max-h-[64rem] md:w-auto md:max-w-none"
+              className="blend-edges h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:max-w-md lg:h-[90vh] lg:max-h-[64rem] lg:w-auto lg:max-w-none"
             />
           </div>
         )}
