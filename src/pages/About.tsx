@@ -82,7 +82,10 @@ export default function About() {
           <h1 lang="la-fonipa" className="text-3xl font-semibold tracking-tight text-neutral-100">
             [ekˈziːre]
           </h1>
-          <p className="mt-6 max-w-xl leading-relaxed text-neutral-400">
+          {/* Even spacing down the block: the name, the bio and the contact row
+              sit the same distance apart, so only the publications heading
+              below reads as a break. */}
+          <p className="mt-8 max-w-xl leading-relaxed text-neutral-400">
             Eric Xie is a California-based photographer. He works with immediacy and chance,
             photographing whatever comes his way. His images highlight the impact of unguarded
             moments in ordinary settings.
@@ -109,13 +112,17 @@ export default function About() {
 
           {/* Same measure and rhythm as the bio above it, a step down in scale
               so it reads as a second block rather than a second page title. */}
-          <h2 className="mt-14 text-xl font-semibold tracking-tight text-neutral-100">
+          <h2 className="mt-20 text-xl font-semibold tracking-tight text-neutral-100">
             Publications &amp; Exhibitions
           </h2>
-          <ul className="mt-5 space-y-2 leading-relaxed">
+          {/* Set in the same grey as the bio, so the heading above stays the
+              only bright line and the entries read as its contents. The gap
+              between entries is wider than the leading inside one, so a title
+              that wraps on a narrow screen still reads as a single item. */}
+          <ul className="mt-4 space-y-1.5 leading-snug text-neutral-400">
             {publications.map(({ title, year }) => (
-              <li key={`${title}${year}`} className="text-neutral-200">
-                {title} <span className="text-neutral-400">· {year}</span>
+              <li key={`${title}${year}`}>
+                {title} <span className="whitespace-nowrap text-neutral-500">· {year}</span>
               </li>
             ))}
           </ul>
