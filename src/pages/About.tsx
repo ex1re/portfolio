@@ -35,6 +35,16 @@ const poem = [
   'And I am not alone.',
 ].join(' · ')
 
+/** Newest first. The year is dimmed against the title, so the column of dates
+    reads as a second layer rather than competing with the names. */
+const publications = [
+  { title: 'Visual Poetry Journal', year: '2025' },
+  { title: 'Chania International Photo Festival', year: '2024' },
+  { title: 'Architecture MasterPrize', year: '2023' },
+  { title: 'Communication Arts', year: '2023' },
+  { title: 'The Glasgow Gallery of Photography', year: '2023' },
+]
+
 /** Sized to sit with the email beside it, and inheriting its colour. */
 function InstagramIcon() {
   return (
@@ -60,12 +70,13 @@ function InstagramIcon() {
 export default function About() {
   return (
     <PageTransition>
-      {/* The columns split 1/3 : 2/3, and the cylinder centres in the wider one,
-          which lands it on the two-thirds line — right of centre without being
-          pushed against the edge. md keeps the text column a little wider so it
-          doesn't get cramped before there's room for the full split. */}
+      {/* The text column is capped at a comfortable measure; the drum's column
+          takes whatever is left and centres it there, so the drum sits exactly
+          halfway between the words and the edge of the screen at any width. The
+          negative margin cancels the section's right padding, so "the edge" is
+          the real one rather than the padded one. */}
       <section className="flex min-h-screen flex-col justify-center gap-16 px-6 pt-32 pb-20 md:flex-row md:items-center md:gap-0 md:pt-20">
-        <div className="md:w-2/5 lg:w-1/3 lg:max-w-lg">
+        <div className="md:w-2/5 md:shrink-0 lg:w-1/3 lg:max-w-lg">
           {/* The mark read aloud. `lang` keeps a screen reader from spelling the
               brackets and stress marks out as punctuation. */}
           <h1 lang="la-fonipa" className="text-3xl font-semibold tracking-tight text-neutral-100">
@@ -95,9 +106,22 @@ export default function About() {
               <InstagramIcon />
             </a>
           </div>
+
+          {/* Same measure and rhythm as the bio above it, a step down in scale
+              so it reads as a second block rather than a second page title. */}
+          <h2 className="mt-14 text-xl font-semibold tracking-tight text-neutral-100">
+            Publications &amp; Exhibitions
+          </h2>
+          <ul className="mt-5 space-y-2 leading-relaxed">
+            {publications.map(({ title, year }) => (
+              <li key={`${title}${year}`} className="text-neutral-200">
+                {title} <span className="text-neutral-400">· {year}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className="md:flex md:w-3/5 md:justify-center lg:w-2/3">
+        <div className="md:flex md:flex-1 md:justify-center md:-mr-6">
           {/* Reserves the drum's footprint while its chunk loads, so the column
               doesn't jump once it arrives. */}
           <Suspense fallback={<div aria-hidden className="mx-auto h-[320px] w-[240px] md:h-[500px] md:w-[400px]" />}>
