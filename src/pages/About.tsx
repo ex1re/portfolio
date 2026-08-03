@@ -86,7 +86,8 @@ export default function About() {
               sit the same distance apart, so only the publications heading
               below reads as a break. */}
           <p className="mt-8 max-w-xl leading-relaxed text-neutral-400">
-            Eric Xie is a California-based photographer. He works with immediacy and chance,
+            <strong className="font-semibold">Eric Xie</strong> is a
+            California-based photographer. He works with immediacy and chance,
             photographing whatever comes his way. His images highlight the impact of unguarded
             moments in ordinary settings.
           </p>
