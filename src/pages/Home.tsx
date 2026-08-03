@@ -27,8 +27,12 @@ function RotatingCamera() {
 
   return (
     <>
-      {/* Read out as one settled line, rather than a word that keeps changing. */}
-      <span className="sr-only">FujiFilm, Canon and iPhone.</span>
+      {/* Read out as one settled line, rather than a word that keeps changing.
+          With motion turned down the list is the whole of it, so it takes the
+          serial comma; alongside the turning names it stays the shorter form. */}
+      <span className="sr-only">
+        {still ? 'FujiFilm, Canon, and iPhone.' : 'FujiFilm, Canon and iPhone.'}
+      </span>
       <span aria-hidden className="relative inline-flex h-7 items-start overflow-hidden align-bottom">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
