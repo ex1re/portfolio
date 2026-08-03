@@ -20,8 +20,24 @@ export interface CollectionPhotoFile extends PhotoFile {
   id: string
 }
 
-/** The home page's opening photograph, or null until one is dropped in. */
-export const heroFile: PhotoFile | null = null
+/**
+ * The home page's opening photograph, or null until one is dropped into
+ * public/photos/home/. Two renditions of the same picture: `src` for ordinary
+ * displays, `src2x` for retina.
+ */
+export interface HeroFile {
+  src: string
+  src2x: string
+  width: number
+  height: number
+}
+
+export const heroFile: HeroFile | null = {
+  "src": "/photos/previews/home/homepage-1x.webp",
+  "src2x": "/photos/previews/home/homepage-2x.webp",
+  "width": 2000,
+  "height": 3000
+}
 
 /** Keyed by filename, e.g. `coastline.jpg`, as referenced from projects.ts. */
 export const selectionFiles: Record<string, PhotoFile> = {}

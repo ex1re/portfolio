@@ -36,14 +36,17 @@ body {
   font-family: 'Instrument Serif', serif;
 }
 
-/* For a photograph whose own edges are black, sitting on a black page. Two
-   things give the frame away: a JPEG's darkest pixels are never exactly the
-   page's colour, and its border is a hard line. Screen blending sends true
-   black to the page colour and leaves the lit parts alone, and the mask
-   feathers the outermost band to nothing, so the picture has no edge to find.
-   The percentages stay small — only the empty margin is touched. */
+/* For a photograph whose own margins are black, sitting on a black page. The
+   tones already agree — a night frame's border pixels measure within a step or
+   two of #0a0a0a — so what gives the picture away is the hard line where it
+   stops, not its colour. Feathering the outermost band to nothing removes that
+   line. The percentages stay small, and cover only empty sky and shadow.
+
+   Deliberately no `mix-blend-mode: screen` here: it would send true black to
+   the page colour, but these margins aren't true black, and screening them over
+   the page lifts them roughly nine steps clear of it — further from the
+   background than leaving them alone. */
 .blend-edges {
-  mix-blend-mode: screen;
   -webkit-mask-image: linear-gradient(to right, transparent, black 9%, black 91%, transparent),
     linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
   -webkit-mask-composite: source-in;

@@ -95,11 +95,11 @@ async function dimensionsOf(absPath) {
 
 const wantedPreviews = new Set()
 
-/** Write (or reuse) the compressed preview for a photo; returns its URL. */
-async function previewFor(absPath) {
+/** Write (or reuse) one resized copy of a photo; returns its URL. */
+async function renditionFor(absPath, edge, quality, suffix = '') {
   if (!sharp) return null
 
-  const rel = relative(photosDir, absPath).replace(/\.[^.]+$/, '.webp')
+  const rel = relative(photosDir, absPath).replace(/\.[^.]+$/, `${suffix}.webp`)
   const outAbs = join(previewsDir, rel)
   wantedPreviews.add(outAbs)
 
@@ -110,19 +110,16 @@ async function previewFor(absPath) {
 
   mkdirSync(dirname(outAbs), { recursive: true })
   await sharp(absPath)
-    // Bake in EXIF orientation so the preview isn't sideways.
+    // Bake in EXIF orientation so the copy isn't sideways.
     .rotate()
-    .resize({
-      width: PREVIEW_EDGE,
-      height: PREVIEW_EDGE,
-      fit: 'inside',
-      withoutEnlargement: true,
-    })
-    .webp({ quality: PREVIEW_QUALITY })
+    .resize({ width: edge, height: edge, fit: 'inside', withoutEnlargement: true })
+    .webp({ quality })
     .toFile(outAbs)
 
   return urlFor(outAbs)
 }
+
+const previewFor = (absPath) => renditionFor(absPath, PREVIEW_EDGE, PREVIEW_QUALITY)
 
 async function describe(absPath) {
   const { width, height } = await dimensionsOf(absPath)
@@ -134,10 +131,35 @@ async function describe(absPath) {
   return { src: preview ?? fullSrc, fullSrc, width, height }
 }
 
-// The home page's centrepiece. Whatever sits in public/photos/home/ becomes it;
-// if there's more than one file the first by name wins.
+/**
+ * The home page's centrepiece. Whatever sits in public/photos/home/ becomes it;
+ * if there's more than one file the first by name wins.
+ *
+ * It's the only photo shown large, so it gets its own pair of renditions rather
+ * than the standard preview: one for ordinary displays, one for retina. The
+ * second is sized for the tallest screen this fills at 2x. The camera original
+ * is never served — it's only the master these are cut from.
+ */
+const HERO_EDGE = 1200
+const HERO_EDGE_2X = 2400
+const HERO_QUALITY = 82
+
+async function describeHero(absPath) {
+  const { width, height } = await dimensionsOf(absPath)
+  if (!width || !height) {
+    throw new Error(`Could not read dimensions from ${relative(root, absPath)}`)
+  }
+  const fallback = urlFor(absPath)
+  return {
+    src: (await renditionFor(absPath, HERO_EDGE, HERO_QUALITY, '-1x')) ?? fallback,
+    src2x: (await renditionFor(absPath, HERO_EDGE_2X, HERO_QUALITY, '-2x')) ?? fallback,
+    width,
+    height,
+  }
+}
+
 const [heroPath] = listImages(join(photosDir, 'home'))
-const hero = heroPath ? await describe(heroPath) : null
+const hero = heroPath ? await describeHero(heroPath) : null
 
 const selections = {}
 for (const file of listImages(join(photosDir, 'selections'))) {
@@ -195,8 +217,19 @@ export interface CollectionPhotoFile extends PhotoFile {
   id: string
 }
 
-/** The home page's opening photograph, or null until one is dropped in. */
-export const heroFile: PhotoFile | null = ${JSON.stringify(hero, null, 2)}
+/**
+ * The home page's opening photograph, or null until one is dropped into
+ * public/photos/home/. Two renditions of the same picture: \`src\` for ordinary
+ * displays, \`src2x\` for retina.
+ */
+export interface HeroFile {
+  src: string
+  src2x: string
+  width: number
+  height: number
+}
+
+export const heroFile: HeroFile | null = ${JSON.stringify(hero, null, 2)}
 
 /** Keyed by filename, e.g. \`coastline.jpg\`, as referenced from projects.ts. */
 export const selectionFiles: Record<string, PhotoFile> = ${JSON.stringify(selections, null, 2)}

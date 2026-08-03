@@ -10,7 +10,7 @@ export default function Home() {
           on desktop, under them once there isn't room. Both are centred on the
           same line, so the picture reads as the other half of the page rather
           than as decoration hung beside it. */}
-      <section className="flex min-h-screen flex-col items-start justify-center gap-16 px-6 pt-32 pb-20 md:flex-row md:items-center md:gap-8 md:pt-24 md:pb-24">
+      <section className="flex min-h-screen flex-col items-start justify-center gap-12 px-6 pt-28 pb-16 md:flex-row md:items-center md:gap-8 md:pt-24 md:pb-24">
         <div className={heroFile ? 'md:w-1/2 md:max-w-2xl' : 'w-full'}>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -52,9 +52,9 @@ export default function Home() {
               transition={{ duration: 1.2, delay: 0.2, ease: 'easeOut' }}
               src={heroFile.src}
               // The slot is a fixed size on screen, so this is a question of
-              // density rather than layout: ordinary displays take the preview,
-              // retina ones pull the full-resolution file.
-              srcSet={`${heroFile.src} 1x, ${heroFile.fullSrc} 2x`}
+              // density rather than layout: ordinary displays take the smaller
+              // rendition, retina ones the larger.
+              srcSet={`${heroFile.src} 1x, ${heroFile.src2x} 2x`}
               width={heroFile.width}
               height={heroFile.height}
               alt="A glass tower at night, its lit floors rising into the dark."

@@ -96,12 +96,14 @@ browsing stays light and the full detail is still there when someone opens a
 photo.
 
 **The home page photograph** — drop one image into `public/photos/home/`. It
-appears beside the opening words on desktop and below them on a phone, and it's
-the only photo served at full resolution on a retina screen. Its edges are
-feathered and screen-blended into the page (`.blend-edges` in
-[`src/index.css`](src/index.css)), so a photograph with dark margins has no
-visible border at all. If the folder is empty the page falls back to the words
-alone, full width.
+appears beside the opening words on desktop and below them on a phone. Being the
+one photo shown large, it gets its own pair of renditions rather than the
+standard preview: 1200px for ordinary displays and 2400px for retina, chosen by
+pixel density. Its edges are feathered into the page (`.blend-edges` in
+[`src/index.css`](src/index.css)), so a photograph with dark margins meets the
+black background with no visible border — the feather covers the outer 9% by 7%,
+which on a night frame is empty sky. If the folder is empty the page falls back
+to the words alone, full width.
 
 **A collection (album)** — drop images into `public/photos/collections/<slug>/`,
 matching a `slug` in [`src/data/collections.ts`](src/data/collections.ts). They're
@@ -138,6 +140,11 @@ lightbox caps at 768px wide.
 
 Previews come out at 1200px on the long edge as WebP, typically 100–250 KB, which
 covers the widest grid slot at 2× density.
+
+Keep camera originals out of the repo — a 40MP file is tens of megabytes, all of
+it committed and none of it served. Cut a web master first (3000px is generous;
+the largest rendition the site serves is 2400px) and keep the full-size file
+wherever you archive your work.
 
 Tuning lives at the top of
 [`scripts/generate-photo-manifest.mjs`](scripts/generate-photo-manifest.mjs)
