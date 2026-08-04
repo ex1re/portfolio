@@ -73,7 +73,10 @@ export default function Home() {
             side. Without the base width the column would shrink to its contents
             and the lettering, which fills whatever it's given, would have
             nothing definite to fill. */}
-        <div className={heroFile ? 'w-full lg:w-1/2 lg:max-w-2xl' : 'w-full'}>
+        {/* Above the picture in the stack, since the two overlap once it's
+            pulled up. What it overlaps is the picture's own sky, which is the
+            page's colour exactly, so the words read as if over the page. */}
+        <div className={heroFile ? 'relative z-10 w-full lg:w-1/2 lg:max-w-2xl' : 'w-full'}>
           {/* The mark is two names crossing, which no single run of text can
               stand in for, so the heading itself is the plain reading of it. */}
           <h1 className="sr-only">San Francisco and Los Angeles</h1>
@@ -114,8 +117,16 @@ export default function Home() {
           </motion.div>
         </div>
 
+        {/* Stacked, the picture is pulled up under the words. Its top third is
+            sky, and since the black point was set to the page's own colour that
+            third is now literally the background — space the layout can't see
+            but the eye reads as a gap. The pull is set so what's left below the
+            link matches what sits above it, and it differs by width because the
+            invisible band grows with the picture. The overlap it creates is
+            over those same invisible pixels; the picture ignores the pointer so
+            the link underneath keeps its full target. */}
         {heroFile && (
-          <div className="flex w-full justify-center lg:w-1/2">
+          <div className="pointer-events-none -mt-8 flex w-full justify-center md:-mt-25 lg:mt-0 lg:w-1/2">
             <motion.img
               // Rising a little as it fades is the same entrance the words make,
               // but it waits for them: the last line has been settled for a
@@ -138,7 +149,7 @@ export default function Home() {
               // waiting its turn behind the deferred images elsewhere.
               fetchPriority="high"
               decoding="async"
-              className="h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:max-w-md lg:h-[90vh] lg:max-h-[64rem] lg:w-auto lg:max-w-none"
+              className="pointer-events-none h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:max-w-md lg:h-[90vh] lg:max-h-[64rem] lg:w-auto lg:max-w-none"
             />
           </div>
         )}
