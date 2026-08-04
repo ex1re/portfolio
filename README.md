@@ -102,14 +102,18 @@ renditions rather than the standard preview — 1600px and 3000px, cut straight
 from the original at high quality — and the browser picks between them on the
 width the slot asks for.
 
-Its fade into the page is **blended into the file**, not masked over it at
-display time. A CSS mask is composited live, and over a wide band in near-black
-its quantised alpha resolves into visible rings; blending once at build time, in
-floating point with the rounding dithered, leaves the border exactly the page's
-colour and nothing in between. The build finds the subject on its own — the lit
-part of the frame — and fades only the clear margin around it, so no tuning is
-needed when the photo changes. If the folder is empty the page falls back to the
-words alone, full width.
+It meets the page with **no border at all**, and the way that's done is tonal
+rather than geometric. A night frame has no edge to hide — it has a sky a few
+levels off the page's colour, which reads as a rectangle however softly you fade
+it. So the build sets the photograph's black point *to* the page's colour
+(`HERO_BLACK_POINT` in
+[`scripts/generate-photo-manifest.mjs`](scripts/generate-photo-manifest.mjs)):
+everything darker becomes exactly the background, everything above is stretched
+back up to keep the picture's contrast. For the current photo that leaves 87% of
+the frame identical to the page. Raise the black point if a lighter sky still
+shows as a rectangle, lower it if the subject is losing shadow it should keep —
+the run prints how much of the frame it flattened. If the folder is empty the
+page falls back to the words alone, full width.
 
 **A collection (album)** — drop images into `public/photos/collections/<slug>/`,
 matching a `slug` in [`src/data/collections.ts`](src/data/collections.ts). They're

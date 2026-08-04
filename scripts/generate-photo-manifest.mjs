@@ -121,61 +121,40 @@ async function renditionFor(absPath, edge, quality, suffix = '') {
 
 const previewFor = (absPath) => renditionFor(absPath, PREVIEW_EDGE, PREVIEW_QUALITY)
 
-/** The page's own background: what the picture's edges are blended into. */
-const PAGE_BG = [10, 10, 10]
-/** A pixel this bright is the subject, and is never touched by the fade. */
-const SUBJECT_LUMA = 50
-/** How much of the clear margin the fade uses, leaving the rest as headroom. */
-const FADE_REACH = 0.95
-
-const luma = (r, g, b) => 0.2126 * r + 0.7152 * g + 0.0722 * b
-
-/** Smootherstep: zero first and second derivative at both ends, so the fade
- *  arrives and departs without a corner. A corner is what the eye finds. */
-const ease = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * t * (t * (t * 6 - 15) + 10))
+/** The page's own background, and so the picture's own black. */
+const PAGE_BG = 10
+/**
+ * Everything at or below this tone becomes that background exactly.
+ *
+ * This is the whole trick, and it is tonal rather than geometric: a night frame
+ * has no edge to hide, it has a sky a few levels off the page. Crush that sky to
+ * the page's colour and the picture simply has no border — there is nothing
+ * there to see, at any brightness, in any corner. Masking the edges instead is
+ * what produced every ring: a fade can only soften a boundary, and the boundary
+ * was never at the edge.
+ *
+ * Raise it if a lighter sky still shows as a rectangle; lower it if the subject
+ * is losing shadow detail it should keep. The run prints what it cost.
+ */
+const HERO_BLACK_POINT = 30
 
 /**
- * Deterministic dither, ±half a level. Rounding a smooth ramp to 8 bits lays
- * down flat steps — the rings — and a little noise under the rounding breaks
- * them up. Seeded from the pixel's own position so a rebuild is byte-identical.
+ * Deterministic dither, ±half a level. Stretching what's left of the range
+ * leaves gaps between neighbouring output values, and rounding into them lays
+ * down flat steps; a little noise underneath breaks those up. Seeded from the
+ * pixel's own position, so a rebuild is byte-identical.
  */
 function dither(x, y) {
   const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453
-  return (n - Math.floor(n)) - 0.5
+  return n - Math.floor(n) - 0.5
 }
 
 /**
- * How far in from each edge the picture can be faded without touching the
- * subject: the smaller clear margin on each axis, less a little headroom.
- */
-function fadeBands(data, width, height) {
-  let left = width, right = 0, top = height, bottom = 0
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const i = (y * width + x) * 3
-      if (luma(data[i], data[i + 1], data[i + 2]) < SUBJECT_LUMA) continue
-      if (x < left) left = x
-      if (x > right) right = x
-      if (y < top) top = y
-      if (y > bottom) bottom = y
-    }
-  }
-  if (right < left) return { x: 0.12, y: 0.12 }
-  return {
-    x: (Math.min(left, width - 1 - right) / width) * FADE_REACH,
-    y: (Math.min(top, height - 1 - bottom) / height) * FADE_REACH,
-  }
-}
-
-/**
- * Writes a copy of the hero with the fade blended into the pixels themselves,
- * rather than masked over them at display time.
+ * Writes the hero with its black point set to the page's own colour, so the
+ * photograph's background and the page's background are the same thing.
  *
- * A CSS mask is composited live and lands on whatever the browser's compositor
- * decides: over a wide band in near-black, its quantised alpha resolves into
- * visible rings. Blending once, here, in floating point and with the rounding
- * dithered, leaves the picture's border exactly the page's colour and nothing
- * in between for the eye to catch.
+ * Everything above the black point is stretched back up to fill the range, so
+ * the picture keeps its full contrast rather than being dimmed into the page.
  */
 async function blendedHeroFor(absPath, edge, quality, suffix) {
   if (!sharp) return null
@@ -196,25 +175,22 @@ async function blendedHeroFor(absPath, edge, quality, suffix) {
     .toBuffer({ resolveWithObject: true })
 
   const { width, height } = info
-  const band = fadeBands(data, width, height)
   const out = Buffer.allocUnsafe(data.length)
+  const gain = (255 - PAGE_BG) / (255 - HERO_BLACK_POINT)
+  let flattened = 0
 
   for (let y = 0; y < height; y++) {
-    const v = y / (height - 1)
-    const fadeY = ease(Math.min(v, 1 - v) / band.y)
     for (let x = 0; x < width; x++) {
-      const u = x / (width - 1)
-      const alpha = fadeY * ease(Math.min(u, 1 - u) / band.x)
       const i = (y * width + x) * 3
-      if (alpha >= 1) {
-        out[i] = data[i]
-        out[i + 1] = data[i + 1]
-        out[i + 2] = data[i + 2]
-        continue
-      }
       const noise = dither(x, y)
       for (let k = 0; k < 3; k++) {
-        const value = PAGE_BG[k] + (data[i + k] - PAGE_BG[k]) * alpha + noise
+        const source = data[i + k]
+        if (source <= HERO_BLACK_POINT) {
+          out[i + k] = PAGE_BG
+          flattened++
+          continue
+        }
+        const value = PAGE_BG + (source - HERO_BLACK_POINT) * gain + noise
         out[i + k] = value < 0 ? 0 : value > 255 ? 255 : Math.round(value)
       }
     }
@@ -222,6 +198,9 @@ async function blendedHeroFor(absPath, edge, quality, suffix) {
 
   mkdirSync(dirname(outAbs), { recursive: true })
   await sharp(out, { raw: { width, height, channels: 3 } }).webp({ quality }).toFile(outAbs)
+
+  const share = ((100 * flattened) / (width * height * 3)).toFixed(1)
+  console.log(`  hero ${width}x${height}: ${share}% of it is now the page's own black`)
 
   return urlFor(outAbs)
 }
