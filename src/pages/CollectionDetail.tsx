@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
+import SiteFooter from '../components/SiteFooter'
 import Lightbox from '../components/Lightbox'
 import PhotoImage from '../components/PhotoImage'
 import { collections } from '../data/collections'
@@ -52,6 +53,8 @@ export default function CollectionDetail() {
           ))}
         </div>
       </section>
+
+      <SiteFooter />
 
       {openIndex !== null && (
         <Lightbox

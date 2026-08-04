@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
+import SiteFooter from '../components/SiteFooter'
 import SelectionPhoto from '../components/SelectionPhoto'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { projects } from '../data/projects'
@@ -113,6 +114,8 @@ export default function Work() {
           })}
         </div>
       </section>
+
+      <SiteFooter />
     </PageTransition>
   )
 }
