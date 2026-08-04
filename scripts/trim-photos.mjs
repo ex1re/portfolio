@@ -22,7 +22,7 @@ import sharp from 'sharp'
 
 /** Long edge of a web master, in px. */
 const EDGE = 2400
-const QUALITY = 82
+const QUALITY = 92
 const ARCHIVE = join(homedir(), 'Pictures', 'exire-originals')
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -68,6 +68,9 @@ for (const abs of walk(photosDir)) {
     // EXIF orientation is baked in here, so the file on disk is upright.
     .rotate()
     .resize({ width: EDGE, height: EDGE, fit: 'inside', withoutEnlargement: true })
+    // Keep the camera's own tags: the build reads ISO, aperture and shutter
+    // back out of these, so stripping them would mean typing them in by hand.
+    .withMetadata()
     .jpeg({ quality: QUALITY, mozjpeg: true })
     .toFile(tmp)
   renameSync(tmp, abs)

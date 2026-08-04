@@ -1,4 +1,5 @@
 import { selectionFiles, collectionFiles } from './generated/photo-manifest'
+import type { PhotoSettings } from './generated/photo-manifest'
 import type { Project } from './projects'
 import type { Collection, Placeholder } from './collections'
 
@@ -19,10 +20,12 @@ export interface DisplayPhoto {
   alt: string
   /** Compressed preview — what grids, covers and the pile display. */
   src?: string
-  /** The original, loaded only by the lightbox. */
+  /** The web master, served whole when a photo is opened on its own page. */
   fullSrc?: string
   width?: number
   height?: number
+  /** ISO, aperture and shutter, read from the file's own tags at build time. */
+  settings?: PhotoSettings
 }
 
 /** Resolve the photo for a selections entry, falling back to its placeholder. */
@@ -37,6 +40,13 @@ export function selectionPhoto(project: Project): DisplayPhoto {
     fullSrc: file?.fullSrc,
     width: file?.width,
     height: file?.height,
+    // What the camera recorded, unless the entry overrides it by hand.
+    settings: {
+      ...file?.settings,
+      ...(project.iso ? { iso: project.iso } : {}),
+      ...(project.aperture ? { aperture: project.aperture } : {}),
+      ...(project.shutter ? { shutter: project.shutter } : {}),
+    },
   }
 }
 

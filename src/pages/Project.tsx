@@ -23,11 +23,11 @@ export default function Project() {
 
   const photo = selectionPhoto(project)
   const upright = photo.aspect < 1
-  // What the camera was set to, in one line, with anything unfilled left out.
+  // What the camera was set to, in one line, with anything unknown left out.
   const settings = [
-    project.iso && `ISO ${project.iso}`,
-    project.aperture && `f/${project.aperture}`,
-    project.shutter && `${project.shutter}`,
+    photo.settings?.iso && `ISO ${photo.settings.iso}`,
+    photo.settings?.aperture && `f/${photo.settings.aperture}`,
+    photo.settings?.shutter,
   ].filter(Boolean)
 
   return (
@@ -52,15 +52,19 @@ export default function Project() {
           )}
 
           <div
-            className={`mx-auto w-full ${upright ? '' : 'max-w-4xl'}`}
-            style={upright ? { maxWidth: `calc(75vh * ${photo.aspect})` } : undefined}
+            className={`mx-auto w-full ${upright ? '' : 'max-w-5xl'}`}
+            style={upright ? { maxWidth: `calc(84vh * ${photo.aspect})` } : undefined}
           >
-            <PhotoImage photo={photo} loading="eager" className="rounded-sm" />
+            {/* The one place a photo is shown large enough to look into, so it
+                gets the web master itself rather than the preview the pile and
+                the grids share — that one is cut for size, and its compression
+                shows in a smooth sky. */}
+            <PhotoImage photo={photo} loading="eager" full className="rounded-sm" />
           </div>
 
           <figcaption className="mt-5 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
-            <h1 className="text-4xl font-semibold text-neutral-100">{project.title}</h1>
-            <p className="text-neutral-500">
+            <h1 className="text-2xl font-semibold text-neutral-100">{project.title}</h1>
+            <p className="text-sm text-neutral-500">
               {project.category} — {project.year}
             </p>
           </figcaption>

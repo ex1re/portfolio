@@ -5,6 +5,12 @@ interface PhotoImageProps {
   photo: DisplayPhoto
   /** Photos visible without scrolling should load eagerly; the rest lazily. */
   loading?: 'eager' | 'lazy'
+  /**
+   * Serve the web master instead of the preview. For the one place a photo is
+   * shown large: the preview is cut for size and its compression shows in a
+   * smooth sky at that scale.
+   */
+  full?: boolean
   className?: string
   children?: ReactNode
 }
@@ -22,17 +28,19 @@ interface PhotoImageProps {
 export default function PhotoImage({
   photo,
   loading = 'lazy',
+  full = false,
   className = '',
   children,
 }: PhotoImageProps) {
+  const src = full ? (photo.fullSrc ?? photo.src) : photo.src
   return (
     <div
       style={{ aspectRatio: String(photo.aspect) }}
       className={`relative w-full overflow-hidden bg-gradient-to-br ${photo.color} ${className}`}
     >
-      {photo.src && (
+      {src && (
         <img
-          src={photo.src}
+          src={src}
           width={photo.width}
           height={photo.height}
           alt={photo.alt}

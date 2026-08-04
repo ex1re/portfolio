@@ -5,15 +5,23 @@
  * An image file on disk.
  *
  * `src` is the compressed preview used everywhere a photo appears in a grid or
- * the pile; `fullSrc` is the original, loaded only by the lightbox. `width` and
- * `height` are the full photo's displayed dimensions -- the preview shares the
- * same ratio, which is all the frames need.
+ * the pile; `fullSrc` is the web master, served whole when a photo is opened.
+ * `width` and `height` are the full photo's displayed dimensions -- the preview
+ * shares the same ratio, which is all the frames need. `settings` is whatever
+ * the camera recorded, absent if the file carried no tags.
  */
+export interface PhotoSettings {
+  iso?: string
+  aperture?: string
+  shutter?: string
+}
+
 export interface PhotoFile {
   src: string
   fullSrc: string
   width: number
   height: number
+  settings?: PhotoSettings
 }
 
 export interface CollectionPhotoFile extends PhotoFile {
@@ -56,55 +64,100 @@ export const selectionFiles: Record<string, PhotoFile> = {
     "src": "/photos/previews/selections/DD9AD218-A8B8-452B-837B-501B2B36D410.webp",
     "fullSrc": "/photos/selections/DD9AD218-A8B8-452B-837B-501B2B36D410.jpg",
     "width": 2400,
-    "height": 1712
+    "height": 1712,
+    "settings": {
+      "iso": "125",
+      "aperture": "1.5",
+      "shutter": "1/60"
+    }
   },
   "DSCF0547.JPG": {
     "src": "/photos/previews/selections/DSCF0547.webp",
     "fullSrc": "/photos/selections/DSCF0547.JPG",
     "width": 2400,
-    "height": 1632
+    "height": 1632,
+    "settings": {
+      "iso": "500",
+      "aperture": "7.1",
+      "shutter": "1/160"
+    }
   },
   "DSCF0687.JPG": {
     "src": "/photos/previews/selections/DSCF0687.webp",
     "fullSrc": "/photos/selections/DSCF0687.JPG",
     "width": 2400,
-    "height": 1600
+    "height": 1600,
+    "settings": {
+      "iso": "320",
+      "aperture": "2",
+      "shutter": "1/1000"
+    }
   },
   "DSCF0952.JPG": {
     "src": "/photos/previews/selections/DSCF0952.webp",
     "fullSrc": "/photos/selections/DSCF0952.JPG",
     "width": 2400,
-    "height": 1581
+    "height": 1581,
+    "settings": {
+      "iso": "800",
+      "aperture": "2",
+      "shutter": "1/125"
+    }
   },
   "DSCF1426.JPG": {
     "src": "/photos/previews/selections/DSCF1426.webp",
     "fullSrc": "/photos/selections/DSCF1426.JPG",
     "width": 2400,
-    "height": 1600
+    "height": 1600,
+    "settings": {
+      "iso": "250",
+      "aperture": "2.2",
+      "shutter": "1/1000"
+    }
   },
   "DSCF1453.JPG": {
     "src": "/photos/previews/selections/DSCF1453.webp",
     "fullSrc": "/photos/selections/DSCF1453.JPG",
     "width": 1600,
-    "height": 2400
+    "height": 2400,
+    "settings": {
+      "iso": "12800",
+      "aperture": "2",
+      "shutter": "1/200"
+    }
   },
   "DSCF1539.JPG": {
     "src": "/photos/previews/selections/DSCF1539.webp",
     "fullSrc": "/photos/selections/DSCF1539.JPG",
     "width": 1600,
-    "height": 2400
+    "height": 2400,
+    "settings": {
+      "iso": "160",
+      "aperture": "8",
+      "shutter": "1/500"
+    }
   },
   "DSCF1709.JPG": {
     "src": "/photos/previews/selections/DSCF1709.webp",
     "fullSrc": "/photos/selections/DSCF1709.JPG",
     "width": 2400,
-    "height": 1600
+    "height": 1600,
+    "settings": {
+      "iso": "4000",
+      "aperture": "2",
+      "shutter": "1/60"
+    }
   },
   "IMG_6579.jpg": {
     "src": "/photos/previews/selections/IMG_6579.webp",
     "fullSrc": "/photos/selections/IMG_6579.jpg",
     "width": 2400,
-    "height": 1641
+    "height": 1641,
+    "settings": {
+      "iso": "32",
+      "aperture": "1.6",
+      "shutter": "1/1370"
+    }
   }
 }
 
