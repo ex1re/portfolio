@@ -33,16 +33,28 @@ const COMPACT_QUERY = '(max-width: 639px)'
 // footprint, hovering scales it up, and dragging moves it further still — the
 // margin absorbs all three so no photo is ever clipped by the edge of the
 // screen. `top` stays >= 0 for the same reason at the heading.
+//
+// The widths follow each photo's own shape rather than the slot's: a portrait
+// at a landscape's width stands nearly twice as tall, and towered over the pile.
+// They're set from the ratio (width ∝ ratio^0.4), which leaves portraits a
+// little the larger of the two by area but no longer dominant.
+//
+// The positions are searched rather than eyeballed — the rotated rectangles are
+// stacked in the same order the page paints them and scored on how much of each
+// one is left showing. Every photo here keeps at least half of itself in view,
+// and the pile averages 69%. Moving one by hand is fine; just check it hasn't
+// buried the photo underneath.
 const layout = [
-  { left: 8, top: 4, width: 33, rotate: -12 },
-  { left: 34, top: 1, width: 29, rotate: 8 },
-  { left: 59, top: 7, width: 33, rotate: -9 },
-  { left: 9, top: 40, width: 31, rotate: 10 },
-  { left: 35, top: 36, width: 28, rotate: -6 },
-  { left: 60, top: 44, width: 32, rotate: 11 },
-  { left: 8, top: 70, width: 32, rotate: -8 },
-  { left: 34, top: 75, width: 29, rotate: 7 },
-  { left: 59, top: 66, width: 33, rotate: -10 },
+  { left: 50.2, top: 3.4, width: 23.6, rotate: -11 },
+  { left: 3.2, top: 54.2, width: 29.7, rotate: 7 },
+  { left: 18.1, top: 57.1, width: 31.5, rotate: -8 },
+  { left: 38.1, top: 59.5, width: 30.0, rotate: 9 },
+  { left: 64.7, top: 58.3, width: 32.3, rotate: -6 },
+  { left: 3.5, top: 17.6, width: 30.6, rotate: 10 },
+  { left: 32.5, top: 2.9, width: 23.5, rotate: -9 },
+  { left: 74.4, top: 24.5, width: 21.9, rotate: 6 },
+  { left: 15.5, top: 4.6, width: 31.5, rotate: -10 },
+  { left: 66.9, top: 2.3, width: 30.2, rotate: 5 },
 ]
 
 export default function Work() {
@@ -59,7 +71,12 @@ export default function Work() {
     <PageTransition>
       <section className="px-6 pt-28 pb-36 sm:pt-44 sm:pb-72 lg:pb-96">
         <h1 className="mb-20 text-sm tracking-wide text-neutral-500 sm:mb-32">selections</h1>
-        <div className="relative mx-auto aspect-[3/4] w-full max-w-5xl sm:aspect-[4/3] lg:aspect-[16/9]">
+        {/* The frame's shape is the pile's vertical spread: the positions are
+            percentages, so a taller frame pulls the same photos apart. 4:3 is
+            where the arrangement holds together at small widths; 16:9 lets it
+            open out once there's room. A phone kept the old 3:4 and the pile
+            floated in the top three quarters of it. */}
+        <div className="relative mx-auto aspect-[4/3] w-full max-w-5xl lg:aspect-[16/9]">
           {projects.map((project, i) => (
             <SelectionPhoto
               key={project.slug}

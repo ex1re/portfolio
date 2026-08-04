@@ -64,6 +64,12 @@ export const selectionFiles: Record<string, PhotoFile> = {
     "width": 2400,
     "height": 1632
   },
+  "DSCF0687.JPG": {
+    "src": "/photos/previews/selections/DSCF0687.webp",
+    "fullSrc": "/photos/selections/DSCF0687.JPG",
+    "width": 2400,
+    "height": 1600
+  },
   "DSCF0952.JPG": {
     "src": "/photos/previews/selections/DSCF0952.webp",
     "fullSrc": "/photos/selections/DSCF0952.JPG",
