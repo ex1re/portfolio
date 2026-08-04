@@ -57,9 +57,28 @@ const layout = [
   { left: 66.9, top: 2.3, width: 30.2, rotate: 5 },
 ]
 
+// A phone gets its own arrangement rather than the same one squeezed. Its frame
+// is the width of the screen and can afford to be square, and the photos are
+// half again as wide in it — at the shared widths they came out barely bigger
+// than a thumbnail beside the collection covers below. Searched the same way,
+// against a square frame: nothing here shows less than half of itself either.
+const layoutCompact = [
+  { left: 6.8, top: 51.0, width: 30.9, rotate: -11 },
+  { left: 3.6, top: 32.1, width: 38.9, rotate: 7 },
+  { left: 23.6, top: 66.7, width: 41.3, rotate: -8 },
+  { left: 57.0, top: 19.3, width: 39.2, rotate: 9 },
+  { left: 54.1, top: 69.0, width: 42.2, rotate: -6 },
+  { left: 37.8, top: 42.6, width: 40.0, rotate: 10 },
+  { left: 25.8, top: 2.3, width: 30.7, rotate: -9 },
+  { left: 67.2, top: 42.3, width: 28.7, rotate: 6 },
+  { left: 4.1, top: 4.5, width: 41.2, rotate: -10 },
+  { left: 51.5, top: 1.7, width: 39.6, rotate: 5 },
+]
+
 export default function Work() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const compact = useMediaQuery(COMPACT_QUERY)
+  const slots = compact ? layoutCompact : layout
 
   const dragConstraints = useMemo(() => {
     const x = compact ? DRAG_X_COMPACT : DRAG_X
@@ -73,19 +92,22 @@ export default function Work() {
           downwards reaches 75px past its resting place on a desktop and 45 on a
           phone, and grows a little under the cursor. This leaves that room and
           a margin over it, rather than the half-screen it used to hold. */}
-      <section className="px-6 pt-28 pb-24 sm:pt-44 sm:pb-28 lg:pb-32">
+      <section className="px-6 pt-28 pb-16 sm:pt-44 sm:pb-20 lg:pb-28">
         <h1 className="mb-20 text-sm tracking-wide text-neutral-500 sm:mb-32">selections</h1>
         {/* The frame's shape is the pile's vertical spread: the positions are
-            percentages, so a taller frame pulls the same photos apart. 4:3 is
-            where the arrangement holds together at small widths; 16:9 lets it
-            open out once there's room. A phone kept the old 3:4 and the pile
-            floated in the top three quarters of it. */}
-        <div className="relative mx-auto aspect-[4/3] w-full max-w-5xl lg:aspect-[16/9]">
+            percentages, so a taller frame pulls the same photos apart. Square on
+            a phone, where the photos are large and need the room; 16:9 once
+            there's width to open out into.
+
+            The cap is what sets the pile's size on a desktop — the photos are
+            percentages of it, so widening the frame enlarges everything without
+            changing how much they overlap. */}
+        <div className="relative mx-auto aspect-square w-full max-w-5xl sm:aspect-[4/3] lg:aspect-[16/9] lg:max-w-6xl xl:max-w-7xl">
           {projects.map((project, i) => (
             <SelectionPhoto
               key={project.slug}
               project={project}
-              placement={layout[i % layout.length]}
+              placement={slots[i % slots.length]}
               index={i}
               isActive={activeIndex === i}
               onActivate={() => setActiveIndex(i)}
