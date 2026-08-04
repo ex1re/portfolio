@@ -69,7 +69,11 @@ export default function Work() {
 
   return (
     <PageTransition>
-      <section className="px-6 pt-28 pb-36 sm:pt-44 sm:pb-72 lg:pb-96">
+      {/* The space below the pile is clearance, not styling: a photo dragged
+          downwards reaches 75px past its resting place on a desktop and 45 on a
+          phone, and grows a little under the cursor. This leaves that room and
+          a margin over it, rather than the half-screen it used to hold. */}
+      <section className="px-6 pt-28 pb-24 sm:pt-44 sm:pb-28 lg:pb-32">
         <h1 className="mb-20 text-sm tracking-wide text-neutral-500 sm:mb-32">selections</h1>
         {/* The frame's shape is the pile's vertical spread: the positions are
             percentages, so a taller frame pulls the same photos apart. 4:3 is
