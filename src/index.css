@@ -51,17 +51,23 @@ body {
    its own — findable on a bright screen even though the two tones either side
    of it agree. These stops trace a smoothstep, so the fade has no corner to
    catch, and the band is wide enough that what remains is spread past noticing. */
-/* One ramp per side, narrow, and left alone. Widening this and easing it over
-   several stops was worse on both counts: every stop is a corner in the alpha,
-   and stacked across a wide band in near-black they resolve into rings. The
-   plain two-stop fade over a short distance has one corner and puts it where
-   the picture has nothing to show. */
+/* The picture stands on the foot of the page. Its bottom edge is the page's own
+   edge, with nothing below to blend into, so that side stays straight and the
+   rounding happens at the top and shoulders instead.
+
+   Three masks, intersected. A ramp down each side and one across the top take
+   care of the edges; an ellipse rooted at the bottom centre does the rounding.
+   The ellipse is drawn tall on purpose — 128% of the frame — so its fade clears
+   the building and rounds off sky alone. Every ramp is a single step: stacking
+   several of them across a wide band in near-black is what resolved into rings
+   the last time. */
 .blend-edges {
-  -webkit-mask-image: linear-gradient(to right, transparent, black 9%, black 91%, transparent),
-    linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
+  --edge-sides: linear-gradient(to right, transparent, black 9%, black 91%, transparent);
+  --edge-top: linear-gradient(to bottom, transparent, black 8%, black 100%);
+  --edge-arch: radial-gradient(78% 128% at 50% 100%, black 62%, transparent 100%);
+  -webkit-mask-image: var(--edge-sides), var(--edge-top), var(--edge-arch);
   -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(to right, transparent, black 9%, black 91%, transparent),
-    linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
+  mask-image: var(--edge-sides), var(--edge-top), var(--edge-arch);
   mask-composite: intersect;
 }
 

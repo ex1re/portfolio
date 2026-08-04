@@ -96,14 +96,20 @@ browsing stays light and the full detail is still there when someone opens a
 photo.
 
 **The home page photograph** — drop one image into `public/photos/home/`. It
-appears beside the opening words on desktop and below them on a phone. Being the
-one photo shown large, it gets its own pair of renditions rather than the
-standard preview: 1200px for ordinary displays and 2400px for retina, chosen by
-pixel density. Its edges are feathered into the page (`.blend-edges` in
-[`src/index.css`](src/index.css)), so a photograph with dark margins meets the
-black background with no visible border — the feather covers the outer 9% by 7%,
-which on a night frame is empty sky. If the folder is empty the page falls back
-to the words alone, full width.
+appears beside the opening words on desktop and below them on a phone, standing
+on the foot of the page. Being the one photo shown large, it gets its own pair of
+renditions rather than the standard preview — 1600px and 3000px, cut straight
+from the original at high quality — and the browser picks between them on the
+width the slot asks for.
+
+Its edges are masked into the page (`.blend-edges` in
+[`src/index.css`](src/index.css)): a ramp down each side and across the top, plus
+an ellipse rooted at the bottom that rounds off the top and shoulders. The bottom
+stays straight, since it is the page's own edge. Each ramp is a single step —
+several stacked across a wide band in near-black resolve into visible rings. Tune
+it against the photograph, not by eye alone: the fade should reach only sky, and
+none of the subject. If the folder is empty the page falls back to the words
+alone, full width.
 
 **A collection (album)** — drop images into `public/photos/collections/<slug>/`,
 matching a `slug` in [`src/data/collections.ts`](src/data/collections.ts). They're
