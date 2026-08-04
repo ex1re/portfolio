@@ -45,7 +45,62 @@ export const heroFile: HeroFile | null = {
 }
 
 /** Keyed by filename, e.g. `coastline.jpg`, as referenced from projects.ts. */
-export const selectionFiles: Record<string, PhotoFile> = {}
+export const selectionFiles: Record<string, PhotoFile> = {
+  "8E928D42-8342-4262-8DFB-449EED535384.jpeg": {
+    "src": "/photos/previews/selections/8E928D42-8342-4262-8DFB-449EED535384.webp",
+    "fullSrc": "/photos/selections/8E928D42-8342-4262-8DFB-449EED535384.jpeg",
+    "width": 1624,
+    "height": 2400
+  },
+  "DD9AD218-A8B8-452B-837B-501B2B36D410.jpg": {
+    "src": "/photos/previews/selections/DD9AD218-A8B8-452B-837B-501B2B36D410.webp",
+    "fullSrc": "/photos/selections/DD9AD218-A8B8-452B-837B-501B2B36D410.jpg",
+    "width": 2400,
+    "height": 1712
+  },
+  "DSCF0547.JPG": {
+    "src": "/photos/previews/selections/DSCF0547.webp",
+    "fullSrc": "/photos/selections/DSCF0547.JPG",
+    "width": 2400,
+    "height": 1632
+  },
+  "DSCF0952.JPG": {
+    "src": "/photos/previews/selections/DSCF0952.webp",
+    "fullSrc": "/photos/selections/DSCF0952.JPG",
+    "width": 2400,
+    "height": 1581
+  },
+  "DSCF1426.JPG": {
+    "src": "/photos/previews/selections/DSCF1426.webp",
+    "fullSrc": "/photos/selections/DSCF1426.JPG",
+    "width": 2400,
+    "height": 1600
+  },
+  "DSCF1453.JPG": {
+    "src": "/photos/previews/selections/DSCF1453.webp",
+    "fullSrc": "/photos/selections/DSCF1453.JPG",
+    "width": 1600,
+    "height": 2400
+  },
+  "DSCF1539.JPG": {
+    "src": "/photos/previews/selections/DSCF1539.webp",
+    "fullSrc": "/photos/selections/DSCF1539.JPG",
+    "width": 1600,
+    "height": 2400
+  },
+  "DSCF1709.JPG": {
+    "src": "/photos/previews/selections/DSCF1709.webp",
+    "fullSrc": "/photos/selections/DSCF1709.JPG",
+    "width": 2400,
+    "height": 1600
+  },
+  "IMG_6579.jpg": {
+    "src": "/photos/previews/selections/IMG_6579.webp",
+    "fullSrc": "/photos/selections/IMG_6579.jpg",
+    "width": 2400,
+    "height": 1641
+  }
+}
 
 /** Keyed by collection slug, in filename order. */
 export const collectionFiles: Record<string, CollectionPhotoFile[]> = {}
