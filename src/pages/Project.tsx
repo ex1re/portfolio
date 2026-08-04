@@ -21,22 +21,50 @@ export default function Project() {
     )
   }
 
+  const photo = selectionPhoto(project)
+  const upright = photo.aspect < 1
+  // What the camera was set to, in one line, with anything unfilled left out.
+  const settings = [
+    project.iso && `ISO ${project.iso}`,
+    project.aperture && `f/${project.aperture}`,
+    project.shutter && `${project.shutter}`,
+  ].filter(Boolean)
+
   return (
     <PageTransition>
       <section className="min-h-screen px-6 pt-32 pb-20">
         <Link to="/garden" className="text-sm text-neutral-500 hover:text-neutral-200">
           ← Back
         </Link>
-        <h1 className="mt-6 text-4xl font-semibold text-neutral-100">{project.title}</h1>
-        <p className="mt-2 text-neutral-500">
-          {project.category} — {project.year}
-        </p>
-        <div className="mt-10 max-w-3xl">
-          <PhotoImage photo={selectionPhoto(project)} loading="eager" className="rounded-sm" />
-        </div>
-        <p className="mt-8 max-w-xl text-neutral-400">
-          Replace this with a real gallery of images and project notes for {project.title}.
-        </p>
+
+        {/* The photograph is the page, so it sits in the middle with its
+            settings above it and its name below — the way a print is captioned
+            rather than the way a page is titled.
+
+            An upright frame is measured against the screen's height instead of
+            its width: at the same width as a landscape it stood half again
+            taller than the window. */}
+        <figure className="mt-10">
+          {settings.length > 0 && (
+            <figcaption className="mb-4 text-center text-sm tracking-wide text-neutral-500">
+              {settings.join('  ·  ')}
+            </figcaption>
+          )}
+
+          <div
+            className={`mx-auto w-full ${upright ? '' : 'max-w-4xl'}`}
+            style={upright ? { maxWidth: `calc(75vh * ${photo.aspect})` } : undefined}
+          >
+            <PhotoImage photo={photo} loading="eager" className="rounded-sm" />
+          </div>
+
+          <figcaption className="mt-5 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
+            <h1 className="text-4xl font-semibold text-neutral-100">{project.title}</h1>
+            <p className="text-neutral-500">
+              {project.category} — {project.year}
+            </p>
+          </figcaption>
+        </figure>
       </section>
     </PageTransition>
   )

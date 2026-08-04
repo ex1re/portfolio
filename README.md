@@ -125,10 +125,11 @@ Vercel builds and deploys from the push; nothing else to do.
 All of it is plain text in two files — open them in any editor:
 
 - **[`src/data/projects.ts`](src/data/projects.ts)** — the garden pile. Each entry
-  has a `title`, `category` and `year` (shown on hover and on the photo's own
-  page), and an `image` naming its file. The `slug` is the URL, so changing it
-  changes the link. `color` and `aspect` are only fallbacks for an entry with no
-  photo yet.
+  has a `title`, `category` and `year` (shown on hover and under the photo on its
+  own page), `iso`, `aperture` and `shutter` (the line above the photo there —
+  they start as `—`, so replace them), and an `image` naming its file. The `slug`
+  is the URL, so changing it changes the link. `color` and `aspect` are only
+  fallbacks for an entry with no photo yet.
 - **[`src/data/collections.ts`](src/data/collections.ts)** — the albums. Each has a
   `title` and a `description`, and a `slug` that must match its folder name under
   `public/photos/collections/`.
