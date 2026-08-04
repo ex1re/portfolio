@@ -23,12 +23,18 @@ export default function Project() {
 
   const photo = selectionPhoto(project)
   const upright = photo.aspect < 1
+
   // What the camera was set to, in one line, with anything unknown left out.
-  const settings = [
-    photo.settings?.iso && `ISO ${photo.settings.iso}`,
-    photo.settings?.aperture && `f/${photo.settings.aperture}`,
-    photo.settings?.shutter,
-  ].filter(Boolean)
+  // The label is added here, and taken off first if it was typed in as well —
+  // copying what's on screen back into projects.ts is the natural thing to do,
+  // and it shouldn't come out as "ISO ISO 250".
+  const bare = (value: string | undefined, label: RegExp) => value?.replace(label, '').trim()
+  const iso = bare(photo.settings?.iso, /^iso\s*/i)
+  // The f-stop's own character, U+0192, rather than the letter f.
+  const aperture = bare(photo.settings?.aperture, /^[fƒ]\s*\/?\s*/i)
+  const shutter = photo.settings?.shutter?.trim()
+
+  const settings = [iso && `ISO ${iso}`, aperture && `ƒ/${aperture}`, shutter].filter(Boolean)
 
   return (
     <PageTransition>
