@@ -51,35 +51,42 @@ body {
    its own — findable on a bright screen even though the two tones either side
    of it agree. These stops trace a smoothstep, so the fade has no corner to
    catch, and the band is wide enough that what remains is spread past noticing. */
+/* The bands are as wide as the picture allows. Measured against this frame, the
+   fade reaches nothing brighter than 27 of 255 out to 19% across and 38 out to
+   18% down — sky and shadow — and past that the lit windows start, which fading
+   would visibly dim. These sit just inside those limits. The depth matters as
+   much as the easing: this frame's top rows run about three steps darker than
+   the page, so a narrow fade ends while the picture is still off-tone and
+   leaves a soft rectangle. At this depth it ends where the two already agree. */
 @theme {
   --mask-fade-x: linear-gradient(
     to right,
     transparent 0%,
-    rgb(0 0 0 / 0.104) 2.6%,
-    rgb(0 0 0 / 0.352) 5.2%,
-    rgb(0 0 0 / 0.648) 7.8%,
-    rgb(0 0 0 / 0.896) 10.4%,
-    #000 13%,
-    #000 87%,
-    rgb(0 0 0 / 0.896) 89.6%,
-    rgb(0 0 0 / 0.648) 92.2%,
-    rgb(0 0 0 / 0.352) 94.8%,
-    rgb(0 0 0 / 0.104) 97.4%,
+    rgb(0 0 0 / 0.104) 3.6%,
+    rgb(0 0 0 / 0.352) 7.2%,
+    rgb(0 0 0 / 0.648) 10.8%,
+    rgb(0 0 0 / 0.896) 14.4%,
+    #000 18%,
+    #000 82%,
+    rgb(0 0 0 / 0.896) 85.6%,
+    rgb(0 0 0 / 0.648) 89.2%,
+    rgb(0 0 0 / 0.352) 92.8%,
+    rgb(0 0 0 / 0.104) 96.4%,
     transparent 100%
   );
   --mask-fade-y: linear-gradient(
     to bottom,
     transparent 0%,
-    rgb(0 0 0 / 0.104) 2%,
-    rgb(0 0 0 / 0.352) 4%,
-    rgb(0 0 0 / 0.648) 6%,
-    rgb(0 0 0 / 0.896) 8%,
-    #000 10%,
-    #000 90%,
-    rgb(0 0 0 / 0.896) 92%,
-    rgb(0 0 0 / 0.648) 94%,
-    rgb(0 0 0 / 0.352) 96%,
-    rgb(0 0 0 / 0.104) 98%,
+    rgb(0 0 0 / 0.104) 3.4%,
+    rgb(0 0 0 / 0.352) 6.8%,
+    rgb(0 0 0 / 0.648) 10.2%,
+    rgb(0 0 0 / 0.896) 13.6%,
+    #000 17%,
+    #000 83%,
+    rgb(0 0 0 / 0.896) 86.4%,
+    rgb(0 0 0 / 0.648) 89.8%,
+    rgb(0 0 0 / 0.352) 93.2%,
+    rgb(0 0 0 / 0.104) 96.6%,
     transparent 100%
   );
 }
