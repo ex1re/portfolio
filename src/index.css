@@ -46,12 +46,48 @@ body {
    the page colour, but these margins aren't true black, and screening them over
    the page lifts them roughly nine steps clear of it — further from the
    background than leaving them alone. */
+/* The band is eased rather than linear. A straight ramp is continuous in
+   brightness but not in slope, and the eye reads that corner as a faint line of
+   its own — findable on a bright screen even though the two tones either side
+   of it agree. These stops trace a smoothstep, so the fade has no corner to
+   catch, and the band is wide enough that what remains is spread past noticing. */
+@theme {
+  --mask-fade-x: linear-gradient(
+    to right,
+    transparent 0%,
+    rgb(0 0 0 / 0.104) 2.6%,
+    rgb(0 0 0 / 0.352) 5.2%,
+    rgb(0 0 0 / 0.648) 7.8%,
+    rgb(0 0 0 / 0.896) 10.4%,
+    #000 13%,
+    #000 87%,
+    rgb(0 0 0 / 0.896) 89.6%,
+    rgb(0 0 0 / 0.648) 92.2%,
+    rgb(0 0 0 / 0.352) 94.8%,
+    rgb(0 0 0 / 0.104) 97.4%,
+    transparent 100%
+  );
+  --mask-fade-y: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgb(0 0 0 / 0.104) 2%,
+    rgb(0 0 0 / 0.352) 4%,
+    rgb(0 0 0 / 0.648) 6%,
+    rgb(0 0 0 / 0.896) 8%,
+    #000 10%,
+    #000 90%,
+    rgb(0 0 0 / 0.896) 92%,
+    rgb(0 0 0 / 0.648) 94%,
+    rgb(0 0 0 / 0.352) 96%,
+    rgb(0 0 0 / 0.104) 98%,
+    transparent 100%
+  );
+}
+
 .blend-edges {
-  -webkit-mask-image: linear-gradient(to right, transparent, black 9%, black 91%, transparent),
-    linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
+  -webkit-mask-image: var(--mask-fade-x), var(--mask-fade-y);
   -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(to right, transparent, black 9%, black 91%, transparent),
-    linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
+  mask-image: var(--mask-fade-x), var(--mask-fade-y);
   mask-composite: intersect;
 }
 

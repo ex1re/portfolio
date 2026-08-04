@@ -118,10 +118,12 @@ export default function Home() {
           <div className="flex w-full justify-center lg:w-1/2">
             <motion.img
               // Rising a little as it fades is the same entrance the words make,
-              // just slower — it should still be arriving as they settle.
+              // but it waits for them: the last line has been settled for a
+              // second before the picture starts, so it arrives as its own
+              // event rather than as part of the page loading.
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 0.2, ease: 'easeOut' }}
+              transition={{ duration: 1.6, delay: 1.9, ease: 'easeOut' }}
               src={heroFile.src}
               // The slot is a fixed size on screen, so this is a question of
               // density rather than layout: ordinary displays take the smaller
