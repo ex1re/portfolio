@@ -1,4 +1,5 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 
 // three.js is heavy relative to the rest of the site, so it's split into its own
@@ -45,6 +46,12 @@ const publications = [
   { title: 'The Glasgow Gallery of Photography', year: '2023' },
 ]
 
+/** The home photograph's entrance, so the two pages open at the same pace. */
+const ENTRANCE_DELAY = 1.9
+const ENTRANCE_DURATION = 1.6
+/** Shown regardless after this long, rather than leaving the column empty. */
+const ENTRANCE_LATEST = 4000
+
 /** Sized to sit with the email beside it, and inheriting its colour. */
 function InstagramIcon() {
   return (
@@ -68,6 +75,29 @@ function InstagramIcon() {
 }
 
 export default function About() {
+  const openedAt = useRef(performance.now())
+  const settled = useRef(false)
+  const [shown, setShown] = useState(false)
+  const [delay, setDelay] = useState(ENTRANCE_DELAY)
+
+  // The drum is the slowest thing on the site to arrive — its own chunk, then a
+  // model, then a texture painted to match it — and it used to simply appear.
+  // It now waits for the same beat the home photograph takes, measured from the
+  // page opening: if it was ready sooner it holds until then, and if it took
+  // longer than that it comes in as soon as there is something to show.
+  const reveal = useCallback(() => {
+    if (settled.current) return
+    settled.current = true
+    const elapsed = (performance.now() - openedAt.current) / 1000
+    setDelay(Math.max(0, ENTRANCE_DELAY - elapsed))
+    setShown(true)
+  }, [])
+
+  useEffect(() => {
+    const id = setTimeout(reveal, ENTRANCE_LATEST)
+    return () => clearTimeout(id)
+  }, [reveal])
+
   return (
     <PageTransition>
       {/* The text column is capped at a comfortable measure; the drum's column
@@ -129,13 +159,18 @@ export default function About() {
           </ul>
         </div>
 
-        <div className="md:flex md:flex-1 md:justify-center md:-mr-6">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={shown ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          transition={{ duration: ENTRANCE_DURATION, delay, ease: 'easeOut' }}
+          className="md:-mr-6 md:flex md:flex-1 md:justify-center"
+        >
           {/* Reserves the drum's footprint while its chunk loads, so the column
               doesn't jump once it arrives. */}
           <Suspense fallback={<div aria-hidden className="mx-auto h-[320px] w-[240px] md:h-[500px] md:w-[400px]" />}>
-            <PoemCylinder text={poem} />
+            <PoemCylinder text={poem} onReady={reveal} />
           </Suspense>
-        </div>
+        </motion.div>
       </section>
     </PageTransition>
   )

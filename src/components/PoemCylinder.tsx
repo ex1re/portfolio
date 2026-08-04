@@ -19,6 +19,8 @@ const SPIN_SPEED = 0.13 // radians/second
 interface PoemCylinderProps {
   text: string
   className?: string
+  /** Fires once the drum has something to show, so the page can bring it in. */
+  onReady?: () => void
 }
 
 /**
@@ -167,7 +169,7 @@ function usePoemTexture(text: string, circumference: number, height: number) {
   return texture
 }
 
-function Drum({ text, spin }: { text: string; spin: boolean }) {
+function Drum({ text, spin, onReady }: { text: string; spin: boolean; onReady?: () => void }) {
   const gltf = useLoader(GLTFLoader, MODEL_URL)
   const group = useRef<THREE.Group>(null)
 
@@ -197,6 +199,12 @@ function Drum({ text, spin }: { text: string; spin: boolean }) {
   }, [geometry])
 
   const texture = usePoemTexture(text, dims.circumference, dims.height)
+
+  // The model and the painted texture are the last things to arrive; until both
+  // are here the scene draws nothing, so this is the moment there is a drum.
+  useEffect(() => {
+    if (geometry && texture) onReady?.()
+  }, [geometry, texture, onReady])
 
   useFrame((_, delta) => {
     if (spin && group.current) group.current.rotation.y += SPIN_SPEED * delta
@@ -269,7 +277,7 @@ function PoemFallback({ text }: { text: string }) {
   )
 }
 
-export default function PoemCylinder({ text, className = '' }: PoemCylinderProps) {
+export default function PoemCylinder({ text, className = '', onReady }: PoemCylinderProps) {
   const compact = useMediaQuery('(max-width: 767px)')
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
   const [touched, setTouched] = useState(false)
@@ -308,7 +316,7 @@ export default function PoemCylinder({ text, className = '' }: PoemCylinderProps
           onCreated={onCreated}
           fallback={<PoemFallback text={text} />}
         >
-          <Drum key={generation} text={text} spin={!touched && !reduceMotion} />
+          <Drum key={generation} text={text} spin={!touched && !reduceMotion} onReady={onReady} />
           <Orbit onGrab={onGrab} />
         </Canvas>
         {/* Rather than leave an empty frame while the GPU sorts itself out. */}
