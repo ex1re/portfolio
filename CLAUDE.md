@@ -118,6 +118,15 @@ So verify by measuring, not by looking: `getBoundingClientRect`,
 served image all work and are exact. Screenshots are for showing the user, not
 for deciding whether something is right.
 
+## Deep links need the rewrite
+
+Routing is client-side, so the server only ever has `index.html` to give. Without
+`vercel.json` every route but `/` returned 404 on a direct load or a refresh —
+clicking through from the home page worked, which is why it went unnoticed. The
+rewrite sends everything to `index.html` and lets the router take it from there;
+Vercel checks the filesystem first, so `/assets/*` and `/photos/*` still serve as
+files.
+
 ## Tailwind
 
 v4, wired as a Vite plugin (not PostCSS). Design tokens live in `@theme` in
