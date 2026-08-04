@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "photos": "node scripts/generate-photo-manifest.mjs",
+    "trim": "node scripts/trim-photos.mjs",
     "predev": "npm run photos",
     "dev": "vite",
     "prebuild": "npm run photos",

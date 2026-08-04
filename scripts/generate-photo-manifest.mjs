@@ -339,6 +339,34 @@ export const collectionFiles: Record<string, CollectionPhotoFile[]> = ${JSON.str
 mkdirSync(dirname(outFile), { recursive: true })
 writeFileSync(outFile, body)
 
+// A camera file dropped straight in works, but it is committed at full weight
+// and the lightbox hands visitors the whole thing. Say so rather than let it
+// pass quietly. The home photograph is exempt: its fade is cut from the
+// original at full resolution on purpose.
+const oversized = []
+for (const dir of ['selections', 'collections']) {
+  const scan = (d) => {
+    if (!existsSync(d)) return
+    for (const name of readdirSync(d)) {
+      if (name.startsWith('.')) continue
+      const abs = join(d, name)
+      if (statSync(abs).isDirectory()) scan(abs)
+      else if (EXTENSIONS.has(extname(name).toLowerCase()) && statSync(abs).size > 3_000_000) {
+        oversized.push({ rel: relative(photosDir, abs), mb: statSync(abs).size / 1048576 })
+      }
+    }
+  }
+  scan(join(photosDir, dir))
+}
+if (oversized.length) {
+  const total = oversized.reduce((n, f) => n + f.mb, 0)
+  console.warn(
+    `\nphoto manifest: ${oversized.length} file(s) are camera-sized, ${total.toFixed(0)} MB in all:\n` +
+      oversized.map((f) => `  ${f.rel} (${f.mb.toFixed(1)} MB)`).join('\n') +
+      '\nRun `npm run trim` to cut web masters from them (originals are kept in ~/Pictures/exire-originals).\n',
+  )
+}
+
 const collectionPhotoCount = Object.values(collections).reduce((n, list) => n + list.length, 0)
 console.log(
   `photo manifest: ${hero ? '1 hero, ' : 'no hero, '}` +

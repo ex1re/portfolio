@@ -26,7 +26,8 @@ Opens the dev server at `http://localhost:5173`.
 npm run build     # type-check and build for production into dist/
 npm run preview   # preview the production build locally
 npm run lint      # lint the project
-npm run photos    # re-read photo dimensions (runs automatically on dev/build)
+npm run photos    # re-read photos (runs automatically on dev/build)
+npm run trim      # cut 2400px web masters from camera files
 ```
 
 ## Project structure
@@ -83,6 +84,62 @@ node scripts/strip-glb-texture.mjs <original>.glb public/models/text-cylinder.gl
 three.js is a large dependency next to everything else here, so the page loads it
 as its own chunk — nothing else on the site pays for it, and the garden fetches
 none of it. Where WebGL is unavailable the poem falls back to plain text.
+
+## Day to day, from the terminal
+
+Adding or swapping photos needs four commands and a text editor. Drop the files
+into the right folder in Finder, then:
+
+```bash
+npm run trim
+```
+
+Cuts any camera-sized file down to a 2400px web master and copies the untouched
+original to `~/Pictures/exire-originals` first. Skip this and a 24MB file gets
+committed and served to whoever opens it in the lightbox. `npm run trim -- --dry`
+says what it would do without touching anything.
+
+```bash
+npm run photos
+```
+
+Reads every photo, writes the compressed previews, and regenerates
+`src/data/generated/photo-manifest.ts`. It also warns if anything is still
+camera-sized. This runs automatically before `npm run dev` and `npm run build`,
+so it's only needed on its own when the dev server is already running.
+
+```bash
+npm run dev
+```
+
+Check it at `http://localhost:5173`. Ctrl-C to stop.
+
+```bash
+git add -A && git commit -m "Add new photos" && git push
+```
+
+Vercel builds and deploys from the push; nothing else to do.
+
+### Editing titles and descriptions
+
+All of it is plain text in two files — open them in any editor:
+
+- **[`src/data/projects.ts`](src/data/projects.ts)** — the garden pile. Each entry
+  has a `title`, `category` and `year` (shown on hover and on the photo's own
+  page), and an `image` naming its file. The `slug` is the URL, so changing it
+  changes the link. `color` and `aspect` are only fallbacks for an entry with no
+  photo yet.
+- **[`src/data/collections.ts`](src/data/collections.ts)** — the albums. Each has a
+  `title` and a `description`, and a `slug` that must match its folder name under
+  `public/photos/collections/`.
+
+To reorder the pile, swap the `image` values between entries: the positions are
+fixed slots in [`src/pages/Work.tsx`](src/pages/Work.tsx), so moving a filename
+moves that photo. Those slots were arranged so no photo is buried behind
+another — if you move one by hand, check what it covers.
+
+Titles and descriptions are text only; nothing needs regenerating after editing
+them. Save, and the dev server reloads.
 
 ## Adding photos
 
@@ -141,6 +198,10 @@ real photos while they load.
 Supported formats: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`, `.gif`.
 
 ### File sizes
+
+`npm run trim` handles this for you — it resizes anything over 2400px in place
+and keeps the original in `~/Pictures/exire-originals`. What follows is why.
+
 
 Previews are generated for you, so the only file you control is the original —
 the one the lightbox serves. Long edge **2400px at quality ~82** (usually
