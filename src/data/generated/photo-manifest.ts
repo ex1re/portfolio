@@ -22,21 +22,26 @@ export interface CollectionPhotoFile extends PhotoFile {
 
 /**
  * The home page's opening photograph, or null until one is dropped into
- * public/photos/home/. Two renditions of the same picture: `src` for ordinary
- * displays, `src2x` for retina.
+ * public/photos/home/. Two renditions of the same picture, each with its own
+ * pixel width so the browser can pick on what the slot actually asks for;
+ * `width` and `height` are the original's, which is never served.
  */
 export interface HeroFile {
   src: string
+  srcWidth: number
   src2x: string
+  src2xWidth: number
   width: number
   height: number
 }
 
 export const heroFile: HeroFile | null = {
   "src": "/photos/previews/home/homepage-1x.webp",
+  "srcWidth": 1067,
   "src2x": "/photos/previews/home/homepage-2x.webp",
-  "width": 2000,
-  "height": 3000
+  "src2xWidth": 2000,
+  "width": 5152,
+  "height": 7728
 }
 
 /** Keyed by filename, e.g. `coastline.jpg`, as referenced from projects.ts. */

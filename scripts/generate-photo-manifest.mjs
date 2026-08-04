@@ -137,12 +137,21 @@ async function describe(absPath) {
  *
  * It's the only photo shown large, so it gets its own pair of renditions rather
  * than the standard preview: one for ordinary displays, one for retina. The
- * second is sized for the tallest screen this fills at 2x. The camera original
- * is never served — it's only the master these are cut from.
+ * camera original is never served — it's only the master these are cut from.
+ *
+ * Both are cut straight from that original at a quality where the encoder has
+ * no visible say in the picture. The retina one is far larger than any screen
+ * needs it to be, deliberately: this photograph is nearly all shadow, where
+ * compression shows first, and it is the one image on the site that carries the
+ * page on its own.
  */
-const HERO_EDGE = 1200
-const HERO_EDGE_2X = 2400
-const HERO_QUALITY = 82
+const HERO_EDGE = 1600
+const HERO_EDGE_2X = 3000
+const HERO_QUALITY = 94
+
+/** The width sharp will land on: fit inside, never enlarged. */
+const widthAtEdge = (width, height, edge) =>
+  Math.round(width * Math.min(1, edge / Math.max(width, height)))
 
 async function describeHero(absPath) {
   const { width, height } = await dimensionsOf(absPath)
@@ -152,7 +161,9 @@ async function describeHero(absPath) {
   const fallback = urlFor(absPath)
   return {
     src: (await renditionFor(absPath, HERO_EDGE, HERO_QUALITY, '-1x')) ?? fallback,
+    srcWidth: widthAtEdge(width, height, HERO_EDGE),
     src2x: (await renditionFor(absPath, HERO_EDGE_2X, HERO_QUALITY, '-2x')) ?? fallback,
+    src2xWidth: widthAtEdge(width, height, HERO_EDGE_2X),
     width,
     height,
   }
@@ -219,12 +230,15 @@ export interface CollectionPhotoFile extends PhotoFile {
 
 /**
  * The home page's opening photograph, or null until one is dropped into
- * public/photos/home/. Two renditions of the same picture: \`src\` for ordinary
- * displays, \`src2x\` for retina.
+ * public/photos/home/. Two renditions of the same picture, each with its own
+ * pixel width so the browser can pick on what the slot actually asks for;
+ * \`width\` and \`height\` are the original's, which is never served.
  */
 export interface HeroFile {
   src: string
+  srcWidth: number
   src2x: string
+  src2xWidth: number
   width: number
   height: number
 }

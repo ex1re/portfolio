@@ -51,50 +51,17 @@ body {
    its own — findable on a bright screen even though the two tones either side
    of it agree. These stops trace a smoothstep, so the fade has no corner to
    catch, and the band is wide enough that what remains is spread past noticing. */
-/* The bands are as wide as the picture allows. Measured against this frame, the
-   fade reaches nothing brighter than 27 of 255 out to 19% across and 38 out to
-   18% down — sky and shadow — and past that the lit windows start, which fading
-   would visibly dim. These sit just inside those limits. The depth matters as
-   much as the easing: this frame's top rows run about three steps darker than
-   the page, so a narrow fade ends while the picture is still off-tone and
-   leaves a soft rectangle. At this depth it ends where the two already agree. */
-@theme {
-  --mask-fade-x: linear-gradient(
-    to right,
-    transparent 0%,
-    rgb(0 0 0 / 0.104) 3.6%,
-    rgb(0 0 0 / 0.352) 7.2%,
-    rgb(0 0 0 / 0.648) 10.8%,
-    rgb(0 0 0 / 0.896) 14.4%,
-    #000 18%,
-    #000 82%,
-    rgb(0 0 0 / 0.896) 85.6%,
-    rgb(0 0 0 / 0.648) 89.2%,
-    rgb(0 0 0 / 0.352) 92.8%,
-    rgb(0 0 0 / 0.104) 96.4%,
-    transparent 100%
-  );
-  --mask-fade-y: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgb(0 0 0 / 0.104) 3.4%,
-    rgb(0 0 0 / 0.352) 6.8%,
-    rgb(0 0 0 / 0.648) 10.2%,
-    rgb(0 0 0 / 0.896) 13.6%,
-    #000 17%,
-    #000 83%,
-    rgb(0 0 0 / 0.896) 86.4%,
-    rgb(0 0 0 / 0.648) 89.8%,
-    rgb(0 0 0 / 0.352) 93.2%,
-    rgb(0 0 0 / 0.104) 96.6%,
-    transparent 100%
-  );
-}
-
+/* One ramp per side, narrow, and left alone. Widening this and easing it over
+   several stops was worse on both counts: every stop is a corner in the alpha,
+   and stacked across a wide band in near-black they resolve into rings. The
+   plain two-stop fade over a short distance has one corner and puts it where
+   the picture has nothing to show. */
 .blend-edges {
-  -webkit-mask-image: var(--mask-fade-x), var(--mask-fade-y);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 9%, black 91%, transparent),
+    linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
   -webkit-mask-composite: source-in;
-  mask-image: var(--mask-fade-x), var(--mask-fade-y);
+  mask-image: linear-gradient(to right, transparent, black 9%, black 91%, transparent),
+    linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
   mask-composite: intersect;
 }
 

@@ -125,10 +125,12 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.6, delay: 1.9, ease: 'easeOut' }}
               src={heroFile.src}
-              // The slot is a fixed size on screen, so this is a question of
-              // density rather than layout: ordinary displays take the smaller
-              // rendition, retina ones the larger.
-              srcSet={`${heroFile.src} 1x, ${heroFile.src2x} 2x`}
+              // Chosen on what the slot actually asks for — its width times the
+              // screen's density — rather than on density alone. A phone at 3x
+              // still only needs about 900px across, and would otherwise pull
+              // the full-size file down a mobile connection to show it small.
+              srcSet={`${heroFile.src} ${heroFile.srcWidth}w, ${heroFile.src2x} ${heroFile.src2xWidth}w`}
+              sizes="(min-width: 1024px) 40vw, (min-width: 640px) 460px, 80vw"
               width={heroFile.width}
               height={heroFile.height}
               alt="A glass tower at night, its lit floors rising into the dark."
