@@ -17,12 +17,10 @@ export default function BottomGlow() {
   const [atEnd, setAtEnd] = useState(false)
 
   useEffect(() => {
-    // A page with nothing to scroll has no end to reach, and standing there
-    // permanently would tint whatever the page happens to end on.
+    // A page shorter than the viewport is already at its end.
     const check = () => {
       const doc = document.documentElement
-      const scrollable = doc.scrollHeight > window.innerHeight + 1
-      setAtEnd(scrollable && doc.scrollHeight - window.scrollY - window.innerHeight < 2)
+      setAtEnd(doc.scrollHeight - window.scrollY - window.innerHeight < 2)
     }
 
     check()

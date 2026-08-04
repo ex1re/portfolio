@@ -102,14 +102,14 @@ renditions rather than the standard preview — 1600px and 3000px, cut straight
 from the original at high quality — and the browser picks between them on the
 width the slot asks for.
 
-Its edges are masked into the page (`.blend-edges` in
-[`src/index.css`](src/index.css)): a ramp down each side and across the top, plus
-an ellipse rooted at the bottom that rounds off the top and shoulders. The bottom
-stays straight, since it is the page's own edge. Each ramp is a single step —
-several stacked across a wide band in near-black resolve into visible rings. Tune
-it against the photograph, not by eye alone: the fade should reach only sky, and
-none of the subject. If the folder is empty the page falls back to the words
-alone, full width.
+Its fade into the page is **blended into the file**, not masked over it at
+display time. A CSS mask is composited live, and over a wide band in near-black
+its quantised alpha resolves into visible rings; blending once at build time, in
+floating point with the rounding dithered, leaves the border exactly the page's
+colour and nothing in between. The build finds the subject on its own — the lit
+part of the frame — and fades only the clear margin around it, so no tuning is
+needed when the photo changes. If the folder is empty the page falls back to the
+words alone, full width.
 
 **A collection (album)** — drop images into `public/photos/collections/<slug>/`,
 matching a `slug` in [`src/data/collections.ts`](src/data/collections.ts). They're

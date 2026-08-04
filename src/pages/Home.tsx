@@ -68,7 +68,7 @@ export default function Home() {
       {/* Stacked, the words and the picture sit straight on top of each other:
           the picture's own top band is empty sky faded to nothing, which reads
           as space of its own without any gap being set. */}
-      <section className="flex min-h-screen flex-col items-start justify-center gap-0 px-6 pt-28 pb-0 lg:flex-row lg:items-center lg:gap-8 lg:py-8">
+      <section className="flex min-h-screen flex-col items-start justify-center gap-0 px-6 pt-28 pb-16 lg:flex-row lg:items-center lg:gap-8 lg:py-8">
         {/* Full width on its own line; a half-column only once they sit side by
             side. Without the base width the column would shrink to its contents
             and the lettering, which fills whatever it's given, would have
@@ -114,11 +114,8 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Stood on the foot of the page rather than centred against the words:
-            the negative margin cancels the section's bottom padding, so the
-            picture's own edge is the screen's. */}
         {heroFile && (
-          <div className="flex w-full justify-center lg:-mb-8 lg:w-1/2 lg:self-end">
+          <div className="flex w-full justify-center lg:w-1/2">
             <motion.img
               // Rising a little as it fades is the same entrance the words make,
               // but it waits for them: the last line has been settled for a
@@ -141,7 +138,7 @@ export default function Home() {
               // waiting its turn behind the deferred images elsewhere.
               fetchPriority="high"
               decoding="async"
-              className="blend-edges h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:max-w-md lg:h-[95vh] lg:w-auto lg:max-w-none"
+              className="h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:max-w-md lg:h-[90vh] lg:max-h-[64rem] lg:w-auto lg:max-w-none"
             />
           </div>
         )}

@@ -51,25 +51,9 @@ body {
    its own — findable on a bright screen even though the two tones either side
    of it agree. These stops trace a smoothstep, so the fade has no corner to
    catch, and the band is wide enough that what remains is spread past noticing. */
-/* The picture stands on the foot of the page. Its bottom edge is the page's own
-   edge, with nothing below to blend into, so that side stays straight and the
-   rounding happens at the top and shoulders instead.
-
-   Three masks, intersected. A ramp down each side and one across the top take
-   care of the edges; an ellipse rooted at the bottom centre does the rounding.
-   The ellipse is drawn tall on purpose — 128% of the frame — so its fade clears
-   the building and rounds off sky alone. Every ramp is a single step: stacking
-   several of them across a wide band in near-black is what resolved into rings
-   the last time. */
-.blend-edges {
-  --edge-sides: linear-gradient(to right, transparent, black 9%, black 91%, transparent);
-  --edge-top: linear-gradient(to bottom, transparent, black 8%, black 100%);
-  --edge-arch: radial-gradient(78% 128% at 50% 100%, black 62%, transparent 100%);
-  -webkit-mask-image: var(--edge-sides), var(--edge-top), var(--edge-arch);
-  -webkit-mask-composite: source-in;
-  mask-image: var(--edge-sides), var(--edge-top), var(--edge-arch);
-  mask-composite: intersect;
-}
+/* No mask here for the home photograph, deliberately. Its fade is blended into
+   the file itself by scripts/generate-photo-manifest.mjs — a mask composited
+   live over a wide band in near-black is what produced the rings. */
 
 /* Driven by CSS rather than JS so the cylinder keeps turning smoothly without
    occupying the main thread, and stops outright for reduced-motion users. */

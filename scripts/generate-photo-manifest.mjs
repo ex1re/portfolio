@@ -121,6 +121,111 @@ async function renditionFor(absPath, edge, quality, suffix = '') {
 
 const previewFor = (absPath) => renditionFor(absPath, PREVIEW_EDGE, PREVIEW_QUALITY)
 
+/** The page's own background: what the picture's edges are blended into. */
+const PAGE_BG = [10, 10, 10]
+/** A pixel this bright is the subject, and is never touched by the fade. */
+const SUBJECT_LUMA = 50
+/** How much of the clear margin the fade uses, leaving the rest as headroom. */
+const FADE_REACH = 0.95
+
+const luma = (r, g, b) => 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+/** Smootherstep: zero first and second derivative at both ends, so the fade
+ *  arrives and departs without a corner. A corner is what the eye finds. */
+const ease = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * t * (t * (t * 6 - 15) + 10))
+
+/**
+ * Deterministic dither, ±half a level. Rounding a smooth ramp to 8 bits lays
+ * down flat steps — the rings — and a little noise under the rounding breaks
+ * them up. Seeded from the pixel's own position so a rebuild is byte-identical.
+ */
+function dither(x, y) {
+  const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453
+  return (n - Math.floor(n)) - 0.5
+}
+
+/**
+ * How far in from each edge the picture can be faded without touching the
+ * subject: the smaller clear margin on each axis, less a little headroom.
+ */
+function fadeBands(data, width, height) {
+  let left = width, right = 0, top = height, bottom = 0
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 3
+      if (luma(data[i], data[i + 1], data[i + 2]) < SUBJECT_LUMA) continue
+      if (x < left) left = x
+      if (x > right) right = x
+      if (y < top) top = y
+      if (y > bottom) bottom = y
+    }
+  }
+  if (right < left) return { x: 0.12, y: 0.12 }
+  return {
+    x: (Math.min(left, width - 1 - right) / width) * FADE_REACH,
+    y: (Math.min(top, height - 1 - bottom) / height) * FADE_REACH,
+  }
+}
+
+/**
+ * Writes a copy of the hero with the fade blended into the pixels themselves,
+ * rather than masked over them at display time.
+ *
+ * A CSS mask is composited live and lands on whatever the browser's compositor
+ * decides: over a wide band in near-black, its quantised alpha resolves into
+ * visible rings. Blending once, here, in floating point and with the rounding
+ * dithered, leaves the picture's border exactly the page's colour and nothing
+ * in between for the eye to catch.
+ */
+async function blendedHeroFor(absPath, edge, quality, suffix) {
+  if (!sharp) return null
+
+  const rel = relative(photosDir, absPath).replace(/\.[^.]+$/, `${suffix}.webp`)
+  const outAbs = join(previewsDir, rel)
+  wantedPreviews.add(outAbs)
+
+  if (existsSync(outAbs) && statSync(outAbs).mtimeMs >= statSync(absPath).mtimeMs) {
+    return urlFor(outAbs)
+  }
+
+  const { data, info } = await sharp(absPath)
+    .rotate()
+    .resize({ width: edge, height: edge, fit: 'inside', withoutEnlargement: true })
+    .removeAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+
+  const { width, height } = info
+  const band = fadeBands(data, width, height)
+  const out = Buffer.allocUnsafe(data.length)
+
+  for (let y = 0; y < height; y++) {
+    const v = y / (height - 1)
+    const fadeY = ease(Math.min(v, 1 - v) / band.y)
+    for (let x = 0; x < width; x++) {
+      const u = x / (width - 1)
+      const alpha = fadeY * ease(Math.min(u, 1 - u) / band.x)
+      const i = (y * width + x) * 3
+      if (alpha >= 1) {
+        out[i] = data[i]
+        out[i + 1] = data[i + 1]
+        out[i + 2] = data[i + 2]
+        continue
+      }
+      const noise = dither(x, y)
+      for (let k = 0; k < 3; k++) {
+        const value = PAGE_BG[k] + (data[i + k] - PAGE_BG[k]) * alpha + noise
+        out[i + k] = value < 0 ? 0 : value > 255 ? 255 : Math.round(value)
+      }
+    }
+  }
+
+  mkdirSync(dirname(outAbs), { recursive: true })
+  await sharp(out, { raw: { width, height, channels: 3 } }).webp({ quality }).toFile(outAbs)
+
+  return urlFor(outAbs)
+}
+
 async function describe(absPath) {
   const { width, height } = await dimensionsOf(absPath)
   if (!width || !height) {
@@ -160,9 +265,9 @@ async function describeHero(absPath) {
   }
   const fallback = urlFor(absPath)
   return {
-    src: (await renditionFor(absPath, HERO_EDGE, HERO_QUALITY, '-1x')) ?? fallback,
+    src: (await blendedHeroFor(absPath, HERO_EDGE, HERO_QUALITY, '-1x')) ?? fallback,
     srcWidth: widthAtEdge(width, height, HERO_EDGE),
-    src2x: (await renditionFor(absPath, HERO_EDGE_2X, HERO_QUALITY, '-2x')) ?? fallback,
+    src2x: (await blendedHeroFor(absPath, HERO_EDGE_2X, HERO_QUALITY, '-2x')) ?? fallback,
     src2xWidth: widthAtEdge(width, height, HERO_EDGE_2X),
     width,
     height,
