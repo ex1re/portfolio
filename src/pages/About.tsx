@@ -107,10 +107,16 @@ export default function About() {
           the real one rather than the padded one. */}
       <section className="flex min-h-screen flex-col justify-center gap-16 px-6 pt-32 pb-20 md:flex-row md:items-center md:gap-0 md:pt-20">
         <div className="md:w-2/5 md:shrink-0 lg:w-1/3 lg:max-w-lg">
-          {/* The mark read aloud. `lang` keeps a screen reader from spelling the
-              brackets and stress marks out as punctuation. */}
-          <h1 lang="la-fonipa" className="text-3xl font-semibold tracking-tight text-neutral-100">
-            [ɛkˈsiːrɛ]
+          {/* The mark read aloud, then what it means. `lang` keeps a screen
+              reader from spelling the brackets and stress marks out as
+              punctuation, and only covers the pronunciation — the gloss beside
+              it is English and carries its own. */}
+          <h1 className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-3xl font-semibold tracking-tight text-neutral-100">
+            <span lang="la-fonipa">[ɛkˈsiːrɛ]</span>
+            {/* Set at the same size, and told apart by weight and colour alone. */}
+            <span lang="en" className="font-normal text-neutral-500">
+              Latin · to go out
+            </span>
           </h1>
           {/* Even spacing down the block: the name, the bio and the contact row
               sit the same distance apart, so only the publications heading
