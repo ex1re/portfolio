@@ -110,7 +110,7 @@ export default function About() {
           {/* The mark read aloud. `lang` keeps a screen reader from spelling the
               brackets and stress marks out as punctuation. */}
           <h1 lang="la-fonipa" className="text-3xl font-semibold tracking-tight text-neutral-100">
-            [ekˈziːre]
+            [ɛkˈsiːrɛ]
           </h1>
           {/* Even spacing down the block: the name, the bio and the contact row
               sit the same distance apart, so only the publications heading
