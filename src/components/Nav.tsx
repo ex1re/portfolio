@@ -18,7 +18,14 @@ export default function Nav() {
           with page headings and the nav ends the same distance from the opposite
           edge. A max-width here would inset both toward the middle. */}
       <div className="flex items-center justify-between px-6 py-5">
-        <NavLink to="/" className="font-logo text-3xl leading-none text-neutral-100">
+        {/* The logo is a link to the foyer like any other, so it closes an open
+            menu the way the links below it do — otherwise it leaves the menu
+            standing over the page it just took you to. */}
+        <NavLink
+          to="/"
+          onClick={() => setOpen(false)}
+          className="font-logo text-3xl leading-none text-neutral-100"
+        >
           exire
         </NavLink>
 
