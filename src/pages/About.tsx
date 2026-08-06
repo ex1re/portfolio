@@ -1,6 +1,7 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
+import FlagMark from '../components/FlagMark'
 
 // three.js is heavy relative to the rest of the site, so it's split into its own
 // chunk that only downloads when someone opens this page. The garden, which
@@ -42,26 +43,31 @@ const publications = [
   {
     title: 'Visual Poetry Journal',
     year: '2025',
+    country: 'dk' as const,
     href: 'https://visualpoetryjournal.com/issue-8-october-2025/',
   },
   {
     title: 'Chania International Photo Festival',
     year: '2024',
+    country: 'gr' as const,
     href: 'https://www.cipfestival.com/participating-artists-2024/',
   },
   {
     title: 'Architecture MasterPrize',
     year: '2023',
+    country: 'us' as const,
     href: 'https://architectureprize.com/winners/2023_photo_s.php',
   },
   {
     title: 'Communication Arts',
     year: '2023',
+    country: 'us' as const,
     href: 'https://www.commarts.com/gallery?d=photography&y=2023',
   },
   {
     title: 'The Glasgow Gallery of Photography',
     year: '2023',
+    country: 'sct' as const,
     href: 'https://www.glasgowgalleryofphotography.com/exhibition2023/environment',
   },
 ]
@@ -179,7 +185,7 @@ export default function About() {
               between entries is wider than the leading inside one, so a title
               that wraps on a narrow screen still reads as a single item. */}
           <ul className="mt-4 space-y-1.5 leading-snug text-neutral-400">
-            {publications.map(({ title, year, href }) => (
+            {publications.map(({ title, year, href, country }) => (
               <li key={`${title}${year}`}>
                 {/* Each entry lifts a step on hover, year included, so the whole
                     line answers rather than just the words under the cursor. */}
@@ -190,8 +196,11 @@ export default function About() {
                   className="group transition-colors hover:text-neutral-100"
                 >
                   {title}{' '}
+                  {/* Year and flag stay together: they're the tail of the line,
+                      and a title that wraps should take them with it rather
+                      than leave the flag stranded on its own. */}
                   <span className="whitespace-nowrap text-neutral-500 transition-colors group-hover:text-neutral-300">
-                    · {year}
+                    · {year} <FlagMark country={country} />
                   </span>
                 </a>
               </li>
