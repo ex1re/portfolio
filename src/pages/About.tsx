@@ -39,11 +39,31 @@ const poem = [
 /** Newest first. The year is dimmed against the title, so the column of dates
     reads as a second layer rather than competing with the names. */
 const publications = [
-  { title: 'Visual Poetry Journal', year: '2025' },
-  { title: 'Chania International Photo Festival', year: '2024' },
-  { title: 'Architecture MasterPrize', year: '2023' },
-  { title: 'Communication Arts', year: '2023' },
-  { title: 'The Glasgow Gallery of Photography', year: '2023' },
+  {
+    title: 'Visual Poetry Journal',
+    year: '2025',
+    href: 'https://visualpoetryjournal.com/issue-8-october-2025/',
+  },
+  {
+    title: 'Chania International Photo Festival',
+    year: '2024',
+    href: 'https://www.cipfestival.com/participating-artists-2024/',
+  },
+  {
+    title: 'Architecture MasterPrize',
+    year: '2023',
+    href: 'https://architectureprize.com/winners/2023_photo_s.php',
+  },
+  {
+    title: 'Communication Arts',
+    year: '2023',
+    href: 'https://www.commarts.com/gallery?d=photography&y=2023',
+  },
+  {
+    title: 'The Glasgow Gallery of Photography',
+    year: '2023',
+    href: 'https://www.glasgowgalleryofphotography.com/exhibition2023/environment',
+  },
 ]
 
 /** The home photograph's entrance, so the two pages open at the same pace. */
@@ -159,9 +179,21 @@ export default function About() {
               between entries is wider than the leading inside one, so a title
               that wraps on a narrow screen still reads as a single item. */}
           <ul className="mt-4 space-y-1.5 leading-snug text-neutral-400">
-            {publications.map(({ title, year }) => (
+            {publications.map(({ title, year, href }) => (
               <li key={`${title}${year}`}>
-                {title} <span className="whitespace-nowrap text-neutral-500">· {year}</span>
+                {/* Each entry lifts a step on hover, year included, so the whole
+                    line answers rather than just the words under the cursor. */}
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group transition-colors hover:text-neutral-100"
+                >
+                  {title}{' '}
+                  <span className="whitespace-nowrap text-neutral-500 transition-colors group-hover:text-neutral-300">
+                    · {year}
+                  </span>
+                </a>
               </li>
             ))}
           </ul>
