@@ -189,17 +189,20 @@ export default function About() {
               <li key={`${title}${year}`}>
                 {/* Each entry lifts a step on hover, year included, so the whole
                     line answers rather than just the words under the cursor. */}
+                {/* `active` is the hover of a touchscreen: it holds while the
+                    finger is down, so an entry answers a press the way it
+                    answers a cursor. */}
                 <a
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group transition-colors hover:text-neutral-100"
+                  className="group transition-colors hover:text-neutral-100 active:text-neutral-100"
                 >
                   {title}{' '}
                   {/* Year and flag stay together: they're the tail of the line,
                       and a title that wraps should take them with it rather
                       than leave the flag stranded on its own. */}
-                  <span className="whitespace-nowrap text-neutral-500 transition-colors group-hover:text-neutral-300">
+                  <span className="whitespace-nowrap text-neutral-500 transition-colors group-hover:text-neutral-300 group-active:text-neutral-300">
                     {/* The extra hair of margin is the dot's own side bearing:
                         a word space either side measures the same, but the
                         flag's circle touches the edge of its box where the dot

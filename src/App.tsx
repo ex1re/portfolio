@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Nav from './components/Nav'
@@ -26,6 +27,15 @@ function AnimatedRoutes() {
 }
 
 function App() {
+  // Safari on iOS only applies `:active` once the document is listening for
+  // touch — without this, a held link never lights up there. The listener does
+  // nothing and is passive, so it costs nothing to scrolling.
+  useEffect(() => {
+    const noop = () => {}
+    document.addEventListener('touchstart', noop, { passive: true })
+    return () => document.removeEventListener('touchstart', noop)
+  }, [])
+
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-neutral-950 text-neutral-100">
