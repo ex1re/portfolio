@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
 import PhotoImage from '../components/PhotoImage'
+import SiteFooter from '../components/SiteFooter'
 import { projects } from '../data/projects'
 import { selectionPhoto } from '../data/photos'
 
@@ -76,6 +77,8 @@ export default function Project() {
           </figcaption>
         </figure>
       </section>
+
+      <SiteFooter />
     </PageTransition>
   )
 }
