@@ -113,9 +113,11 @@ export default function About() {
               it is English and carries its own. */}
           <h1 className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-3xl font-semibold tracking-tight text-neutral-100">
             <span lang="la-fonipa">[ɛkˈsiːrɛ]</span>
-            {/* Set at the same size, and told apart by weight and colour alone. */}
-            <span lang="en" className="font-normal text-neutral-500">
-              Latin · to go out
+            {/* Set at the same size, and told apart by weight and colour alone.
+                The two greys are the ones the publications list uses: the bio's
+                for the language, a step down for what follows the dot. */}
+            <span lang="en" className="font-normal text-neutral-400">
+              Latin <span className="text-neutral-500">· to go out</span>
             </span>
           </h1>
           {/* Even spacing down the block: the name, the bio and the contact row
