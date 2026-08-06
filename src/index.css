@@ -51,6 +51,14 @@ body {
    its own — findable on a bright screen even though the two tones either side
    of it agree. These stops trace a smoothstep, so the fade has no corner to
    catch, and the band is wide enough that what remains is spread past noticing. */
+/* Holding a photo in the pile is how you pick it up, but a hold on a link is
+   also how iOS raises its preview sheet — and that sheet takes the gesture with
+   it, so the photo never moves. There is no CSS property for this in the
+   standard, only WebKit's own. */
+.no-callout {
+  -webkit-touch-callout: none;
+}
+
 /* No mask here for the home photograph, deliberately. Its fade is blended into
    the file itself by scripts/generate-photo-manifest.mjs — a mask composited
    live over a wide band in near-black is what produced the rings. */

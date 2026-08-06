@@ -48,6 +48,11 @@ export default function SelectionPhoto({
   const dragControls = useDragControls()
   const [armed, setArmed] = useState(false)
   const [dragging, setDragging] = useState(false)
+  // True from the moment a hold succeeds until the finger lifts. The window
+  // between arming and the first drag frame is the one that used to lose the
+  // gesture: the browser was still free to scroll, and a scroll cancels the
+  // pointer that framer-motion is following.
+  const [pressing, setPressing] = useState(false)
   const photo = selectionPhoto(project)
 
   const holdTimer = useRef<number | null>(null)
@@ -64,6 +69,12 @@ export default function SelectionPhoto({
       holdTimer.current = null
     }
     holdOrigin.current = null
+  }
+
+  /** The finger has gone: stop holding the page still. */
+  function endPress() {
+    cancelHold()
+    setPressing(false)
   }
 
   /**
@@ -93,13 +104,16 @@ export default function SelectionPhoto({
   }, [armed, dragControls])
 
   // `touch-action` is latched when a gesture begins, so it can't stop the page
-  // scrolling for a drag that starts later. Cancel the scroll directly instead.
+  // scrolling for a drag that starts later. Cancel the scroll directly instead,
+  // from the moment the hold succeeds rather than from the first drag frame —
+  // in between, one scrolled pixel was enough to cancel the pointer and with it
+  // the drag, which is why a held photo wouldn't move.
   useEffect(() => {
-    if (!dragging) return
+    if (!pressing && !dragging) return
     const block = (event: TouchEvent) => event.preventDefault()
     document.addEventListener('touchmove', block, { passive: false })
     return () => document.removeEventListener('touchmove', block)
-  }, [dragging])
+  }, [pressing, dragging])
 
   useEffect(
     () => () => {
@@ -121,6 +135,7 @@ export default function SelectionPhoto({
         // A deliberate hold is not a tap, so it shouldn't open the project.
         suppressClick.current = true
         navigator.vibrate?.(12)
+        setPressing(true)
         arm(native)
       }, HOLD_MS)
     } else {
@@ -140,8 +155,8 @@ export default function SelectionPhoto({
       onPointerEnter={onActivate}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
-      onPointerUp={cancelHold}
-      onPointerCancel={cancelHold}
+      onPointerUp={endPress}
+      onPointerCancel={endPress}
       // Suppress the long-press callout/context menu on touch.
       onContextMenu={(event) => event.preventDefault()}
       drag={armed}
@@ -160,7 +175,10 @@ export default function SelectionPhoto({
           suppressClick.current = true
         }
       }}
-      onDragEnd={() => setDragging(false)}
+      onDragEnd={() => {
+        setDragging(false)
+        setPressing(false)
+      }}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{
         opacity: 1,
@@ -185,7 +203,7 @@ export default function SelectionPhoto({
         left: `${placement.left}%`,
         top: `${placement.top}%`,
         width: `${placement.width}%`,
-        touchAction: dragging ? 'none' : 'auto',
+        touchAction: pressing || dragging ? 'none' : 'auto',
       }}
     >
       <Link
@@ -197,7 +215,7 @@ export default function SelectionPhoto({
             suppressClick.current = false
           }
         }}
-        className="group block cursor-grab bg-neutral-400 p-1.5 shadow-xl shadow-black/60 select-none active:cursor-grabbing"
+        className="no-callout group block cursor-grab bg-neutral-400 p-1.5 shadow-xl shadow-black/60 select-none active:cursor-grabbing"
       >
         <PhotoImage photo={photo} loading={index < 4 ? 'eager' : 'lazy'}>
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-3 pt-8 pb-2 opacity-0 transition-opacity group-hover:opacity-100">
