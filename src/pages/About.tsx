@@ -200,7 +200,11 @@ export default function About() {
                       and a title that wraps should take them with it rather
                       than leave the flag stranded on its own. */}
                   <span className="whitespace-nowrap text-neutral-500 transition-colors group-hover:text-neutral-300">
-                    · {year} <FlagMark country={country} />
+                    {/* The extra hair of margin is the dot's own side bearing:
+                        a word space either side measures the same, but the
+                        flag's circle touches the edge of its box where the dot
+                        sits back from its own, so it read as the tighter gap. */}
+                    · {year} <FlagMark country={country} className="ml-[0.07em]" />
                   </span>
                 </a>
               </li>
