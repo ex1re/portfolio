@@ -162,4 +162,723 @@ export const selectionFiles: Record<string, PhotoFile> = {
 }
 
 /** Keyed by collection slug, in filename order. */
-export const collectionFiles: Record<string, CollectionPhotoFile[]> = {}
+export const collectionFiles: Record<string, CollectionPhotoFile[]> = {
+  "abstractions": [
+    {
+      "id": "abstractions/01-DSCF1070.JPG",
+      "src": "/photos/previews/collections/abstractions/01-DSCF1070.webp",
+      "fullSrc": "/photos/collections/abstractions/01-DSCF1070.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "160",
+        "aperture": "7.1",
+        "shutter": "1/500"
+      }
+    },
+    {
+      "id": "abstractions/DSCF0708.JPG",
+      "src": "/photos/previews/collections/abstractions/DSCF0708.webp",
+      "fullSrc": "/photos/collections/abstractions/DSCF0708.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "160",
+        "aperture": "4",
+        "shutter": "1/1000"
+      }
+    },
+    {
+      "id": "abstractions/DSCF0922 copy.JPG",
+      "src": "/photos/previews/collections/abstractions/DSCF0922 copy.webp",
+      "fullSrc": "/photos/collections/abstractions/DSCF0922 copy.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "200",
+        "aperture": "2",
+        "shutter": "1/400"
+      }
+    },
+    {
+      "id": "abstractions/DSCF0922.JPG",
+      "src": "/photos/previews/collections/abstractions/DSCF0922.webp",
+      "fullSrc": "/photos/collections/abstractions/DSCF0922.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "200",
+        "aperture": "2",
+        "shutter": "1/400"
+      }
+    },
+    {
+      "id": "abstractions/DSCF1442.JPG",
+      "src": "/photos/previews/collections/abstractions/DSCF1442.webp",
+      "fullSrc": "/photos/collections/abstractions/DSCF1442.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "12800",
+        "aperture": "2",
+        "shutter": "1/250"
+      }
+    },
+    {
+      "id": "abstractions/DSCF1539.JPG",
+      "src": "/photos/previews/collections/abstractions/DSCF1539.webp",
+      "fullSrc": "/photos/collections/abstractions/DSCF1539.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "160",
+        "aperture": "8",
+        "shutter": "1/500"
+      }
+    },
+    {
+      "id": "abstractions/DSCF1985.JPG",
+      "src": "/photos/previews/collections/abstractions/DSCF1985.webp",
+      "fullSrc": "/photos/collections/abstractions/DSCF1985.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "250",
+        "aperture": "2.8",
+        "shutter": "1/50"
+      }
+    },
+    {
+      "id": "abstractions/DSCF1995.JPG",
+      "src": "/photos/previews/collections/abstractions/DSCF1995.webp",
+      "fullSrc": "/photos/collections/abstractions/DSCF1995.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "250",
+        "aperture": "5.6",
+        "shutter": "1/50"
+      }
+    },
+    {
+      "id": "abstractions/IMG_1338.jpeg",
+      "src": "/photos/previews/collections/abstractions/IMG_1338.webp",
+      "fullSrc": "/photos/collections/abstractions/IMG_1338.jpeg",
+      "width": 2400,
+      "height": 2034,
+      "settings": {
+        "iso": "40",
+        "aperture": "1.5",
+        "shutter": "1/210"
+      }
+    },
+    {
+      "id": "abstractions/IMG_1729.jpeg",
+      "src": "/photos/previews/collections/abstractions/IMG_1729.webp",
+      "fullSrc": "/photos/collections/abstractions/IMG_1729.jpeg",
+      "width": 1910,
+      "height": 2400,
+      "settings": {
+        "iso": "1600",
+        "aperture": "2.8",
+        "shutter": "1/8"
+      }
+    },
+    {
+      "id": "abstractions/IMG_3741.JPG",
+      "src": "/photos/previews/collections/abstractions/IMG_3741.webp",
+      "fullSrc": "/photos/collections/abstractions/IMG_3741.JPG",
+      "width": 2400,
+      "height": 1898,
+      "settings": {
+        "iso": "32",
+        "aperture": "1.8",
+        "shutter": "1/5495"
+      }
+    },
+    {
+      "id": "abstractions/IMG_4896.jpg",
+      "src": "/photos/previews/collections/abstractions/IMG_4896.webp",
+      "fullSrc": "/photos/collections/abstractions/IMG_4896.jpg",
+      "width": 2400,
+      "height": 1772,
+      "settings": {
+        "iso": "500",
+        "aperture": "1.9",
+        "shutter": "1/30"
+      }
+    }
+  ],
+  "constructions": [
+    {
+      "id": "constructions/01-DD9AD218-A8B8-452B-837B-501B2B36D410.jpg",
+      "src": "/photos/previews/collections/constructions/01-DD9AD218-A8B8-452B-837B-501B2B36D410.webp",
+      "fullSrc": "/photos/collections/constructions/01-DD9AD218-A8B8-452B-837B-501B2B36D410.jpg",
+      "width": 2400,
+      "height": 1712,
+      "settings": {
+        "iso": "125",
+        "aperture": "1.5",
+        "shutter": "1/60"
+      }
+    },
+    {
+      "id": "constructions/8E928D42-8342-4262-8DFB-449EED535384.jpeg",
+      "src": "/photos/previews/collections/constructions/8E928D42-8342-4262-8DFB-449EED535384.webp",
+      "fullSrc": "/photos/collections/constructions/8E928D42-8342-4262-8DFB-449EED535384.jpeg",
+      "width": 1624,
+      "height": 2400
+    },
+    {
+      "id": "constructions/DSCF0538.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF0538.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF0538.JPG",
+      "width": 2400,
+      "height": 1350,
+      "settings": {
+        "iso": "500",
+        "aperture": "2.2",
+        "shutter": "1/200"
+      }
+    },
+    {
+      "id": "constructions/DSCF0892.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF0892.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF0892.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "320",
+        "aperture": "2",
+        "shutter": "1/400"
+      }
+    },
+    {
+      "id": "constructions/DSCF0952.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF0952.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF0952.JPG",
+      "width": 2400,
+      "height": 1581,
+      "settings": {
+        "iso": "800",
+        "aperture": "2",
+        "shutter": "1/125"
+      }
+    },
+    {
+      "id": "constructions/DSCF1306.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF1306.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF1306.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "800",
+        "aperture": "2",
+        "shutter": "1/250"
+      }
+    },
+    {
+      "id": "constructions/DSCF1426.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF1426.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF1426.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "250",
+        "aperture": "2.2",
+        "shutter": "1/1000"
+      }
+    },
+    {
+      "id": "constructions/DSCF1453.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF1453.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF1453.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "12800",
+        "aperture": "2",
+        "shutter": "1/200"
+      }
+    },
+    {
+      "id": "constructions/DSCF1477.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF1477.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF1477.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "12800",
+        "aperture": "2",
+        "shutter": "1/200"
+      }
+    },
+    {
+      "id": "constructions/DSCF1640.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF1640.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF1640.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "12800",
+        "aperture": "2",
+        "shutter": "1/500"
+      }
+    },
+    {
+      "id": "constructions/DSCF1709.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF1709.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF1709.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "4000",
+        "aperture": "2",
+        "shutter": "1/60"
+      }
+    },
+    {
+      "id": "constructions/DSCF1794.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF1794.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF1794.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "500",
+        "aperture": "3.2",
+        "shutter": "1/125"
+      }
+    },
+    {
+      "id": "constructions/DSCF1822.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF1822.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF1822.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "2500",
+        "aperture": "2",
+        "shutter": "1/60"
+      }
+    },
+    {
+      "id": "constructions/DSCF2394.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF2394.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF2394.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "5000",
+        "aperture": "2",
+        "shutter": "1/60"
+      }
+    },
+    {
+      "id": "constructions/DSCF2615.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF2615.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF2615.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "500",
+        "aperture": "2",
+        "shutter": "1/50"
+      }
+    },
+    {
+      "id": "constructions/IMG_6579.jpg",
+      "src": "/photos/previews/collections/constructions/IMG_6579.webp",
+      "fullSrc": "/photos/collections/constructions/IMG_6579.jpg",
+      "width": 2400,
+      "height": 1641,
+      "settings": {
+        "iso": "32",
+        "aperture": "1.6",
+        "shutter": "1/1370"
+      }
+    },
+    {
+      "id": "constructions/IMG_8052.jpeg",
+      "src": "/photos/previews/collections/constructions/IMG_8052.webp",
+      "fullSrc": "/photos/collections/constructions/IMG_8052.jpeg",
+      "width": 2400,
+      "height": 1686,
+      "settings": {
+        "iso": "100",
+        "aperture": "1.8",
+        "shutter": "1/100"
+      }
+    },
+    {
+      "id": "constructions/jhfhjfjfty.jpg",
+      "src": "/photos/previews/collections/constructions/jhfhjfjfty.webp",
+      "fullSrc": "/photos/collections/constructions/jhfhjfjfty.jpg",
+      "width": 2400,
+      "height": 1755,
+      "settings": {
+        "iso": "50",
+        "aperture": "1.5",
+        "shutter": "1/367"
+      }
+    }
+  ],
+  "landscape": [
+    {
+      "id": "landscape/01-DSCF2497.JPG",
+      "src": "/photos/previews/collections/landscape/01-DSCF2497.webp",
+      "fullSrc": "/photos/collections/landscape/01-DSCF2497.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "160",
+        "aperture": "2",
+        "shutter": "1/500"
+      }
+    },
+    {
+      "id": "landscape/DSCF0269.JPG",
+      "src": "/photos/previews/collections/landscape/DSCF0269.webp",
+      "fullSrc": "/photos/collections/landscape/DSCF0269.JPG",
+      "width": 2400,
+      "height": 1675,
+      "settings": {
+        "iso": "250",
+        "aperture": "8",
+        "shutter": "1/200"
+      }
+    },
+    {
+      "id": "landscape/DSCF1683.JPG",
+      "src": "/photos/previews/collections/landscape/DSCF1683.webp",
+      "fullSrc": "/photos/collections/landscape/DSCF1683.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "500",
+        "aperture": "3.2",
+        "shutter": "1/500"
+      }
+    },
+    {
+      "id": "landscape/DSCF1690.JPG",
+      "src": "/photos/previews/collections/landscape/DSCF1690.webp",
+      "fullSrc": "/photos/collections/landscape/DSCF1690.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "640",
+        "aperture": "2",
+        "shutter": "1/500"
+      }
+    },
+    {
+      "id": "landscape/DSCF2574.JPG",
+      "src": "/photos/previews/collections/landscape/DSCF2574.webp",
+      "fullSrc": "/photos/collections/landscape/DSCF2574.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "125",
+        "aperture": "5",
+        "shutter": "1/400"
+      }
+    },
+    {
+      "id": "landscape/DSCF2626.JPG",
+      "src": "/photos/previews/collections/landscape/DSCF2626.webp",
+      "fullSrc": "/photos/collections/landscape/DSCF2626.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "200",
+        "aperture": "2",
+        "shutter": "1/2"
+      }
+    },
+    {
+      "id": "landscape/IMG_0405.jpeg",
+      "src": "/photos/previews/collections/landscape/IMG_0405.webp",
+      "fullSrc": "/photos/collections/landscape/IMG_0405.jpeg",
+      "width": 2400,
+      "height": 1817,
+      "settings": {
+        "iso": "50",
+        "aperture": "2.8",
+        "shutter": "1/1422"
+      }
+    },
+    {
+      "id": "landscape/IMG_0625.jpeg",
+      "src": "/photos/previews/collections/landscape/IMG_0625.webp",
+      "fullSrc": "/photos/collections/landscape/IMG_0625.jpeg",
+      "width": 2400,
+      "height": 1800,
+      "settings": {
+        "iso": "64",
+        "aperture": "2.8",
+        "shutter": "1/99"
+      }
+    },
+    {
+      "id": "landscape/IMG_2266.jpeg",
+      "src": "/photos/previews/collections/landscape/IMG_2266.webp",
+      "fullSrc": "/photos/collections/landscape/IMG_2266.jpeg",
+      "width": 2400,
+      "height": 1862
+    }
+  ],
+  "people": [
+    {
+      "id": "people/01-IMG_3945.jpeg",
+      "src": "/photos/previews/collections/people/01-IMG_3945.webp",
+      "fullSrc": "/photos/collections/people/01-IMG_3945.jpeg",
+      "width": 2400,
+      "height": 1874,
+      "settings": {
+        "iso": "1600",
+        "aperture": "1.5",
+        "shutter": "1/15"
+      }
+    },
+    {
+      "id": "people/DSCF0368.JPG",
+      "src": "/photos/previews/collections/people/DSCF0368.webp",
+      "fullSrc": "/photos/collections/people/DSCF0368.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "2500",
+        "aperture": "2",
+        "shutter": "1/200"
+      }
+    },
+    {
+      "id": "people/DSCF0469.JPG",
+      "src": "/photos/previews/collections/people/DSCF0469.webp",
+      "fullSrc": "/photos/collections/people/DSCF0469.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "500",
+        "aperture": "2",
+        "shutter": "1/320"
+      }
+    },
+    {
+      "id": "people/DSCF0547.JPG",
+      "src": "/photos/previews/collections/people/DSCF0547.webp",
+      "fullSrc": "/photos/collections/people/DSCF0547.JPG",
+      "width": 2400,
+      "height": 1632,
+      "settings": {
+        "iso": "500",
+        "aperture": "7.1",
+        "shutter": "1/160"
+      }
+    },
+    {
+      "id": "people/DSCF0687.JPG",
+      "src": "/photos/previews/collections/people/DSCF0687.webp",
+      "fullSrc": "/photos/collections/people/DSCF0687.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "320",
+        "aperture": "2",
+        "shutter": "1/1000"
+      }
+    },
+    {
+      "id": "people/DSCF0701.JPG",
+      "src": "/photos/previews/collections/people/DSCF0701.webp",
+      "fullSrc": "/photos/collections/people/DSCF0701.JPG",
+      "width": 2400,
+      "height": 1674,
+      "settings": {
+        "iso": "4000",
+        "aperture": "2",
+        "shutter": "1/200"
+      }
+    },
+    {
+      "id": "people/DSCF0777.JPG",
+      "src": "/photos/previews/collections/people/DSCF0777.webp",
+      "fullSrc": "/photos/collections/people/DSCF0777.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "250",
+        "aperture": "6.4",
+        "shutter": "1/500"
+      }
+    },
+    {
+      "id": "people/DSCF0832.JPG",
+      "src": "/photos/previews/collections/people/DSCF0832.webp",
+      "fullSrc": "/photos/collections/people/DSCF0832.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "2500",
+        "aperture": "2",
+        "shutter": "1/250"
+      }
+    },
+    {
+      "id": "people/DSCF0870.JPG",
+      "src": "/photos/previews/collections/people/DSCF0870.webp",
+      "fullSrc": "/photos/collections/people/DSCF0870.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "320",
+        "aperture": "2",
+        "shutter": "1/250"
+      }
+    },
+    {
+      "id": "people/DSCF0893.JPG",
+      "src": "/photos/previews/collections/people/DSCF0893.webp",
+      "fullSrc": "/photos/collections/people/DSCF0893.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "800",
+        "aperture": "2",
+        "shutter": "1/400"
+      }
+    },
+    {
+      "id": "people/DSCF0898.JPG",
+      "src": "/photos/previews/collections/people/DSCF0898.webp",
+      "fullSrc": "/photos/collections/people/DSCF0898.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "250",
+        "aperture": "2.8",
+        "shutter": "1/400"
+      }
+    },
+    {
+      "id": "people/DSCF0918.JPG",
+      "src": "/photos/previews/collections/people/DSCF0918.webp",
+      "fullSrc": "/photos/collections/people/DSCF0918.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "640",
+        "aperture": "2",
+        "shutter": "1/400"
+      }
+    },
+    {
+      "id": "people/DSCF1000.JPG",
+      "src": "/photos/previews/collections/people/DSCF1000.webp",
+      "fullSrc": "/photos/collections/people/DSCF1000.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "3200",
+        "aperture": "2",
+        "shutter": "1/100"
+      }
+    },
+    {
+      "id": "people/DSCF1804.JPG",
+      "src": "/photos/previews/collections/people/DSCF1804.webp",
+      "fullSrc": "/photos/collections/people/DSCF1804.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "1000",
+        "aperture": "2",
+        "shutter": "1/100"
+      }
+    },
+    {
+      "id": "people/DSCF2635.JPG",
+      "src": "/photos/previews/collections/people/DSCF2635.webp",
+      "fullSrc": "/photos/collections/people/DSCF2635.JPG",
+      "width": 2400,
+      "height": 1350,
+      "settings": {
+        "iso": "800",
+        "aperture": "2",
+        "shutter": "1/10"
+      }
+    },
+    {
+      "id": "people/Fuji122924_51.jpg",
+      "src": "/photos/previews/collections/people/Fuji122924_51.webp",
+      "fullSrc": "/photos/collections/people/Fuji122924_51.jpg",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "250",
+        "aperture": "2",
+        "shutter": "1/500"
+      }
+    },
+    {
+      "id": "people/Fuji122924_53.jpg",
+      "src": "/photos/previews/collections/people/Fuji122924_53.webp",
+      "fullSrc": "/photos/collections/people/Fuji122924_53.jpg",
+      "width": 2400,
+      "height": 1623,
+      "settings": {
+        "iso": "250",
+        "aperture": "2.2",
+        "shutter": "1/640"
+      }
+    },
+    {
+      "id": "people/Fuji122924_56.jpg",
+      "src": "/photos/previews/collections/people/Fuji122924_56.webp",
+      "fullSrc": "/photos/collections/people/Fuji122924_56.jpg",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "250",
+        "aperture": "2.2",
+        "shutter": "1/250"
+      }
+    },
+    {
+      "id": "people/Fuji122924_58.jpg",
+      "src": "/photos/previews/collections/people/Fuji122924_58.webp",
+      "fullSrc": "/photos/collections/people/Fuji122924_58.jpg",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "320",
+        "aperture": "2",
+        "shutter": "1/400"
+      }
+    },
+    {
+      "id": "people/Fuji122924_62.jpg",
+      "src": "/photos/previews/collections/people/Fuji122924_62.webp",
+      "fullSrc": "/photos/collections/people/Fuji122924_62.jpg",
+      "width": 1499,
+      "height": 2400,
+      "settings": {
+        "iso": "250",
+        "aperture": "2",
+        "shutter": "1/400"
+      }
+    },
+    {
+      "id": "people/IMG_9307.jpeg",
+      "src": "/photos/previews/collections/people/IMG_9307.webp",
+      "fullSrc": "/photos/collections/people/IMG_9307.jpeg",
+      "width": 2400,
+      "height": 1799,
+      "settings": {
+        "iso": "64",
+        "aperture": "1.8",
+        "shutter": "1/939"
+      }
+    }
+  ]
+}
