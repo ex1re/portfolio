@@ -36,6 +36,17 @@ function App() {
     return () => document.removeEventListener('touchstart', noop)
   }, [])
 
+  // Every page puts itself at the top when it mounts, so leave the scroll to
+  // them: left on automatic the browser also restores a position of its own, on
+  // its own schedule, and the two disagree on a page that is still arriving.
+  useEffect(() => {
+    const previous = history.scrollRestoration
+    history.scrollRestoration = 'manual'
+    return () => {
+      history.scrollRestoration = previous
+    }
+  }, [])
+
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-neutral-950 text-neutral-100">
