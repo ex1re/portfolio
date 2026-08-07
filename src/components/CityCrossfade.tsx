@@ -7,6 +7,9 @@ const BLEND = 30
 /** Room given to each layer beyond the box, so the mask has somewhere to
  *  finish rather than ending on a cut. */
 const BLEED = 0.55
+/** The tracking set on the block below, in ems. Kept here because the layout
+ *  has to account for it: it is subtracted after the final letter too. */
+const TRACKING = 0.035
 /** The size the names are measured at, before the real one is worked out. */
 const REF_SIZE = 100
 const MIN_SIZE = 26
@@ -63,12 +66,22 @@ export default function CityCrossfade({ top, bottom, className = '' }: CityCross
 
     // The layers reach past the block so the gradient can run out beyond the
     // letters; the band itself stays centred on the seam either way.
+    //
+    // They reach past it sideways as well, because a mask hides whatever falls
+    // outside the box it's painted over. Letter-spacing is added after every
+    // character including the last, so negative tracking leaves the box a hair
+    // narrower than the letters inside it — enough to shave the final s off
+    // "Los Angeles". The names are still scaled to the block itself; this only
+    // gives that last hair somewhere to go.
     const bleed = BLEED * size
+    const sideBleed = TRACKING * size * 2
     const boxHeight = box.clientHeight
     const layerHeight = boxHeight + 2 * bleed
     for (const layer of layers) {
       layer!.style.top = `${-bleed}px`
       layer!.style.bottom = `${-bleed}px`
+      layer!.style.left = `${-sideBleed}px`
+      layer!.style.right = `${-sideBleed}px`
     }
 
     const band = (boxHeight * BLEND) / 100
