@@ -72,7 +72,7 @@ export default function Project() {
           <figcaption className="mt-5 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
             <h1 className="text-2xl font-semibold text-neutral-100">{project.title}</h1>
             <p className="text-sm text-neutral-500">
-              {project.category} — {project.year}
+              {project.year}
             </p>
           </figcaption>
         </figure>

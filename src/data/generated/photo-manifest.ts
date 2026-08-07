@@ -201,18 +201,6 @@ export const collectionFiles: Record<string, CollectionPhotoFile[]> = {
       }
     },
     {
-      "id": "abstractions/DSCF0922.JPG",
-      "src": "/photos/previews/collections/abstractions/DSCF0922.webp",
-      "fullSrc": "/photos/collections/abstractions/DSCF0922.JPG",
-      "width": 2400,
-      "height": 1600,
-      "settings": {
-        "iso": "200",
-        "aperture": "2",
-        "shutter": "1/400"
-      }
-    },
-    {
       "id": "abstractions/DSCF1442.JPG",
       "src": "/photos/previews/collections/abstractions/DSCF1442.webp",
       "fullSrc": "/photos/collections/abstractions/DSCF1442.JPG",
