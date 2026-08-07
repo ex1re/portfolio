@@ -119,7 +119,9 @@ export default function Work() {
 
       <section className="px-6 pt-4 pb-24">
         <h2 className="mb-10 text-sm tracking-wide text-neutral-500">collections</h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Two across at most. There are four of them, so a third column leaves
+            one stranded on a row of its own; two columns make two even rows. */}
+        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2">
           {collections.map((collection, i) => {
             const photos = collectionPhotos(collection)
             const cover = photos[0]
@@ -147,9 +149,13 @@ export default function Work() {
                       />
                     )}
                   </div>
-                  <div className="mt-3">
-                    <h3 className="text-base text-neutral-100">{collection.title}</h3>
-                    <p className="text-sm text-neutral-500">{photos.length} photos</p>
+                  {/* The character carries the collection, so it's set large
+                      and centred under its cover; the translation sits beneath
+                      it in the quiet grey the rest of the page uses for a
+                      second line. */}
+                  <div className="mt-4 text-center">
+                    <h3 className="text-3xl font-semibold text-neutral-100">{collection.title}</h3>
+                    <p className="mt-1 text-sm text-neutral-500">{collection.description}</p>
                   </div>
                 </Link>
               </motion.div>

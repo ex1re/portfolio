@@ -7,7 +7,9 @@ export interface Placeholder {
 
 export interface Collection {
   slug: string
+  /** The character the collection goes by. */
   title: string
+  /** What it means, and nothing more — it sits under the character. */
   description: string
   color: string
   /**
@@ -20,46 +22,55 @@ export interface Collection {
 
 export const collections: Collection[] = [
   {
-    slug: 'coastal-mornings',
-    title: 'Coastal Mornings',
-    description: 'Light along the shoreline before the world wakes up.',
-    color: 'from-slate-700 to-slate-900',
+    slug: 'people',
+    title: '人',
+    description: 'People',
+    color: 'from-slate-700 to-neutral-900',
     placeholders: [
-      { id: 'cm-1', color: 'from-slate-600 to-slate-900', aspect: 0.75 },
-      { id: 'cm-2', color: 'from-slate-700 to-neutral-900', aspect: 1.4 },
-      { id: 'cm-3', color: 'from-blue-800 to-slate-900', aspect: 1 },
-      { id: 'cm-4', color: 'from-slate-500 to-slate-900', aspect: 0.66 },
-      { id: 'cm-5', color: 'from-cyan-800 to-slate-900', aspect: 1.2 },
-      { id: 'cm-6', color: 'from-slate-600 to-neutral-900', aspect: 0.8 },
-      { id: 'cm-7', color: 'from-sky-900 to-slate-900', aspect: 1.1 },
+      { id: 'pe-1', color: 'from-slate-600 to-neutral-900', aspect: 0.75 },
+      { id: 'pe-2', color: 'from-slate-700 to-neutral-900', aspect: 1.4 },
+      { id: 'pe-3', color: 'from-zinc-700 to-neutral-900', aspect: 1 },
+      { id: 'pe-4', color: 'from-slate-500 to-neutral-900', aspect: 0.66 },
+      { id: 'pe-5', color: 'from-stone-700 to-neutral-900', aspect: 1.2 },
     ],
   },
   {
-    slug: 'strangers',
-    title: 'Strangers',
-    description: 'Portraits of people met once, in passing.',
-    color: 'from-rose-800 to-neutral-900',
+    slug: 'landscape',
+    title: '景',
+    description: 'Landscape',
+    color: 'from-sky-900 to-neutral-900',
     placeholders: [
-      { id: 'st-1', color: 'from-rose-700 to-neutral-900', aspect: 0.75 },
-      { id: 'st-2', color: 'from-rose-800 to-neutral-900', aspect: 0.8 },
-      { id: 'st-3', color: 'from-pink-800 to-neutral-900', aspect: 0.7 },
-      { id: 'st-4', color: 'from-rose-600 to-neutral-900', aspect: 1 },
-      { id: 'st-5', color: 'from-red-900 to-neutral-900', aspect: 0.75 },
+      { id: 'la-1', color: 'from-sky-800 to-neutral-900', aspect: 1.5 },
+      { id: 'la-2', color: 'from-cyan-900 to-neutral-900', aspect: 1.3 },
+      { id: 'la-3', color: 'from-blue-900 to-neutral-900', aspect: 1 },
+      { id: 'la-4', color: 'from-teal-900 to-neutral-900', aspect: 1.6 },
+      { id: 'la-5', color: 'from-sky-700 to-neutral-900', aspect: 0.75 },
     ],
   },
   {
-    slug: 'after-hours',
-    title: 'After Hours',
-    description: 'The city once the shops close and the neon stays on.',
-    color: 'from-amber-800 to-neutral-900',
+    slug: 'constructions',
+    title: '筑',
+    description: 'Constructions',
+    color: 'from-stone-600 to-neutral-900',
     placeholders: [
-      { id: 'ah-1', color: 'from-amber-700 to-neutral-900', aspect: 1.3 },
-      { id: 'ah-2', color: 'from-amber-800 to-neutral-900', aspect: 0.75 },
-      { id: 'ah-3', color: 'from-orange-800 to-neutral-900', aspect: 1 },
-      { id: 'ah-4', color: 'from-yellow-800 to-neutral-900', aspect: 1.5 },
-      { id: 'ah-5', color: 'from-amber-600 to-neutral-900', aspect: 0.8 },
-      { id: 'ah-6', color: 'from-amber-900 to-neutral-900', aspect: 1.1 },
-      { id: 'ah-7', color: 'from-orange-700 to-neutral-900', aspect: 0.66 },
+      { id: 'co-1', color: 'from-stone-500 to-neutral-900', aspect: 0.7 },
+      { id: 'co-2', color: 'from-neutral-600 to-neutral-900', aspect: 1.4 },
+      { id: 'co-3', color: 'from-stone-700 to-neutral-900', aspect: 1 },
+      { id: 'co-4', color: 'from-zinc-600 to-neutral-900', aspect: 0.66 },
+      { id: 'co-5', color: 'from-stone-800 to-neutral-900', aspect: 1.2 },
+    ],
+  },
+  {
+    slug: 'abstractions',
+    title: '象',
+    description: 'Abstractions',
+    color: 'from-violet-900 to-neutral-900',
+    placeholders: [
+      { id: 'ab-1', color: 'from-violet-800 to-neutral-900', aspect: 1 },
+      { id: 'ab-2', color: 'from-purple-900 to-neutral-900', aspect: 0.8 },
+      { id: 'ab-3', color: 'from-indigo-900 to-neutral-900', aspect: 1.3 },
+      { id: 'ab-4', color: 'from-fuchsia-900 to-neutral-900', aspect: 0.75 },
+      { id: 'ab-5', color: 'from-violet-700 to-neutral-900', aspect: 1.5 },
     ],
   },
 ]

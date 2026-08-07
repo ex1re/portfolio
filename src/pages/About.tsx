@@ -151,9 +151,9 @@ export default function About() {
               below reads as a break. */}
           <p className="mt-8 max-w-xl leading-relaxed text-neutral-400">
             <strong className="font-semibold">Eric Xie</strong> is a
-            California-based photographer. He works with immediacy and chance,
-            photographing whatever comes his way. His images highlight the impact of unguarded
-            moments in ordinary settings.
+            California-based photographer born in Haikou, the "Coconut City." 
+            He works with immediacy and chance, photographing whatever comes his way. 
+            His images, like visual prose, try to highlight the unguarded moments of daily life.
           </p>
           <div className="mt-8 flex items-center gap-4">
             <a
