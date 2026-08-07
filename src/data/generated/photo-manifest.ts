@@ -596,18 +596,6 @@ export const collectionFiles: Record<string, CollectionPhotoFile[]> = {
       }
     },
     {
-      "id": "landscape/IMG_0405.jpeg",
-      "src": "/photos/previews/collections/landscape/IMG_0405.webp",
-      "fullSrc": "/photos/collections/landscape/IMG_0405.jpeg",
-      "width": 2400,
-      "height": 1817,
-      "settings": {
-        "iso": "50",
-        "aperture": "2.8",
-        "shutter": "1/1422"
-      }
-    },
-    {
       "id": "landscape/IMG_0625.jpeg",
       "src": "/photos/previews/collections/landscape/IMG_0625.webp",
       "fullSrc": "/photos/collections/landscape/IMG_0625.jpeg",
