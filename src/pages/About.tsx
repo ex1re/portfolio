@@ -100,6 +100,37 @@ function InstagramIcon() {
   )
 }
 
+/**
+ * LinkedIn's own mark, at the size of the Instagram one beside it.
+ *
+ * The letterforms are the brand's, not an approximation: an "in" set in
+ * geometric sans has square terminals and a flat shoulder, and drawing it with
+ * round-capped strokes turns it into handwriting. The badge is filled, which is
+ * how LinkedIn draws it — it carries a little more weight than the outlined
+ * camera next to it, and that's the trade for the letters being right.
+ */
+function LinkedInIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="19"
+      height="19"
+      fill="currentColor"
+      aria-hidden
+      focusable="false"
+    >
+      {/* Sized against its neighbour rather than to the box, which they don't
+          use alike: LinkedIn's mark fills its whole viewBox, while the camera's
+          square is inset to 2 and drawn with a 2-wide stroke — so what you see
+          of it runs 1 to 23, twenty-two units across. This is scaled to exactly
+          that and centred, so the two squares are the same square. */}
+      <g transform="translate(1 1) scale(0.91667)">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </g>
+    </svg>
+  )
+}
+
 export default function About() {
   const openedAt = useRef(performance.now())
   const settled = useRef(false)
@@ -172,6 +203,15 @@ export default function About() {
               className="-m-3 p-3 text-neutral-100 transition-opacity hover:opacity-70"
             >
               <InstagramIcon />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/zhilin-xie/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn: Zhilin Xie"
+              className="-m-3 p-3 text-neutral-100 transition-opacity hover:opacity-70"
+            >
+              <LinkedInIcon />
             </a>
           </div>
 
