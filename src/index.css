@@ -12,6 +12,24 @@
   box-sizing: border-box;
 }
 
+/* The page's black belongs to the document, not only to the app inside it.
+   Every visible surface was painted by a div inside #root, which left html and
+   body transparent — and the browser paints more of the window than the app
+   does. Safari on iOS tints its top and bottom toolbars from the document's own
+   background, found none, and used white; the same white appeared under a
+   rubber-band overscroll. It's set here rather than on body because html is the
+   scroll container, and #0a0a0a is what `bg-neutral-950` resolves to, which is
+   also the colour the home photograph's black point is crushed to.
+
+   `color-scheme` is the other half. It tells the browser the page is dark
+   before any CSS is applied, so the canvas it paints during the first frame,
+   the scrollbars and any form control come up dark instead of flashing white —
+   and it does that whatever the reader has set at the system level. */
+html {
+  background-color: #0a0a0a;
+  color-scheme: dark;
+}
+
 /* The garden pile deliberately bleeds past its container and can be dragged
    further; clip that horizontally instead of letting it pan the page sideways.
    Both html and body are needed — html is the scroll container. */

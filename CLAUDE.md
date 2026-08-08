@@ -81,12 +81,27 @@ card's rotated rect and ask `document.elementFromPoint` what's on top.
 `z-index: 50`, and a stale active card will make a neighbour look 30% buried when
 it isn't.
 
+## The page colour belongs to the document
+
+`html` carries `background-color: #0a0a0a` and `color-scheme: dark`, and
+`index.html` carries a matching `theme-color`. The app's own black is a Tailwind
+class on a div inside `#root`, which leaves the document transparent — and the
+browser paints more of the window than the app does. Safari on iOS tints its
+toolbars from the document's background, so with nothing there it used white,
+top and bottom, whatever the reader's dark mode said. All three values are
+`#0a0a0a`, which is also `bg-neutral-950` and the hero's black point; if one
+moves they all move.
+
 ## The foot glow
 
 `BottomGlow` stands over the bottom 70px of the viewport once a page reaches its
-end, softening the white the browser reveals on rubber-band overscroll. It has a
-`backdrop-blur`, so **anything the page ends on needs clearance** — `SiteFooter`
-carries `pb-24` for exactly this reason.
+end. It has a `backdrop-blur`, so **anything the page ends on needs clearance** —
+`SiteFooter` carries `pb-24` for exactly this reason.
+
+It was built to soften the white that rubber-band overscroll revealed, back when
+the canvas behind the document was white. The document is black now, so that
+white is gone at the source and the glow has little left to do — the same goes
+for the bloom that used to show through the header on an overscroll at the top.
 
 ## Entrances
 

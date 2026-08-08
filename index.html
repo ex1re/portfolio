@@ -7,6 +7,15 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- What Safari tints its toolbars with on iOS. The stylesheet sets the same
+         colour on the document, but this is read from the markup before any CSS
+         has loaded, so the chrome is right from the first paint rather than
+         starting white and correcting itself.
+
+         Deliberately not wrapped in a prefers-color-scheme media attribute: the
+         page is black for everyone, so the toolbars should be too, whatever the
+         reader has their phone set to. -->
+    <meta name="theme-color" content="#0a0a0a" />
     <title>exire</title>
   </head>
   <body>
