@@ -84,9 +84,11 @@ it isn't.
 ## The monitor tiers start at 120rem, and that number is load-bearing
 
 `3xl` (120rem/1920px) and `4xl` (160rem/2560px) are defined in `@theme`, and
-carry the sizes for desk monitors: the hero's `max-h`, the pile's `max-w` (the
-collections grid shares it, so the two sections line up), and — in JS, because a
-canvas needs real pixels — `PoemCylinder`'s `size`.
+carry the sizes for desk monitors: the hero's `max-h`, the pile's `max-w`, the
+collections grid (four across on one row, uncapped so it runs the page width —
+the pile is a composition and stays in its frame, the collections are doors into
+the work and are the largest things on the page), and — in JS, because a canvas
+needs real pixels — `PoemCylinder`'s `size`.
 
 **They must clear a 14" MacBook, which is 1512px wide and 1800px at "More
 Space".** Tailwind's own `2xl` is 1536px and lands on that laptop, which is why

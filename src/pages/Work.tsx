@@ -108,8 +108,14 @@ export default function Work() {
 
             Above xl the cap stopped at 80rem, so on a 2560px screen the pile
             sat at half the width available to it and every photograph in it
-            was half the size it could have been. */}
-        <div className="relative mx-auto aspect-square w-full max-w-5xl sm:aspect-[4/3] lg:aspect-[16/9] lg:max-w-6xl xl:max-w-7xl 3xl:max-w-[96rem] 4xl:max-w-[112rem]">
+            was half the size it could have been.
+
+            104rem at 4xl rather than more: the collections below run the full
+            width of the page, and their cards land near 600px there. The pile
+            is held where its largest photograph stays under that, so the two
+            sections keep their order — the collections are the doors into the
+            work and read as the larger of the two. */}
+        <div className="relative mx-auto aspect-square w-full max-w-5xl sm:aspect-[4/3] lg:aspect-[16/9] lg:max-w-6xl xl:max-w-7xl 3xl:max-w-[96rem] 4xl:max-w-[104rem]">
           {projects.map((project, i) => (
             <SelectionPhoto
               key={project.slug}
@@ -126,16 +132,25 @@ export default function Work() {
 
       <section className="px-6 pt-4 pb-24">
         <h2 className="mb-10 text-sm tracking-wide text-neutral-500">collections</h2>
-        {/* Two across at most. There are four of them, so a third column leaves
-            one stranded on a row of its own; two columns make two even rows.
+        {/* One column, then two. Three would strand the fourth on a row of its
+            own, so two even rows it is — until there's room for all four side
+            by side, which is the other arrangement that comes out even.
 
-            Held to the pile's width on a monitor, and only there. Two columns
-            with nothing to stop them made each card over 1200px wide on a
-            2560px screen — the one part of this page that grew too much while
-            everything above it grew too little. Sharing the pile's cap lines
-            the two sections up on the same measure. Below 3xl it is untouched
-            and still runs the full width. */}
-        <div className="mx-auto grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 3xl:max-w-[96rem] 4xl:max-w-[112rem]">
+            That row is deliberately uncapped, so on a monitor it runs the width
+            of the page while the pile above stays held to its frame. The two
+            sections are doing different jobs: the pile is a composition, and
+            fixing its width is what keeps the arrangement as it was searched,
+            whereas these are doors into the work and should be the largest
+            things on the page. Below 3xl it is two columns and unchanged.
+
+            Four across waits for 4xl rather than starting at 3xl. At 1920 the
+            page is only wide enough for four if each is cut to about 440px,
+            which is smaller than the photographs in the pile above — the wrong
+            way round. Two columns there are larger still.
+
+            The gutter opens up with them — 24px between cards over 600px wide
+            reads as a crack rather than a space. */}
+        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 4xl:grid-cols-4 4xl:gap-x-8">
           {collections.map((collection, i) => {
             const photos = collectionPhotos(collection)
             const cover = photos[0]
