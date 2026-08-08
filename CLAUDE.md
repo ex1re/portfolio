@@ -100,9 +100,12 @@ The hero's `4xl:max-h-[88rem]` is set where the photograph runs out, not by
 taste: the 2x master is 2000×3000, and 88rem of height asks for ~939px of width,
 which is 1878 device pixels on a retina screen. A taller ceiling upscales it.
 
-Pile previews are `PREVIEW_EDGE = 1200` on the long edge. At `4xl` the tightest
-one draws at 519px, so ~1.5× — fine at 1×, a little short on a HiDPI monitor.
-Raise `PREVIEW_EDGE` and re-run `npm run photos` if that ever shows.
+Previews are `PREVIEW_EDGE = 1600` on the long edge, raised from 1200 once the
+pile grew: the tightest photo in it now clears 2× on a retina monitor with room
+to spare. **Changing that constant regenerates nothing on its own** — renditions
+are skipped when the output is newer than its *source*, which this isn't. Delete
+`public/photos/previews/<folder>` first, then `npm run photos`. Vercel has no
+such folder to skip, so a deploy picks the new value up by itself.
 
 ## The page colour belongs to the document
 

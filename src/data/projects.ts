@@ -31,8 +31,8 @@ export const projects: Project[] = [
   { slug: 'interval', title: 'Interval', year: 2025, color: 'from-stone-700 to-neutral-900', aspect: 1.5, image: 'DSCF0687.JPG' },
   { slug: 'synths', title: 'Synths', year: 2024, color: 'from-emerald-800 to-neutral-900', aspect: 0.8, image: 'DSCF0952.JPG' },
   { slug: 'untitled1', title: 'Untitled', year: 2025, color: 'from-sky-800 to-neutral-900', aspect: 1.5, image: 'DSCF1426.JPG' },
-  { slug: 'untitled2', title: 'Untitled', year: 2025, color: 'from-neutral-600 to-neutral-900', aspect: 0.66, image: 'DSCF1453.JPG' },
-  { slug: 'untitled3', title: 'Untitled', year: 2025, color: 'from-cyan-800 to-neutral-900', aspect: 1.2, image: 'DSCF1539.JPG' },
+  { slug: 'skyline', title: 'Skyline', year: 2025, color: 'from-neutral-600 to-neutral-900', aspect: 0.66, image: 'DSCF1453.JPG' },
+  { slug: 'untitled2', title: 'Untitled', year: 2025, color: 'from-cyan-800 to-neutral-900', aspect: 1.2, image: 'DSCF1539.JPG' },
   { slug: 'arabesque', title: 'Arabesque', year: 2025, color: 'from-orange-800 to-neutral-900', aspect: 0.75, image: 'DSCF1709.JPG' },
   { slug: 'mothership', title: 'Mothership', year: 2023, color: 'from-indigo-800 to-neutral-900', aspect: 1, image: 'IMG_6579.jpg' },
 ]

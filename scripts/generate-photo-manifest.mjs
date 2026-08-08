@@ -32,7 +32,21 @@ import { fileURLToPath } from 'node:url'
 import { imageSize } from 'image-size'
 
 /** Long edge of a generated preview, in px. Covers the widest grid slot at 2x. */
-const PREVIEW_EDGE = 1200
+/**
+ * The long edge of a preview, in px — `fit: 'inside'` takes it as a bounding
+ * box, so a landscape comes out this wide and a portrait this tall.
+ *
+ * 1600 rather than 1200 because the pile grew. On a 2560px monitor its photos
+ * draw around 520px, and a retina screen wants twice that; at 1200 a portrait
+ * was only 800px on its short side and had to be stretched. 1600 puts the
+ * short side past 1000px, which clears 2x with room to spare.
+ *
+ * Raising this is not enough on its own to change anything: renditions are
+ * skipped when the output is newer than the source, which is a comparison
+ * against the photograph and not against this number. Delete the generated
+ * folders to force a rebuild.
+ */
+const PREVIEW_EDGE = 1600
 const PREVIEW_QUALITY = 78
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')

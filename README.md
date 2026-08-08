@@ -210,8 +210,9 @@ the one the lightbox serves. Long edge **2400px at quality ~82** (usually
 without being wasteful. Beyond ~3000px nobody sees the difference here, since the
 lightbox caps at 768px wide.
 
-Previews come out at 1200px on the long edge as WebP, typically 100–250 KB, which
-covers the widest grid slot at 2× density.
+Previews come out at 1600px on the long edge as WebP, which covers the widest
+grid slot at 2× density even on a wide monitor, where the garden's pile opens
+out and its photographs are drawn considerably larger.
 
 Keep camera originals out of the repo — a 40MP file is tens of megabytes, all of
 it committed and none of it served. Cut a web master first (3000px is generous;
@@ -220,6 +221,14 @@ wherever you archive your work.
 
 Tuning lives at the top of
 [`scripts/generate-photo-manifest.mjs`](scripts/generate-photo-manifest.mjs)
-(`PREVIEW_EDGE`, `PREVIEW_QUALITY`). Previews are cached by modification time, so
-re-runs only rebuild what changed, and previews whose original was deleted are
-cleaned up automatically.
+(`PREVIEW_EDGE`, `PREVIEW_QUALITY`). `PREVIEW_EDGE` is a bounding box rather than
+a width — a landscape comes out that wide, a portrait that tall — and sets how
+large a photo can be drawn before it softens. `PREVIEW_QUALITY` is WebP
+compression at whatever that size is: the knob for blotchy skies, not for
+softness.
+
+Previews are cached by modification time, so re-runs only rebuild what changed,
+and previews whose original was deleted are cleaned up automatically. That
+comparison is against the photograph, not the settings, so **changing either
+number rebuilds nothing by itself** — delete `public/photos/previews/<folder>`
+and run `npm run photos` again.
