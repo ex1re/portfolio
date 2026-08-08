@@ -61,6 +61,41 @@ function stripes(count: number, colour: string) {
   )
 }
 
+/** One five-pointed star, point upwards. */
+function star(cx: number, cy: number, radius: number) {
+  const inner = radius * 0.382
+  let d = ''
+  for (let i = 0; i < 10; i++) {
+    const r = i % 2 === 0 ? radius : inner
+    const angle = (Math.PI / 5) * i - Math.PI / 2
+    const x = (cx + r * Math.cos(angle)).toFixed(1)
+    const y = (cy + r * Math.sin(angle)).toFixed(1)
+    d += `${i === 0 ? 'M' : 'L'}${x} ${y} `
+  }
+  return `${d}Z`
+}
+
+/**
+ * The canton's fifty stars, in the flag's own arrangement: nine rows
+ * alternating six and five, on an eleven-column grid.
+ *
+ * They are the reason this flag is drawn rather than served as a picture. At
+ * the size these marks are shown a star is smaller than a pixel, so a photograph
+ * of one resolves to a grey smear; as a path it stays a star at any size, and
+ * softens into an even speckle rather than a smudge where it can't be resolved.
+ */
+function starField(width: number, height: number, radius: number) {
+  let d = ''
+  for (let row = 1; row <= 9; row++) {
+    const count = row % 2 === 1 ? 6 : 5
+    for (let i = 0; i < count; i++) {
+      const column = row % 2 === 1 ? 1 + i * 2 : 2 + i * 2
+      d += star((column * width) / 12, (row * height) / 10, radius)
+    }
+  }
+  return d
+}
+
 const FLAGS: Record<Country, ReactNode> = {
   dk: (
     <>
@@ -84,6 +119,7 @@ const FLAGS: Record<Country, ReactNode> = {
       <rect width="512" height="512" fill="#fff" />
       {stripes(13, '#b22234' /* the flag's own red */)}
       <rect width="390" height="276" fill="#3c3b6e" />
+      <path d={starField(390, 276, 12)} fill="#fff" />
     </>
   ),
   sct: (
