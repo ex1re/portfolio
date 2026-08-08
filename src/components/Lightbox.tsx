@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { DisplayPhoto } from '../data/photos'
 
@@ -9,8 +9,48 @@ interface LightboxProps {
   onNavigate: (index: number) => void
 }
 
+/** A swipe has to travel this far to count, in px. */
+const SWIPE_DISTANCE = 45
+/** And it has to be this much more sideways than up, so a scroll isn't one. */
+const SWIPE_RATIO = 1.4
+
 export default function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) {
   const photo = photos[index]
+  const swipeFrom = useRef<{ x: number; y: number } | null>(null)
+  const swiped = useRef(false)
+
+  const step = useCallback(
+    (by: number) => onNavigate((index + by + photos.length) % photos.length),
+    [index, photos.length, onNavigate],
+  )
+
+  /**
+   * On a phone the arrows sit over the photograph rather than beside it, so
+   * they're hidden there and the gesture takes their place. Touch only — a
+   * mouse drag across a picture is how you'd save it, not how you'd page.
+   */
+  function onPointerDown(event: React.PointerEvent) {
+    // Cleared here rather than when the click arrives: a swipe across the
+    // photograph produces a click the photograph swallows, so the flag would
+    // otherwise still be up for the next tap and eat that one instead.
+    swiped.current = false
+    swipeFrom.current =
+      event.pointerType === 'touch' ? { x: event.clientX, y: event.clientY } : null
+  }
+
+  function onPointerUp(event: React.PointerEvent) {
+    const from = swipeFrom.current
+    swipeFrom.current = null
+    if (!from || photos.length < 2) return
+    const dx = event.clientX - from.x
+    const dy = event.clientY - from.y
+    if (Math.abs(dx) < SWIPE_DISTANCE || Math.abs(dx) < Math.abs(dy) * SWIPE_RATIO) return
+    // A swipe that starts on the photo and finishes on the backdrop still
+    // resolves to a click on the backdrop, which is the gesture for closing.
+    swiped.current = true
+    // Dragging leftwards brings the next photo in from the right.
+    step(dx < 0 ? 1 : -1)
+  }
   // The preview is already cached from the grid, so it can show instantly while
   // the full-size file downloads behind it.
   const [fullLoaded, setFullLoaded] = useState(false)
@@ -23,12 +63,12 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()
-      if (e.key === 'ArrowRight') onNavigate((index + 1) % photos.length)
-      if (e.key === 'ArrowLeft') onNavigate((index - 1 + photos.length) % photos.length)
+      if (e.key === 'ArrowRight') step(1)
+      if (e.key === 'ArrowLeft') step(-1)
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [index, photos.length, onClose, onNavigate])
+  }, [onClose, step])
 
   // Warm the neighbours so stepping through with the arrows is instant.
   useEffect(() => {
@@ -53,7 +93,14 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           className="fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/95 px-6 backdrop-blur-sm"
-          onClick={onClose}
+          onClick={() => {
+            if (!swiped.current) onClose()
+          }}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerCancel={() => {
+            swipeFrom.current = null
+          }}
         >
           <button
             type="button"
@@ -68,9 +115,9 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
             type="button"
             onClick={(e) => {
               e.stopPropagation()
-              onNavigate((index - 1 + photos.length) % photos.length)
+              step(-1)
             }}
-            className="absolute left-4 text-2xl text-neutral-400 hover:text-neutral-100 sm:left-8"
+            className="absolute left-4 hidden text-2xl text-neutral-400 hover:text-neutral-100 sm:left-8 sm:block"
             aria-label="Previous photo"
           >
             ←
@@ -124,9 +171,9 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
             type="button"
             onClick={(e) => {
               e.stopPropagation()
-              onNavigate((index + 1) % photos.length)
+              step(1)
             }}
-            className="absolute right-4 text-2xl text-neutral-400 hover:text-neutral-100 sm:right-8"
+            className="absolute right-4 hidden text-2xl text-neutral-400 hover:text-neutral-100 sm:right-8 sm:block"
             aria-label="Next photo"
           >
             →
