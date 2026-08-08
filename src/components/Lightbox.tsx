@@ -4,7 +4,16 @@ import type { DisplayPhoto } from '../data/photos'
 
 interface LightboxProps {
   photos: DisplayPhoto[]
-  index: number
+  /**
+   * Which photograph is open, or null for none.
+   *
+   * Closing is the reason this is nullable rather than the caller simply not
+   * rendering the lightbox. The exit animation lives in the AnimatePresence
+   * below, and an AnimatePresence can only animate its children out — it cannot
+   * animate its own removal. Unmounting the whole component to close it took
+   * the AnimatePresence with it, and the fade never got a frame to run in.
+   */
+  index: number | null
   onClose: () => void
   onNavigate: (index: number) => void
 }
@@ -37,7 +46,8 @@ const SWIPE_FLICK_MIN = 12
 const FOLLOW = 0.55
 
 export default function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) {
-  const photo = photos[index]
+  const photo = index === null ? undefined : photos[index]
+  const open = Boolean(photo)
   const swiped = useRef(false)
   /** How far the photograph is currently pulled from centre. */
   const shift = useMotionValue(0)
@@ -47,7 +57,10 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
   const speed = useRef(0)
 
   const step = useCallback(
-    (by: number) => onNavigate((index + by + photos.length) % photos.length),
+    (by: number) => {
+      if (index === null) return
+      onNavigate((index + by + photos.length) % photos.length)
+    },
     [index, photos.length, onNavigate],
   )
 
@@ -137,6 +150,16 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
       animate(shift, 0, { type: 'spring', stiffness: 400, damping: 40, mass: 1 })
     }
   }
+  /**
+   * True from opening until the closing fade has finished, which is a little
+   * longer than the lightbox is open. Anything that has to outlast the close —
+   * the scroll lock — follows this rather than `open`.
+   */
+  const [locked, setLocked] = useState(false)
+  useEffect(() => {
+    if (open) setLocked(true)
+  }, [open])
+
   // The preview is already cached from the grid, so it can show instantly while
   // the full-size file downloads behind it.
   const [fullLoaded, setFullLoaded] = useState(false)
@@ -158,10 +181,14 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
    * the scrollbar would otherwise let the page widen by its width and shift
    * everything sideways as the lightbox opens, so that width is handed back as
    * padding. On a phone there is no scrollbar and the gap is zero.
+   *
+   * Released when the fade has finished rather than when the close is asked
+   * for. Handing the scrollbar back at the start of the close widens the page
+   * by its width, and the content behind would shift sideways in plain view
+   * through a backdrop that hasn't finished clearing.
    */
-  const open = Boolean(photo)
   useEffect(() => {
-    if (!open) return
+    if (!locked) return
     const root = document.documentElement
     const gap = window.innerWidth - root.clientWidth
     const previous = { overflow: root.style.overflow, padding: root.style.paddingRight }
@@ -171,9 +198,14 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
       root.style.overflow = previous.overflow
       root.style.paddingRight = previous.padding
     }
-  }, [open])
+  }, [locked])
 
+  // Both of the following are guarded on being open, because the component now
+  // stays mounted the whole time the page is up rather than only while a
+  // photograph is showing. Left unguarded, an arrow key pressed while browsing
+  // the grid would step from nothing and open the lightbox by itself.
   useEffect(() => {
+    if (!open) return
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()
       if (e.key === 'ArrowRight') step(1)
@@ -181,11 +213,11 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [onClose, step])
+  }, [open, onClose, step])
 
   // Warm the neighbours so stepping through with the arrows is instant.
   useEffect(() => {
-    if (photos.length < 2) return
+    if (index === null || photos.length < 2) return
     const neighbours = [
       photos[(index + 1) % photos.length],
       photos[(index - 1 + photos.length) % photos.length],
@@ -198,13 +230,20 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
   }, [index, photos])
 
   return (
-    <AnimatePresence>
+    // The page is only handed back once the fade has actually finished.
+    <AnimatePresence onExitComplete={() => setLocked(false)}>
       {photo && (
         <motion.div
+          // Keyed so presence is tracked across the close rather than inferred.
+          key="lightbox"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          // Out a little faster than in, and easing in rather than out, so
+          // dismissing feels immediate: the picture leaves promptly instead of
+          // hanging about at half opacity. Short enough throughout to stay
+          // ahead of a second tap.
+          exit={{ opacity: 0, transition: { duration: 0.16, ease: 'easeIn' } }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
           // No panning in either direction, which does two things at once: the
           // page behind can't be dragged while the lightbox is up, and the
           // browser can't decide partway through a swipe that the touch was a
@@ -255,7 +294,11 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
               key={photo.id}
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.97 }}
+              // Settles back very slightly as it goes, which reads as the
+              // photograph withdrawing rather than the light being switched
+              // off. It inherits the exit from the backdrop above it, so the
+              // two leave together.
+              exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.16, ease: 'easeIn' } }}
               transition={{ duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
               className="flex w-full items-center justify-center"
@@ -309,7 +352,11 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
           </button>
 
           <span className="font-nav absolute bottom-6 text-xs text-neutral-500">
-            {index + 1} / {photos.length}
+            {/* A photograph is showing here, so there is an index — but the
+                types can't see that the two go together. The fallback never
+                appears: the closing fade replays the last rendered tree rather
+                than rendering this again with nothing selected. */}
+            {(index ?? 0) + 1} / {photos.length}
           </span>
         </motion.div>
       )}

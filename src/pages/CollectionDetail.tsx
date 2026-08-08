@@ -56,14 +56,15 @@ export default function CollectionDetail() {
 
       <SiteFooter />
 
-      {openIndex !== null && (
-        <Lightbox
-          photos={photos}
-          index={openIndex}
-          onClose={() => setOpenIndex(null)}
-          onNavigate={setOpenIndex}
-        />
-      )}
+      {/* Always mounted, and told which photograph to show — null for none.
+          Removing it on close took its exit animation with it, and the
+          lightbox vanished instead of fading. */}
+      <Lightbox
+        photos={photos}
+        index={openIndex}
+        onClose={() => setOpenIndex(null)}
+        onNavigate={setOpenIndex}
+      />
     </PageTransition>
   )
 }
