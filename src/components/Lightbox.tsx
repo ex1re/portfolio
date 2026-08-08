@@ -27,6 +27,14 @@ const SWIPE_DISTANCE = 28
 const SWIPE_FLICK = 0.45
 /** A flick still has to be a movement, not a twitch during a tap. */
 const SWIPE_FLICK_MIN = 12
+/**
+ * How much of the finger's travel the photograph takes. Tracking it exactly
+ * makes a large picture swing about under the finger; at a little over half it
+ * still plainly answers the hand, and the movement is calm enough to watch.
+ * Only what's drawn is damped — how far the finger went is what decides
+ * whether to page, and that's measured raw.
+ */
+const FOLLOW = 0.55
 
 export default function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) {
   const photo = photos[index]
@@ -84,7 +92,11 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
     const elapsed = event.timeStamp - last.current.t
     if (elapsed > 0) speed.current = (event.clientX - last.current.x) / elapsed
     last.current = { x: event.clientX, t: event.timeStamp }
-    shift.set(dx)
+    // Rounded to whole pixels. A photograph this size parked on a fraction of a
+    // pixel is resampled every frame, and with a blurred backdrop behind it
+    // that resampling shimmers — the picture looks like it's vibrating rather
+    // than moving. On whole pixels it simply moves.
+    shift.set(Math.round(dx * FOLLOW))
   }
 
   /**
@@ -113,11 +125,16 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
       swiped.current = true
       // Dragging leftwards brings the next photo in from the right.
       step(dx < 0 ? 1 : -1)
-      // The incoming photograph settles into place from where the finger left
-      // off, so paging is one continuous movement rather than a snap and a fade.
-      animate(shift, 0, { duration: 0.25, ease: [0.22, 1, 0.36, 1] })
+      // Centred at once rather than slid back. The photograph arriving is a
+      // different one that fades up in place, so animating the frame home at
+      // the same time put two unrelated movements on screen at once and read
+      // as a lurch. The one that carries meaning is the fade.
+      shift.set(0)
     } else {
-      animate(shift, 0, { type: 'spring', stiffness: 500, damping: 40 })
+      // Critically damped — stiffness 400 against damping 40 puts the ratio at
+      // exactly 1, so an abandoned swipe returns and stops. Anything springier
+      // overshoots centre and wobbles, which is the shake it's meant to avoid.
+      animate(shift, 0, { type: 'spring', stiffness: 400, damping: 40, mass: 1 })
     }
   }
   // The preview is already cached from the grid, so it can show instantly while
@@ -128,6 +145,33 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
   useEffect(() => {
     setFullLoaded(false)
   }, [photo?.id])
+
+  /**
+   * Hold the page still underneath.
+   *
+   * The lightbox covers the window, but the document behind it went on
+   * scrolling: a swipe with any drift in it panned the grid, and because that
+   * grid shows through a blurred backdrop the whole background slid while the
+   * photograph stayed put. It looked like the photograph was the thing shaking.
+   *
+   * Locked on the root element, which is this site's scroll container. Removing
+   * the scrollbar would otherwise let the page widen by its width and shift
+   * everything sideways as the lightbox opens, so that width is handed back as
+   * padding. On a phone there is no scrollbar and the gap is zero.
+   */
+  const open = Boolean(photo)
+  useEffect(() => {
+    if (!open) return
+    const root = document.documentElement
+    const gap = window.innerWidth - root.clientWidth
+    const previous = { overflow: root.style.overflow, padding: root.style.paddingRight }
+    root.style.overflow = 'hidden'
+    if (gap > 0) root.style.paddingRight = `${gap}px`
+    return () => {
+      root.style.overflow = previous.overflow
+      root.style.paddingRight = previous.padding
+    }
+  }, [open])
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -161,12 +205,13 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          // The sideways axis is claimed here, and that is what makes the
-          // gesture reliable rather than merely tuned: left to itself the
-          // browser decides partway through a swipe that the touch is a page
-          // pan, takes the pointer back, and the swipe is never seen. Up and
-          // down, and pinching to zoom, are left to the browser.
-          className="fixed inset-0 z-[100] flex touch-pan-y touch-pinch-zoom items-center justify-center bg-neutral-950/95 px-6 backdrop-blur-sm select-none"
+          // No panning in either direction, which does two things at once: the
+          // page behind can't be dragged while the lightbox is up, and the
+          // browser can't decide partway through a swipe that the touch was a
+          // pan, take the pointer back, and leave the swipe unseen. Pinching to
+          // zoom is deliberately still allowed — it costs nothing here, since
+          // zooming isn't panning, and it's worth keeping on a photograph.
+          className="fixed inset-0 z-[100] flex touch-pinch-zoom items-center justify-center overscroll-contain bg-neutral-950/95 px-6 backdrop-blur-sm select-none"
           onClick={() => {
             if (!swiped.current) onClose()
           }}
@@ -201,7 +246,9 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Lightbo
               other's transform, and the photograph would jump back to centre
               the moment a new one started fading in. */}
           <motion.div
-            style={{ x: shift }}
+            // Kept on its own compositing layer, so following the finger moves
+            // a finished layer instead of repainting the picture each frame.
+            style={{ x: shift, willChange: 'transform' }}
             className="flex w-full max-w-3xl items-center justify-center"
           >
             <motion.div
