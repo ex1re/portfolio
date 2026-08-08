@@ -71,6 +71,17 @@ export const selectionFiles: Record<string, PhotoFile> = {
       "shutter": "1/60"
     }
   },
+  "DSCF0538.JPG": {
+    "src": "/photos/previews/selections/DSCF0538.webp",
+    "fullSrc": "/photos/selections/DSCF0538.JPG",
+    "width": 2400,
+    "height": 1350,
+    "settings": {
+      "iso": "500",
+      "aperture": "2.2",
+      "shutter": "1/200"
+    }
+  },
   "DSCF0547.JPG": {
     "src": "/photos/previews/selections/DSCF0547.webp",
     "fullSrc": "/photos/selections/DSCF0547.JPG",
@@ -80,17 +91,6 @@ export const selectionFiles: Record<string, PhotoFile> = {
       "iso": "500",
       "aperture": "7.1",
       "shutter": "1/160"
-    }
-  },
-  "DSCF0687.JPG": {
-    "src": "/photos/previews/selections/DSCF0687.webp",
-    "fullSrc": "/photos/selections/DSCF0687.JPG",
-    "width": 2400,
-    "height": 1600,
-    "settings": {
-      "iso": "320",
-      "aperture": "2",
-      "shutter": "1/1000"
     }
   },
   "DSCF0952.JPG": {
@@ -137,15 +137,15 @@ export const selectionFiles: Record<string, PhotoFile> = {
       "shutter": "1/500"
     }
   },
-  "DSCF1709.JPG": {
-    "src": "/photos/previews/selections/DSCF1709.webp",
-    "fullSrc": "/photos/selections/DSCF1709.JPG",
+  "DSCF1985.JPG": {
+    "src": "/photos/previews/selections/DSCF1985.webp",
+    "fullSrc": "/photos/selections/DSCF1985.JPG",
     "width": 2400,
     "height": 1600,
     "settings": {
-      "iso": "4000",
-      "aperture": "2",
-      "shutter": "1/60"
+      "iso": "250",
+      "aperture": "2.8",
+      "shutter": "1/50"
     }
   },
   "IMG_6579.jpg": {

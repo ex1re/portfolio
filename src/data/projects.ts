@@ -25,14 +25,14 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  { slug: 'benevolence', title: 'Benevolence', year: 2024, iso: 'ISO 250', aperture: 'ƒ/1.78', shutter: '1/60', color: 'from-slate-700 to-slate-900', aspect: 1.4, image: '8E928D42-8342-4262-8DFB-449EED535384.jpeg' },
-  { slug: 'purgatory', title: 'Purgatory', year: 2023, color: 'from-rose-800 to-neutral-900', aspect: 0.75, image: 'DD9AD218-A8B8-452B-837B-501B2B36D410.jpg' },
-  { slug: 'transience', title: 'Transience', year: 2024, color: 'from-amber-800 to-neutral-900', aspect: 1, image: 'DSCF0547.JPG' },
-  { slug: 'interval', title: 'Interval', year: 2025, color: 'from-stone-700 to-neutral-900', aspect: 1.5, image: 'DSCF0687.JPG' },
-  { slug: 'synths', title: 'Synths', year: 2024, color: 'from-emerald-800 to-neutral-900', aspect: 0.8, image: 'DSCF0952.JPG' },
+  { slug: 'benevolence', title: 'Benevolence', year: 2024, iso: 'ISO 250', aperture: 'ƒ/1.78', shutter: '1/60', color: 'from-slate-700 to-slate-900', aspect: 0.677, image: '8E928D42-8342-4262-8DFB-449EED535384.jpeg' },
+  { slug: 'purgatory', title: 'Purgatory', year: 2023, color: 'from-rose-800 to-neutral-900', aspect: 1.4, image: 'DD9AD218-A8B8-452B-837B-501B2B36D410.jpg' },
+  { slug: 'transience', title: 'Transience', year: 2024, color: 'from-amber-800 to-neutral-900', aspect: 1.47, image: 'DSCF0547.JPG' },
+  { slug: 'gorge', title: 'Gorge', year: 2024, color: 'from-stone-700 to-neutral-900', aspect: 1.78, image: 'DSCF0538.JPG' },
+  { slug: 'synths', title: 'Synths', year: 2024, color: 'from-emerald-800 to-neutral-900', aspect: 1.52, image: 'DSCF0952.JPG' },
   { slug: 'untitled1', title: 'Untitled', year: 2025, color: 'from-sky-800 to-neutral-900', aspect: 1.5, image: 'DSCF1426.JPG' },
   { slug: 'skyline', title: 'Skyline', year: 2025, color: 'from-neutral-600 to-neutral-900', aspect: 0.66, image: 'DSCF1453.JPG' },
-  { slug: 'untitled2', title: 'Untitled', year: 2025, color: 'from-cyan-800 to-neutral-900', aspect: 1.2, image: 'DSCF1539.JPG' },
-  { slug: 'arabesque', title: 'Arabesque', year: 2025, color: 'from-orange-800 to-neutral-900', aspect: 0.75, image: 'DSCF1709.JPG' },
-  { slug: 'mothership', title: 'Mothership', year: 2023, color: 'from-indigo-800 to-neutral-900', aspect: 1, image: 'IMG_6579.jpg' },
+  { slug: 'untitled2', title: 'Untitled', year: 2025, color: 'from-cyan-800 to-neutral-900', aspect: 0.667, image: 'DSCF1539.JPG' },
+  { slug: 'untitled3', title: 'Untitled', year: 2025, color: 'from-orange-800 to-neutral-900', aspect: 1.5, image: 'DSCF1985.JPG' },
+  { slug: 'mothership', title: 'Mothership', year: 2023, color: 'from-indigo-800 to-neutral-900', aspect: 1.46, image: 'IMG_6579.jpg' },
 ]
