@@ -188,10 +188,10 @@ export default function About() {
           </p>
           <div className="mt-8 flex items-center gap-4">
             <a
-              href="mailto:z4@berkeley.edu"
+              href="mailto:exire.art@gmail.com"
               className="border-b border-neutral-100 pb-1 text-sm text-neutral-100 transition-opacity hover:opacity-70"
             >
-              z4@berkeley.edu
+              exire.art@gmail.com
             </a>
             <a
               href="https://instagram.com/e.xire"
