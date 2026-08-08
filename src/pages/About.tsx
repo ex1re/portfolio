@@ -263,7 +263,10 @@ export default function About() {
         >
           {/* Reserves the drum's footprint while its chunk loads, so the column
               doesn't jump once it arrives. */}
-          <Suspense fallback={<div aria-hidden className="mx-auto h-[320px] w-[240px] md:h-[500px] md:w-[400px]" />}>
+          {/* Reserves the drum's footprint, so these have to track the sizes
+              PoemCylinder picks at the same widths — otherwise the column
+              would resize under the drum as its chunk arrives. */}
+          <Suspense fallback={<div aria-hidden className="mx-auto h-[320px] w-[240px] md:h-[500px] md:w-[400px] 3xl:h-[600px] 3xl:w-[480px] 4xl:h-[700px] 4xl:w-[560px]" />}>
             <PoemCylinder text={poem} onReady={reveal} />
           </Suspense>
         </motion.div>

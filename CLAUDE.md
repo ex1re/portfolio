@@ -81,6 +81,27 @@ card's rotated rect and ask `document.elementFromPoint` what's on top.
 `z-index: 50`, and a stale active card will make a neighbour look 30% buried when
 it isn't.
 
+## The monitor tiers start at 120rem, and that number is load-bearing
+
+`3xl` (120rem/1920px) and `4xl` (160rem/2560px) are defined in `@theme`, and
+carry the sizes for desk monitors: the hero's `max-h`, the pile's `max-w` (the
+collections grid shares it, so the two sections line up), and — in JS, because a
+canvas needs real pixels — `PoemCylinder`'s `size`.
+
+**They must clear a 14" MacBook, which is 1512px wide and 1800px at "More
+Space".** Tailwind's own `2xl` is 1536px and lands on that laptop, which is why
+these start higher. Anything added for monitors goes at `3xl`/`4xl`, never
+`2xl`. The drum's queries are written in rem to match the breakpoints; if one
+moves they all move.
+
+The hero's `4xl:max-h-[88rem]` is set where the photograph runs out, not by
+taste: the 2x master is 2000×3000, and 88rem of height asks for ~939px of width,
+which is 1878 device pixels on a retina screen. A taller ceiling upscales it.
+
+Pile previews are `PREVIEW_EDGE = 1200` on the long edge. At `4xl` the tightest
+one draws at 519px, so ~1.5× — fine at 1×, a little short on a HiDPI monitor.
+Raise `PREVIEW_EDGE` and re-run `npm run photos` if that ever shows.
+
 ## The page colour belongs to the document
 
 `html` carries `background-color: #0a0a0a` and `color-scheme: dark`, and

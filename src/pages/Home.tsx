@@ -149,7 +149,20 @@ export default function Home() {
               // waiting its turn behind the deferred images elsewhere.
               fetchPriority="high"
               decoding="async"
-              className="pointer-events-none h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:max-w-md lg:h-[90vh] lg:max-h-[64rem] lg:w-auto lg:max-w-none"
+              // The picture asks for 90vh and is held to a ceiling. On a laptop
+              // the ceiling never comes into it — 90vh of a 900px-tall window
+              // is 810, well under the 64rem cap — but on a tall monitor 90vh
+              // is past 1200px and the cap was the only thing stopping it, so
+              // the photograph got smaller relative to the screen the larger
+              // the screen was. The higher ceilings let it keep its 90vh.
+              //
+              // 88rem is not a round number, it's where the photograph runs
+              // out. The 2x master is 2000x3000, and at these proportions
+              // 88rem of height asks for about 939px of width — 1878 device
+              // pixels on a retina screen, just inside what the file has. A
+              // taller ceiling would start enlarging the picture past its own
+              // pixels on the very screens meant to show it best.
+              className="pointer-events-none h-auto w-full max-w-[19rem] object-contain sm:max-w-sm md:max-w-md lg:h-[90vh] lg:max-h-[64rem] lg:w-auto lg:max-w-none 3xl:max-h-[80rem] 4xl:max-h-[88rem]"
             />
           </div>
         )}

@@ -101,8 +101,15 @@ export default function Work() {
 
             The cap is what sets the pile's size on a desktop — the photos are
             percentages of it, so widening the frame enlarges everything without
-            changing how much they overlap. */}
-        <div className="relative mx-auto aspect-square w-full max-w-5xl sm:aspect-[4/3] lg:aspect-[16/9] lg:max-w-6xl xl:max-w-7xl">
+            changing how much they overlap. That is why the monitor sizes are
+            added here and nowhere else in the pile: the searched arrangement
+            is in percentages and the shape is unchanged, so the whole thing
+            scales up exactly as composed, with every overlap as it was.
+
+            Above xl the cap stopped at 80rem, so on a 2560px screen the pile
+            sat at half the width available to it and every photograph in it
+            was half the size it could have been. */}
+        <div className="relative mx-auto aspect-square w-full max-w-5xl sm:aspect-[4/3] lg:aspect-[16/9] lg:max-w-6xl xl:max-w-7xl 3xl:max-w-[96rem] 4xl:max-w-[112rem]">
           {projects.map((project, i) => (
             <SelectionPhoto
               key={project.slug}
@@ -120,8 +127,15 @@ export default function Work() {
       <section className="px-6 pt-4 pb-24">
         <h2 className="mb-10 text-sm tracking-wide text-neutral-500">collections</h2>
         {/* Two across at most. There are four of them, so a third column leaves
-            one stranded on a row of its own; two columns make two even rows. */}
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2">
+            one stranded on a row of its own; two columns make two even rows.
+
+            Held to the pile's width on a monitor, and only there. Two columns
+            with nothing to stop them made each card over 1200px wide on a
+            2560px screen — the one part of this page that grew too much while
+            everything above it grew too little. Sharing the pile's cap lines
+            the two sections up on the same measure. Below 3xl it is untouched
+            and still runs the full width. */}
+        <div className="mx-auto grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 3xl:max-w-[96rem] 4xl:max-w-[112rem]">
           {collections.map((collection, i) => {
             const photos = collectionPhotos(collection)
             const cover = photos[0]

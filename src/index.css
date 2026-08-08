@@ -6,6 +6,19 @@
    on Windows and Android, so line breaks land in the same places either way. */
 @theme {
   --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Two steps above Tailwind's own, for desk monitors.
+
+     Where they sit is the whole point. The largest built-in step is 2xl at
+     96rem — 1536px — which a 14" MacBook very nearly reaches: it runs 1512px
+     wide by default and 1800px at its roomiest setting. A tier meant for
+     monitors has to clear both, or it would land on a laptop instead. 120rem
+     is above either, so nothing here can reach the laptop at any setting.
+
+     In rem rather than px so they follow the reader's text size: someone who
+     has enlarged type is asking for fewer pixels of layout, not more. */
+  --breakpoint-3xl: 120rem; /* 1920px — a common desk monitor */
+  --breakpoint-4xl: 160rem; /* 2560px — 1440p and ultrawide */
 }
 
 * {

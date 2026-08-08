@@ -300,7 +300,27 @@ export default function PoemCylinder({ text, className = '', onReady }: PoemCyli
     })
   }, [])
 
-  const size = compact ? { width: 240, height: 320 } : { width: 400, height: 500 }
+  /**
+   * The drum's size is a number rather than a class, because the canvas needs
+   * real pixel dimensions — so its monitor sizes are media queries here rather
+   * than breakpoints in the stylesheet. The widths match `--breakpoint-3xl` and
+   * `--breakpoint-4xl`; if those move, these move with them.
+   *
+   * Above 768px it was a flat 400x500 at every width, which on a 2560px screen
+   * left it using under a fifth of the column it was centred in. Each step
+   * keeps the 4:5 proportion, so the poem wraps exactly as it did — the texture
+   * is drawn from the geometry's own circumference and height, and only its
+   * resolution changes.
+   */
+  const wide = useMediaQuery('(min-width: 120rem)')
+  const ultrawide = useMediaQuery('(min-width: 160rem)')
+  const size = compact
+    ? { width: 240, height: 320 }
+    : ultrawide
+      ? { width: 560, height: 700 }
+      : wide
+        ? { width: 480, height: 600 }
+        : { width: 400, height: 500 }
 
   return (
     <div className={className}>
