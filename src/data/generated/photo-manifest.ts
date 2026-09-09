@@ -474,6 +474,30 @@ export const collectionFiles: Record<string, CollectionPhotoFile[]> = {
       }
     },
     {
+      "id": "constructions/DSCF2960.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF2960.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF2960.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "125",
+        "aperture": "5.6",
+        "shutter": "1/2000"
+      }
+    },
+    {
+      "id": "constructions/DSCF2961.JPG",
+      "src": "/photos/previews/collections/constructions/DSCF2961.webp",
+      "fullSrc": "/photos/collections/constructions/DSCF2961.JPG",
+      "width": 1600,
+      "height": 2400,
+      "settings": {
+        "iso": "125",
+        "aperture": "4.5",
+        "shutter": "1/2000"
+      }
+    },
+    {
       "id": "constructions/IMG_6579.jpg",
       "src": "/photos/previews/collections/constructions/IMG_6579.webp",
       "fullSrc": "/photos/collections/constructions/IMG_6579.jpg",
@@ -581,6 +605,30 @@ export const collectionFiles: Record<string, CollectionPhotoFile[]> = {
         "iso": "200",
         "aperture": "2",
         "shutter": "1/2"
+      }
+    },
+    {
+      "id": "landscape/DSCF2723.JPG",
+      "src": "/photos/previews/collections/landscape/DSCF2723.webp",
+      "fullSrc": "/photos/collections/landscape/DSCF2723.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "1000",
+        "aperture": "2",
+        "shutter": "1/20"
+      }
+    },
+    {
+      "id": "landscape/DSCF2815.JPG",
+      "src": "/photos/previews/collections/landscape/DSCF2815.webp",
+      "fullSrc": "/photos/collections/landscape/DSCF2815.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "125",
+        "aperture": "8",
+        "shutter": "1/340"
       }
     },
     {
@@ -770,6 +818,18 @@ export const collectionFiles: Record<string, CollectionPhotoFile[]> = {
         "iso": "1000",
         "aperture": "2",
         "shutter": "1/100"
+      }
+    },
+    {
+      "id": "people/DSCF2615.JPG",
+      "src": "/photos/previews/collections/people/DSCF2615.webp",
+      "fullSrc": "/photos/collections/people/DSCF2615.JPG",
+      "width": 2400,
+      "height": 1600,
+      "settings": {
+        "iso": "500",
+        "aperture": "2",
+        "shutter": "1/50"
       }
     },
     {
